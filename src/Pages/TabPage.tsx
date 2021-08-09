@@ -4,6 +4,11 @@ import Page2 from './Page2';
 import { Page, Tab, Toolbar, Tabbar } from 'react-onsenui';
 
 class TabPage extends React.Component {
+  state = { 
+    title: 'Tab 1',
+    index: 0
+  }
+
   renderTabs() {
     const page1 = {
       content: <Page1 key="tab1"/>,
@@ -15,18 +20,19 @@ class TabPage extends React.Component {
     };
     return [page1, page2];
   }
+  // Title: string = 'a';
 
   onPostChange() {
-    // alert("changed");
+    console.log(this);
   }
 
   render() {
     return( 
       <Page>
         <Toolbar>
-          <div className="center">Tab 1</div>
+          <div className="center">{this.state.title}</div>
         </Toolbar>
-        <Tabbar index={0} swipeable={false} renderTabs={this.renderTabs.bind(this)} onPostChange={this.onPostChange}></Tabbar>
+        <Tabbar index={this.state.index} swipeable={false} renderTabs={this.renderTabs.bind(this)} onPostChange={this.onPostChange}></Tabbar>
       </Page>
     )
   }
