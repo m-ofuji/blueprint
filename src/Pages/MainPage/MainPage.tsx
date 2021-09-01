@@ -4,23 +4,13 @@ import ListView from './ListView';
 import AddButton from './AddButton';
 import { Navigator, Page } from 'react-onsenui';
 
-class MainPage extends React.Component
-{
-
-  renderNavbar () {
-    return <NavBar title='BluePrint'/>
-  }
-
-  renderPage (route: any, navigator: Navigator) {
-    return 
-  }
-
+class MainPage extends React.Component {
   render() {
     return (
-      <Navigator renderPage={(route, navigator) => 
+      <Navigator renderPage={(route, navigator: Navigator) => 
         <Page key={'root'} renderToolbar={() => <NavBar title='BluePrint'/>}>
           <ListView title={'listView'} />
-          <AddButton position={'bottom right'}/>
+          <AddButton route={route} navigator={navigator} position={'bottom right'}/>
         </Page>
       } 
       initialRoute={{
