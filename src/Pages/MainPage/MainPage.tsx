@@ -3,6 +3,7 @@ import NavBar from './NavBar';
 import ListView from './ListView';
 import AddButton from './AddButton';
 import { Navigator, Page } from 'react-onsenui';
+import  PaintPage  from '../PaintPage/PaintPage';
 
 class MainPage extends React.Component {
   render() {
