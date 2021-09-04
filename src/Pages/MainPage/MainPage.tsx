@@ -1,24 +1,19 @@
-import React from 'react';
-import NavBar from './NavBar';
-import ListView from './ListView';
-import AddButton from './AddButton';
+import HomePage from './HomePage';
 import { Navigator, Page } from 'react-onsenui';
-import  PaintPage  from '../PaintPage/PaintPage';
 
-class MainPage extends React.Component {
-  render() {
+const MainPage = () => {
+  const renderPage = (route:any, navigator: Navigator) => {
     return (
-      <Navigator renderPage={(route, navigator: Navigator) => 
-        <Page key={'root'} renderToolbar={() => <NavBar title='BluePrint'/>}>
-          <ListView title={'listView'} />
-          <AddButton route={route} navigator={navigator} position={'bottom right'}/>
-        </Page>
-      } 
-      initialRoute={{
-        title: 'Root Page'
-      }}/>
-    )
+      <route.comp key={route.key} navigator={navigator} {...route.props}/>
+    );
   }
+
+  return (
+    <Navigator
+      initialRoute={{comp: HomePage, key: 'HomePage'}}
+      renderPage={renderPage}
+    />
+  )
 }
 
 export default MainPage;

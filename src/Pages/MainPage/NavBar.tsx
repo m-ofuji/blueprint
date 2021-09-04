@@ -1,9 +1,26 @@
-import { Toolbar} from 'react-onsenui';
+import { Toolbar, BackButton } from 'react-onsenui';
 
-const NavBar = ({ title }: {title: string}) => {
+const NavBar = ({
+    title, 
+    barTextColor, 
+    barBackgroundColor, 
+    hasBackButton
+  } : {
+    title :string, 
+    barTextColor: string, 
+    barBackgroundColor: string, 
+    hasBackButton: boolean
+  }
+  ) => {
   return (
-    <Toolbar style={{background: '#004898'}}>
-      <div style={{color: '#ffffff'}} className='center'>{title}</div>
+    hasBackButton ? 
+    <Toolbar style={{background: barBackgroundColor}}>
+      <div className='left'><BackButton>Back</BackButton></div>
+      <div className='center' style={{color: barTextColor}} >{title}</div>
+    </Toolbar>
+    :
+    <Toolbar style={{background: barBackgroundColor}}>
+      <div style={{color: barTextColor}} className='center'>{title}</div>
     </Toolbar>
   )
 }
