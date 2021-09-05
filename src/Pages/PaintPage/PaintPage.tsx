@@ -1,9 +1,8 @@
 import NavBar from '../MainPage/NavBar';
 import ons from 'onsenui'
-import { createRef, ChangeEvent } from 'react';
+import { createRef, ChangeEvent, useState } from 'react';
 import { Page, SpeedDial, Fab, Icon, SpeedDialItem } from 'react-onsenui';
-import { Stage, Layer, Rect, Circle, Image } from 'react-konva';
-import useImage from 'use-image';
+import { Stage, Layer, Image } from 'react-konva';
 
 const PaintPage = () => {
 
@@ -14,15 +13,8 @@ const PaintPage = () => {
     hasBackButton: true
   }
 
-  state:{
-
-  }
-
-  let imageE: HTMLImageElement | undefined
-
-  const DrawImage = (url: string) => {
-    [imageE] = useImage(url);
-  };
+  const [wallImage, updatewallImage] = useState(new window.Image());
+  const [imageHeight, updateImageHeight] = useState(0);
 
   const selectPicture = () => {
     const option = {
@@ -40,20 +32,20 @@ const PaintPage = () => {
   }
 
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
-if (event.target.files === null) {
+    if (event.target.files === null) {
       return
     }
     const file = event.target.files.item(0)
     if (file === null) {
       return
     }
-    var reader = new FileReader()
-    reader.readAsDataURL(file)
-    reader.onload = () => {
-      imageE = new window.Image();
-      imageE.src = reader.result as string;
-      // [imageE] = useImage(reader.result as string);
-      console.log(reader.result as string)
+
+    const dataURL = URL.createObjectURL(file);
+    const i = new window.Image();
+    i.src = dataURL;
+    updatewallImage(i);
+    i.onload = () => {
+      updateImageHeight(window.innerWidth * (i.naturalHeight / i.naturalWidth));  
     }
   }
 
@@ -61,9 +53,11 @@ if (event.target.files === null) {
     <Page onShow={selectPicture} renderToolbar={() => <NavBar {...param}/>}>
       <Stage width={window.innerWidth} height={window.innerHeight}>
         <Layer>
-          <Image x={0} y={0} image={imageE}/>
-          <Rect width={50} height={50} fill="red" />
-          <Circle x={200} y={200} stroke="black" radius={50} />
+          <Image 
+            style={'aspect-fit:'}  
+            width={window.innerWidth} height={imageHeight}
+            draggable image={wallImage}
+          />
         </Layer>
       </Stage>
       <SpeedDial position={'bottom right'}>
