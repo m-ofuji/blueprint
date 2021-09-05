@@ -2,7 +2,8 @@ import NavBar from '../MainPage/NavBar';
 import ons from 'onsenui'
 import { createRef, ChangeEvent } from 'react';
 import { Page, SpeedDial, Fab, Icon, SpeedDialItem } from 'react-onsenui';
-import { Stage, Layer, Rect, Circle } from 'react-konva';
+import { Stage, Layer, Rect, Circle, Image } from 'react-konva';
+import useImage from 'use-image';
 
 const PaintPage = () => {
 
@@ -13,6 +14,16 @@ const PaintPage = () => {
     hasBackButton: true
   }
 
+  state:{
+
+  }
+
+  let imageE: HTMLImageElement | undefined
+
+  const DrawImage = (url: string) => {
+    [imageE] = useImage(url);
+  };
+
   const selectPicture = () => {
     const option = {
       title:'壁画像選択', buttonLabels:['いいえ','はい']
@@ -20,7 +31,6 @@ const PaintPage = () => {
     ons.notification.confirm('壁の画像を選択してください。', {}).then(onAlertClose);
   }
 
-  // ref.current.onchange((a,b) => {});
   const ref = createRef<HTMLInputElement>()
 
   const onAlertClose = (index:HTMLElement) => {
@@ -40,6 +50,9 @@ if (event.target.files === null) {
     var reader = new FileReader()
     reader.readAsDataURL(file)
     reader.onload = () => {
+      imageE = new window.Image();
+      imageE.src = reader.result as string;
+      // [imageE] = useImage(reader.result as string);
       console.log(reader.result as string)
     }
   }
@@ -48,6 +61,7 @@ if (event.target.files === null) {
     <Page onShow={selectPicture} renderToolbar={() => <NavBar {...param}/>}>
       <Stage width={window.innerWidth} height={window.innerHeight}>
         <Layer>
+          <Image x={0} y={0} image={imageE}/>
           <Rect width={50} height={50} fill="red" />
           <Circle x={200} y={200} stroke="black" radius={50} />
         </Layer>
