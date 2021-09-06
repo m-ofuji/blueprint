@@ -14,7 +14,7 @@ const PaintPage = () => {
   }
 
   const [wallImage, updatewallImage] = useState(new window.Image());
-  const [imageHeight, updateImageHeight] = useState(0);
+  const [wallImageHeight, updatewallImageHeight] = useState(0);
 
   const selectPicture = () => {
     const option = {
@@ -45,7 +45,7 @@ const PaintPage = () => {
     i.src = dataURL;
     updatewallImage(i);
     i.onload = () => {
-      updateImageHeight(window.innerWidth * (i.naturalHeight / i.naturalWidth));  
+      updatewallImageHeight(window.innerWidth * (i.naturalHeight / i.naturalWidth));  
     }
   }
 
@@ -55,8 +55,8 @@ const PaintPage = () => {
         <Layer>
           <Image 
             style={'aspect-fit:'}  
-            width={window.innerWidth} height={imageHeight}
-            draggable image={wallImage}
+            width={window.innerWidth} height={wallImageHeight}
+            draggable image={wallImage} 
           />
         </Layer>
       </Stage>
