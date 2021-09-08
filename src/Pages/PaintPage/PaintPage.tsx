@@ -3,10 +3,7 @@ import ons from 'onsenui'
 import { createRef, ChangeEvent, useState } from 'react';
 import { Page, SpeedDial, Fab, Icon, SpeedDialItem } from 'react-onsenui';
 import { Stage, Layer, Image, Circle } from 'react-konva';
-
-const GreenCircle = (k:number) => {
-  return <Circle key={k} x={200 + k} y={100} radius={50} fill="green" />
-}
+import HoldCircle from './HoldCircle';
 
 const PaintPage = () => {
 
@@ -32,7 +29,7 @@ const PaintPage = () => {
 
   const ref = createRef<HTMLInputElement>()
 
-  const onAlertClose = (index:HTMLElement) => {
+  const onAlertClose = (index: HTMLElement) => {
     if (ref.current) {
       ref.current.click()
     }
@@ -66,9 +63,8 @@ const PaintPage = () => {
             draggable image={wallImage} 
           />
           {images.map((image) => {
-              return <GreenCircle {...image} />;
+              return <HoldCircle {...image} />;
           })}
-          {/* <Circle x={200} y={100} radius={50} fill="green" /> */}
         </Layer>
       </Stage>
       <SpeedDial position={'bottom right'}>
@@ -79,7 +75,6 @@ const PaintPage = () => {
         <SpeedDialItem > S </SpeedDialItem>
         <SpeedDialItem > G </SpeedDialItem>
         <SpeedDialItem onClick={() => {
-          console.log('aaa');
           setImages(images.concat([count++]));
         }}> F </SpeedDialItem>
       </SpeedDial>
