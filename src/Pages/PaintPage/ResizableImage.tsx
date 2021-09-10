@@ -8,8 +8,15 @@ function Comp() {
   return <div ref={ref}>foo</div>;
 }
 
+class RctParam {
+  shapeProps:any;
+  isSelected:boolean = false;
+  onSelect:KonvaEventObject<MouseEvent> | undefined;
+  onChange: any;
+}
+
 const Rectangle = ({ shapeProps, isSelected, onSelect, onChange }
-  :{shapeProps:any, isSelected:boolean, onSelect:KonvaEventObject<MouseEvent>, onChange:any}) => {
+  :RctParam) => {
   
   // ここを直す
   const shapeRef = React.useRef<any>();
