@@ -1,24 +1,21 @@
-import React, { LegacyRef } from 'react';
-import { render } from 'react-dom';
-import { KonvaEventObject } from 'konva/lib/Node';
-import { Stage, Layer, Rect, Transformer } from 'react-konva';
+import React from 'react';
+import { Image, Transformer } from 'react-konva';
 
-class RctParam {
+export class ResizableImageProps {
   shapeProps:any;
   isSelected:boolean = false;
   onSelect:any;
   onChange: any;
+  src: CanvasImageSource | undefined
 }
 
-const ResizableRectangle = ({ shapeProps, isSelected, onSelect, onChange } :RctParam) => {
-  
+export const ResizableImage = ({ shapeProps, isSelected, onSelect, onChange, src } :ResizableImageProps) => {
   // ここを直す
   const shapeRef = React.useRef<any>();
   const trRef = React.useRef<any>(null);
 
   React.useEffect(() => {
     if (isSelected) {
-      // we need to attach transformer manually
       trRef.current.nodes([shapeRef.current]);
       trRef.current.getLayer().batchDraw();
     }
@@ -26,7 +23,8 @@ const ResizableRectangle = ({ shapeProps, isSelected, onSelect, onChange } :RctP
 
   return (
     <React.Fragment>
-      <Rect
+      <Image
+        image={src}
         onClick={onSelect}
         onTap={onSelect}
         ref={shapeRef}
@@ -72,5 +70,3 @@ const ResizableRectangle = ({ shapeProps, isSelected, onSelect, onChange } :RctP
     </React.Fragment>
   );
 };
-
-export default ResizableRectangle;
