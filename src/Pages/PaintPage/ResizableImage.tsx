@@ -3,20 +3,14 @@ import { render } from 'react-dom';
 import { KonvaEventObject } from 'konva/lib/Node';
 import { Stage, Layer, Rect, Transformer } from 'react-konva';
 
-function Comp() {
-  const ref = React.useRef<HTMLDivElement>(null);
-  return <div ref={ref}>foo</div>;
-}
-
 class RctParam {
   shapeProps:any;
   isSelected:boolean = false;
-  onSelect:KonvaEventObject<MouseEvent> | undefined;
+  onSelect:any;
   onChange: any;
 }
 
-const Rectangle = ({ shapeProps, isSelected, onSelect, onChange }
-  :RctParam) => {
+const ResizableRectangle = ({ shapeProps, isSelected, onSelect, onChange } :RctParam) => {
   
   // ここを直す
   const shapeRef = React.useRef<any>();
@@ -46,10 +40,6 @@ const Rectangle = ({ shapeProps, isSelected, onSelect, onChange }
           });
         }}
         onTransformEnd={(e) => {
-          // transformer is changing scale of the node
-          // and NOT its width or height
-          // but in the store we have only width and height
-          // to match the data better we will reset scale on transform end
           const node = shapeRef.current;
 
           if (node == null) return;
@@ -57,14 +47,12 @@ const Rectangle = ({ shapeProps, isSelected, onSelect, onChange }
           const scaleX = node.scaleX();
           const scaleY = node.scaleY();
 
-          // we will reset it back
           node.scaleX(1);
           node.scaleY(1);
           onChange({
             ...shapeProps,
             x: node.x(),
             y: node.y(),
-            // set minimal value
             width: Math.max(5, node.width() * scaleX),
             height: Math.max(node.height() * scaleY),
           });
@@ -74,7 +62,6 @@ const Rectangle = ({ shapeProps, isSelected, onSelect, onChange }
         <Transformer
           ref={trRef}
           boundBoxFunc={(oldBox, newBox) => {
-            // limit resize
             if (newBox.width < 5 || newBox.height < 5) {
               return oldBox;
             }
@@ -85,3 +72,5 @@ const Rectangle = ({ shapeProps, isSelected, onSelect, onChange }
     </React.Fragment>
   );
 };
+
+export default ResizableRectangle;
