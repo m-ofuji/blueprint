@@ -18,6 +18,7 @@ const PaintPage = () => {
   const [wallImage, updatewallImage] = useState<CanvasImageSource>(new window.Image());
   const [wallImageHeight, updatewallImageHeight] = useState<number>(0);
   const [images, setImages] = useState<number[] | null>([]);
+  const [stage, setStage] = useState<typeof Stage | null>(null);
 
   const [rectangles, setRectangles] = useState<any>(null);
 
@@ -102,6 +103,9 @@ const PaintPage = () => {
           setImages(images != null && images != undefined ? images.concat([count++]) : null);
         }}> F </SpeedDialItem>
       </SpeedDial>
+      <Fab  onClick={()=> {  }} position={'bottom left'}>
+        <Icon icon='fa-plus' size={26} fixedWidth={false} />
+      </Fab>
       <input
         onChange={onChange}
         ref={ref}

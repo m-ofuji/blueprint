@@ -58,6 +58,13 @@ export const ResizableImage = ({ shapeProps, isSelected, onSelect, onChange, src
       />
       {isSelected && (
         <Transformer
+          keepRatio
+          enabledAnchors={[
+            'top-left',
+            'top-right',
+            'bottom-left',
+            'bottom-rigt'
+          ]}
           ref={trRef}
           boundBoxFunc={(oldBox, newBox) => {
             if (newBox.width < 5 || newBox.height < 5) {
