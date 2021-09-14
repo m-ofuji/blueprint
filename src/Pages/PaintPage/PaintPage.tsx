@@ -1,10 +1,11 @@
 import NavBar from '../MainPage/NavBar';
 import ons from 'onsenui'
-import { createRef, ChangeEvent, useState } from 'react';
+import { createRef, ChangeEvent, useState, useRef } from 'react';
 import { Page, SpeedDial, Fab, Icon, SpeedDialItem } from 'react-onsenui';
 import { Stage, Layer, Image, Circle } from 'react-konva';
 import HoldCircle from './HoldCircle';
 import { ResizableImage, ResizableImageProps } from './ResizableImage';
+import { downloadURI } from './DownloadUri';
 
 const PaintPage = () => {
 
@@ -18,7 +19,7 @@ const PaintPage = () => {
   const [wallImage, updatewallImage] = useState<CanvasImageSource>(new window.Image());
   const [wallImageHeight, updatewallImageHeight] = useState<number>(0);
   const [images, setImages] = useState<number[] | null>([]);
-  const [stage, setStage] = useState<typeof Stage | null>(null);
+  const stage = useRef<any>(null);
 
   const [rectangles, setRectangles] = useState<any>(null);
 
@@ -72,9 +73,23 @@ const PaintPage = () => {
     }
   };
 
+  const handleExport = () => {
+    console.log(stage);
+    if (stage == null) return;
+
+    const uri = stage.current.toDataURL();
+    console.log(uri);
+    downloadURI(uri, "topo.png")
+  };
+
   return (
     <Page onShow={selectPicture} renderToolbar={() => <NavBar {...param}/>}>
-      <Stage width={window.innerWidth} height={window.innerHeight} onMouseDown={checkDeselect} onTouchStart={checkDeselect}>
+      <Stage 
+        width={window.innerWidth} 
+        height={window.innerHeight} 
+        onMouseDown={checkDeselect} 
+        onTouchStart={checkDeselect}
+        ref={stage}>
         <Layer>
           <ResizableImage
             src={wallImage}
@@ -103,7 +118,7 @@ const PaintPage = () => {
           setImages(images != null && images != undefined ? images.concat([count++]) : null);
         }}> F </SpeedDialItem>
       </SpeedDial>
-      <Fab  onClick={()=> {  }} position={'bottom left'}>
+      <Fab  onClick={handleExport} position={'bottom left'}>
         <Icon icon='fa-plus' size={26} fixedWidth={false} />
       </Fab>
       <input
