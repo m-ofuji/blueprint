@@ -2,7 +2,7 @@ import NavBar from '../MainPage/NavBar';
 import ons from 'onsenui'
 import { createRef, ChangeEvent, useState, useRef } from 'react';
 import { Page, SpeedDial, Fab, Icon, SpeedDialItem } from 'react-onsenui';
-import { Stage, Layer, Image, Circle } from 'react-konva';
+import { Stage, Layer, Group } from 'react-konva';
 import HoldCircle from './HoldCircle';
 import { ResizableImage, ResizableImageProps } from './ResizableImage';
 import { downloadURI } from './DownloadUri';
@@ -91,20 +91,22 @@ const PaintPage = () => {
         onTouchStart={checkDeselect}
         ref={stage}>
         <Layer>
-          <ResizableImage
-            src={wallImage}
-            key={'wallImage'}
-            shapeProps={rectangles}
-            isSelected={'rect1' === selectedId}
-            onSelect={() => {
-              selectShape(initialRectangles.id);
-            }}
-            onChange={(newAttrs: any) => {
-              initialRectangles = newAttrs;
-              setRectangles(initialRectangles);
-            }}
-          />
-          {images?.map((image, i) => <HoldCircle key={i} {...image} />)}
+          <Group draggable>
+            <ResizableImage
+              src={wallImage}
+              key={'wallImage'}
+              shapeProps={rectangles}
+              isSelected={'rect1' === selectedId}
+              onSelect={() => {
+                selectShape(initialRectangles.id);
+              }}
+              onChange={(newAttrs: any) => {
+                initialRectangles = newAttrs;
+                setRectangles(initialRectangles);
+              }}
+            />
+            {images?.map((image, i) => <HoldCircle key={i} {...image} />)}
+          </Group>
         </Layer>
       </Stage>
       <SpeedDial position={'bottom right'}>
