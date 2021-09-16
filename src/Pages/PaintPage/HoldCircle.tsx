@@ -1,4 +1,4 @@
-import { Circle, Shape } from 'react-konva';
+import { Circle } from 'react-konva';
 
 const HoldCircle = (key: number) => {
   return <Circle
@@ -9,6 +9,7 @@ const HoldCircle = (key: number) => {
     strokeWidth={5}
     x={window.innerWidth / 2}
     y={(window.innerHeight / 2) - 100}
+    draggable={false}
   />
 }
 

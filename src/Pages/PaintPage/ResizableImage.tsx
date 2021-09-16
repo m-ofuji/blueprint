@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, Transformer } from 'react-konva';
+import { Image, Rect, Transformer } from 'react-konva';
 
 export class ResizableImageProps {
   shapeProps:any;

@@ -2,7 +2,7 @@ import NavBar from '../MainPage/NavBar';
 import ons from 'onsenui'
 import { createRef, ChangeEvent, useState, useRef } from 'react';
 import { Page, SpeedDial, Fab, Icon, SpeedDialItem } from 'react-onsenui';
-import { Stage, Layer, Group } from 'react-konva';
+import { Stage, Layer, Group, Rect } from 'react-konva';
 import HoldCircle from './HoldCircle';
 import { ResizableImage, ResizableImageProps } from './ResizableImage';
 import { downloadURI } from './DownloadUri';
@@ -92,6 +92,34 @@ const PaintPage = () => {
         ref={stage}>
         <Layer>
           <Group draggable>
+            <Rect
+              fill={'#ffffff'}
+              x={500}
+              y={500}
+              width={500}
+              height={500}
+            />
+            <Rect
+              fill={'#000000'}
+
+              x={600}
+              y={600}
+              width={50}
+              height={50}
+            />
+            <Rect
+              fill={'#000000'}
+
+              x={700}
+              y={700}
+              width={50}
+              height={50}
+            />
+
+
+          </Group>
+          <Group draggable>
+            <HoldCircle {...1}/>
             <ResizableImage
               src={wallImage}
               key={'wallImage'}
@@ -120,7 +148,7 @@ const PaintPage = () => {
           setImages(images != null && images != undefined ? images.concat([count++]) : null);
         }}> F </SpeedDialItem>
       </SpeedDial>
-      <Fab  onClick={handleExport} position={'bottom left'}>
+      <Fab onClick={handleExport} position={'bottom left'}>
         <Icon icon='fa-plus' size={26} fixedWidth={false} />
       </Fab>
       <input
