@@ -6,6 +6,7 @@ import { Stage, Layer, Group, Rect } from 'react-konva';
 import HoldCircle from './HoldCircle';
 import { ResizableImage, ResizableImageProps } from './ResizableImage';
 import { downloadURI } from './DownloadUri';
+import { HoldFloatMenu } from './HoldFloatMenu';
 
 const PaintPage = () => {
 
@@ -101,7 +102,6 @@ const PaintPage = () => {
             />
             <Rect
               fill={'#000000'}
-
               x={600}
               y={600}
               width={50}
@@ -109,13 +109,11 @@ const PaintPage = () => {
             />
             <Rect
               fill={'#000000'}
-
               x={700}
               y={700}
               width={50}
               height={50}
             />
-
 
           </Group>
           <Group draggable>
@@ -137,17 +135,15 @@ const PaintPage = () => {
           </Group>
         </Layer>
       </Stage>
-      <SpeedDial position={'bottom right'}>
-        <Fab >
-          <Icon icon='fa-plus' size={26} fixedWidth={false} />
-        </Fab>
-        <SpeedDialItem > ○ </SpeedDialItem>
-        <SpeedDialItem > S </SpeedDialItem>
-        <SpeedDialItem > G </SpeedDialItem>
-        <SpeedDialItem onClick={() => {
+      <HoldFloatMenu
+        position={'bottom right'}
+        onNormalClick={() => {
           setImages(images != null && images != undefined ? images.concat([count++]) : null);
-        }}> F </SpeedDialItem>
-      </SpeedDial>
+        }}
+        onFootClick={() => {}}
+        onStartClick={() => {}}
+        onGoalClick={() => {}}
+      />
       <Fab onClick={handleExport} position={'bottom left'}>
         <Icon icon='fa-plus' size={26} fixedWidth={false} />
       </Fab>
