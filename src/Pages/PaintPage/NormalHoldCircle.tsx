@@ -1,8 +1,12 @@
 import { Circle } from 'react-konva';
 
-const HoldCircle = (key: number) => {
+export type NormalHoldCircleProps = {
+  key: number
+}
+
+export const NormalHoldCircle = (props: NormalHoldCircleProps) => {
   return <Circle
-    key={key}
+    key={props.key}
     fill="#00000000"
     stroke="yellow"
     radius={40}
@@ -12,5 +16,3 @@ const HoldCircle = (key: number) => {
     draggable={false}
   />
 }
-
-export default HoldCircle;

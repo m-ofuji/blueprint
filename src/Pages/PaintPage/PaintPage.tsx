@@ -1,12 +1,13 @@
 import NavBar from '../MainPage/NavBar';
 import ons from 'onsenui'
 import { createRef, ChangeEvent, useState, useRef } from 'react';
-import { Page, SpeedDial, Fab, Icon, SpeedDialItem } from 'react-onsenui';
+import { Page, Fab, Icon } from 'react-onsenui';
 import { Stage, Layer, Group, Rect } from 'react-konva';
-import HoldCircle from './HoldCircle';
-import { ResizableImage, ResizableImageProps } from './ResizableImage';
+import { NormalHoldCircle, NormalHoldCircleProps } from './NormalHoldCircle';
+import { ResizableImage } from './ResizableImage';
 import { downloadURI } from './DownloadUri';
 import { HoldFloatMenu } from './HoldFloatMenu';
+import { JsxAttributeLike } from 'typescript';
 
 const PaintPage = () => {
 
@@ -19,10 +20,12 @@ const PaintPage = () => {
 
   const [wallImage, updatewallImage] = useState<CanvasImageSource>(new window.Image());
   const [wallImageHeight, updatewallImageHeight] = useState<number>(0);
-  const [images, setImages] = useState<number[] | null>([]);
+  // const [images, setImages] = useState<number[] | null>([]);
+  const [normalHolds, setNormalHolds] = useState<NormalHoldCircleProps[] | null>([]);
   const stage = useRef<any>(null);
-
+  const [selectedId, selectShape] = useState<string | null>(null);
   const [rectangles, setRectangles] = useState<any>(null);
+  const ref = createRef<HTMLInputElement>();
 
   let initialRectangles = {
     x: window.innerWidth / 2,
@@ -32,8 +35,6 @@ const PaintPage = () => {
     id: 'rect1',
   };
 
-  const [selectedId, selectShape] = useState<string | null>(null);
-
   let count = 0;
 
   const selectPicture = () => {
@@ -42,8 +43,6 @@ const PaintPage = () => {
     }
     ons.notification.confirm('壁の画像を選択してください。', {}).then(onAlertClose);
   }
-
-  const ref = createRef<HTMLInputElement>()
 
   const onAlertClose = (index: HTMLElement) => {
     if (ref.current) {
@@ -79,7 +78,6 @@ const PaintPage = () => {
     if (stage == null) return;
 
     const uri = stage.current.toDataURL();
-    console.log(uri);
     downloadURI(uri, "topo.png")
   };
 
@@ -114,10 +112,8 @@ const PaintPage = () => {
               width={50}
               height={50}
             />
-
           </Group>
           <Group draggable>
-            <HoldCircle {...1}/>
             <ResizableImage
               src={wallImage}
               key={'wallImage'}
@@ -131,15 +127,14 @@ const PaintPage = () => {
                 setRectangles(initialRectangles);
               }}
             />
-            {images?.map((image, i) => <HoldCircle key={i} {...image} />)}
+            {normalHolds?.map((props, i) => <NormalHoldCircle {...props} />)}
+            {/* {images.map()} */}
           </Group>
         </Layer>
       </Stage>
       <HoldFloatMenu
         position={'bottom right'}
-        onNormalClick={() => {
-          setImages(images != null && images != undefined ? images.concat([count++]) : null);
-        }}
+        onNormalClick={() => setNormalHolds((i) => normalHolds?.concat([{key:normalHolds.length++}]) ?? null)}
         onFootClick={() => {}}
         onStartClick={() => {}}
         onGoalClick={() => {}}
