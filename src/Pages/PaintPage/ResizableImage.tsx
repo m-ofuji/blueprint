@@ -1,15 +1,16 @@
+import { group, groupEnd } from 'console';
 import React from 'react';
-import { Image, Rect, Transformer } from 'react-konva';
+import { Image, Rect, Transformer, Group } from 'react-konva';
 
-export class ResizableImageProps {
+export type ResizableImageProps = {
   shapeProps:any;
-  isSelected:boolean = false;
+  isSelected:boolean;
   onSelect:any;
   onChange: any;
   src: CanvasImageSource | undefined
 }
 
-export const ResizableImage = ({ shapeProps, isSelected, onSelect, onChange, src } :ResizableImageProps) => {
+export const ResizableImage = ({ shapeProps, isSelected, onSelect, onChange, src } : ResizableImageProps) => {
   // ここを直す
   const shapeRef = React.useRef<any>();
   const trRef = React.useRef<any>(null);
@@ -22,7 +23,7 @@ export const ResizableImage = ({ shapeProps, isSelected, onSelect, onChange, src
   }, [isSelected]);
 
   return (
-    <React.Fragment>
+    <Group>
       <Image
         image={src}
         onClick={onSelect}
@@ -57,13 +58,13 @@ export const ResizableImage = ({ shapeProps, isSelected, onSelect, onChange, src
         }}
       />
       {isSelected && (
-        <Transformer
-          keepRatio
-          enabledAnchors={[
+         <Transformer
+           keepRatio
+           enabledAnchors={[
             'top-left',
             'top-right',
             'bottom-left',
-            'bottom-rigt'
+            'bottom-right'
           ]}
           ref={trRef}
           boundBoxFunc={(oldBox, newBox) => {
@@ -74,6 +75,6 @@ export const ResizableImage = ({ shapeProps, isSelected, onSelect, onChange, src
           }}
         />
       )}
-    </React.Fragment>
+    </Group>
   );
 };

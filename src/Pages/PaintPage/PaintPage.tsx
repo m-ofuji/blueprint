@@ -2,12 +2,13 @@ import NavBar from '../MainPage/NavBar';
 import ons from 'onsenui'
 import { createRef, ChangeEvent, useState, useRef } from 'react';
 import { Page, Fab, Icon } from 'react-onsenui';
-import { Stage, Layer, Group, Rect } from 'react-konva';
+import { Stage, Layer, Group, Rect, Image } from 'react-konva';
 import { NormalHoldCircle, NormalHoldCircleProps } from './NormalHoldCircle';
-import { ResizableImage } from './ResizableImage';
+import { ResizableImage, ResizableImageProps } from './ResizableImage';
 import { downloadURI } from './DownloadUri';
 import { HoldFloatMenu } from './HoldFloatMenu';
 import { JsxAttributeLike } from 'typescript';
+import Konva from 'konva';
 
 const PaintPage = () => {
 
@@ -18,10 +19,10 @@ const PaintPage = () => {
     hasBackButton: true
   }
 
-  const [wallImage, updatewallImage] = useState<CanvasImageSource>(new window.Image());
+  const [wallImage, setWallImage] = useState<CanvasImageSource | null>(null);
   const [wallImageHeight, updatewallImageHeight] = useState<number>(0);
-  // const [images, setImages] = useState<number[] | null>([]);
   const [normalHolds, setNormalHolds] = useState<NormalHoldCircleProps[] | null>([]);
+  // const [resizableImages, setResizableImages] = useState<ResizableImageProps[]>([]);
   const stage = useRef<any>(null);
   const [selectedId, selectShape] = useState<string | null>(null);
   const [rectangles, setRectangles] = useState<any>(null);
@@ -30,22 +31,20 @@ const PaintPage = () => {
   let initialRectangles = {
     x: window.innerWidth / 2,
     y: window.innerHeight / 2,
-    width: wallImage.width,
-    height: wallImage.height,
+    width: wallImage?.width,
+    height: wallImage?.height,
     id: 'rect1',
   };
-
-  let count = 0;
 
   const selectPicture = () => {
     const option = {
       title:'壁画像選択', buttonLabels:['いいえ','はい']
     }
-    ons.notification.confirm('壁の画像を選択してください。', {}).then(onAlertClose);
+    ons.notification.confirm('壁の画像を選択してください。', option).then(onAlertClose);
   }
 
   const onAlertClose = (index: HTMLElement) => {
-    if (ref.current) {
+    if (ref.current && Number(index) === 1) {
       ref.current.click()
     }
   }
@@ -60,10 +59,23 @@ const PaintPage = () => {
     const dataURL = URL.createObjectURL(file);
     const i = new window.Image();
     i.src = dataURL;
-    updatewallImage(i);
+    setWallImage(i);
     i.onload = () => {
       updatewallImageHeight(window.innerWidth * (i.naturalHeight / i.naturalWidth));  
     }
+
+    // if (wallImage === null) return;
+    console.log(wallImage);
+    // setResizableImages([{
+    //   src: i ?? undefined,
+    //   shapeProps: rectangles,
+    //   isSelected : 'rect1' === selectedId,
+    //   onSelect: () => selectShape(initialRectangles.id),
+    //   onChange: (newAttrs: any) => {
+    //     initialRectangles = newAttrs;
+    //     setRectangles(initialRectangles);
+    //   }
+    // }]);
   }
 
   const checkDeselect = (e:any) => {
@@ -74,12 +86,16 @@ const PaintPage = () => {
   };
 
   const handleExport = () => {
-    console.log(stage);
     if (stage == null) return;
 
     const uri = stage.current.toDataURL();
     downloadURI(uri, "topo.png")
   };
+
+  const imagesource = new window.Image(); 
+  imagesource.src = 'https://konvajs.org/assets/lion.png';
+  imagesource.width=500;
+  imagesource.height=500;
 
   return (
     <Page onShow={selectPicture} renderToolbar={() => <NavBar {...param}/>}>
@@ -93,10 +109,15 @@ const PaintPage = () => {
           <Group draggable>
             <Rect
               fill={'#ffffff'}
-              x={500}
+              x={800}
               y={500}
               width={500}
               height={500}
+            />
+            <Image 
+              x={500}
+              y={500}
+              image={imagesource}
             />
             <Rect
               fill={'#000000'}
@@ -115,7 +136,7 @@ const PaintPage = () => {
           </Group>
           <Group draggable>
             <ResizableImage
-              src={wallImage}
+              src={wallImage ?? undefined}
               key={'wallImage'}
               shapeProps={rectangles}
               isSelected={'rect1' === selectedId}
@@ -127,9 +148,11 @@ const PaintPage = () => {
                 setRectangles(initialRectangles);
               }}
             />
+            {/* {<ResizableImage {...resizableImage} />} */}
+            {/* {resizableImages?.map((props, i) => <ResizableImage key={'a'} {...props} />)} */}
             {normalHolds?.map((props, i) => <NormalHoldCircle {...props} />)}
-            {/* {images.map()} */}
           </Group>
+          {/* {normalHolds?.map((props, i) => <NormalHoldCircle {...props} />)} */}
         </Layer>
       </Stage>
       <HoldFloatMenu
