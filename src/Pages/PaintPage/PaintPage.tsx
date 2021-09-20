@@ -2,11 +2,12 @@ import NavBar from '../MainPage/NavBar';
 import ons from 'onsenui'
 import { createRef, ChangeEvent, useState, useRef } from 'react';
 import { Button, Page, Fab, Icon } from 'react-onsenui';
-import { Stage, Layer, Group, Rect, Image } from 'react-konva';
+import { Stage, Layer, Group, Circle, Rect, Image } from 'react-konva';
 import { NormalHoldCircle, NormalHoldCircleProps } from './NormalHoldCircle';
 import { ResizableImage, ResizableImageProps } from './ResizableImage';
 import { downloadURI } from './DownloadUri';
 import { HoldFloatMenu } from './HoldFloatMenu';
+import { ModuleResolutionKind } from 'typescript';
 
 const PaintPage = () => {
 
@@ -19,10 +20,10 @@ const PaintPage = () => {
 
   const [wallImage, setWallImage] = useState<CanvasImageSource | null>(null);
   const [wallImageHeight, updatewallImageHeight] = useState<number>(0);
-  const [normalHolds, setNormalHolds] = useState<NormalHoldCircleProps[] | null>([]);
+  // const [normalHolds, setNormalHolds] = useState<NormalHoldCircleProps[] | null>([]);
   // const [resizableImages, setResizableImages] = useState<ResizableImageProps[]>([]);
   const stage = useRef<any>(null);
-  const holdCircleRef = useRef<JSX.Element>(null);
+  const resizableImage = useRef<any>(null);
   // const [holdCircle, useHoldCircle] = useState<JSX.Element | null>(null);
   const [selectedId, selectShape] = useState<string | null>(null);
   const [rectangles, setRectangles] = useState<any>(null);
@@ -85,6 +86,7 @@ const PaintPage = () => {
   imagesource.height=500;
 
   const holdCirclePotision = {
+    keyNum:0,
     x: window.innerWidth / 2,
     y: window.innerHeight / 2
   }
@@ -100,32 +102,57 @@ const PaintPage = () => {
         <Layer>
           <Group draggable>
             <ResizableImage
+              ref={resizableImage}
               src={wallImage ?? undefined}
               key={'wallImage'}
               shapeProps={rectangles}
               isSelected={'rect1' === selectedId}
-              onSelect={() => {
-                selectShape(initialRectangles.id);
-              }}
+              onSelect={() => selectShape(initialRectangles.id)}
               onChange={(newAttrs: any) => {
                 initialRectangles = newAttrs;
                 setRectangles(initialRectangles);
               }}
-              onNormalHoldAdded={holdCircleRef.current?.props}
             />
+            {/* <Circle
+              fill="#00000000"
+              stroke="blue"
+              radius={40}
+              strokeWidth={5}
+              x={window.innerWidth / 2}
+              y={window.innerHeight / 2}
+              draggable={false}
+            /> */}
             {/* {<ResizableImage {...resizableImage} />} */}
             {/* {resizableImages?.map((props, i) => <ResizableImage key={'a'} {...props} />)} */}
-            {normalHolds?.map((props, i) => <NormalHoldCircle ref={holdCircleRef} {...props} />)}
+            {/* {normalHolds?.map((props, i) => <NormalHoldCircle {...props} />)} */}
           </Group>
+          <Circle
+              fill="#00000000"
+              stroke="blue"
+              radius={40}
+              strokeWidth={5}
+              x={window.innerWidth / 2}
+              y={window.innerHeight / 2}
+              draggable={false}
+            />
           {/* {normalHolds?.map((props, i) => <NormalHoldCircle {...props} />)} */}
         </Layer>
       </Stage>
-      <div className={'button-center'}>
-        <Button modifier='material'>決定</Button>
-      </div>
+      {/* <div className={'button-center'}>
+        <Button 
+          modifier='material'
+          onClick={() => {
+            if (normalHolds === null) return;
+            resizableImage.current.useHold(normalHolds[normalHolds.length - 1]);
+          }}>
+          決定
+        </Button>
+      </div> */}
       <HoldFloatMenu
         position={'bottom right'}
-        onNormalClick={() => setNormalHolds(i => normalHolds?.concat([holdCirclePotision]) ?? null)}
+        // onNormalClick={() => setNormalHolds(i => normalHolds?.concat([{keyNum:i?.length ?? 0, ...holdCirclePotision}]) ?? null)}
+        // onNormalClick={() => setNormalHolds(i => normalHolds?.concat([holdCirclePotision]) ?? null)}
+        onNormalClick={() => resizableImage.current.useHold()}
         onFootClick={() => {}}
         onStartClick={() => {}}
         onGoalClick={() => {}}

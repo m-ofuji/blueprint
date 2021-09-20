@@ -3,13 +3,14 @@
 import { Circle } from 'react-konva';
 
 export type NormalHoldCircleProps = {
+  // key:number,
   x: number,
   y: number
 }
 
-export const NormalHoldCircle = (ref:any, props: NormalHoldCircleProps) => {
+export const NormalHoldCircle = (props: NormalHoldCircleProps) => {
   return <Circle
-    ref={ref}
+    // key={props.key}
     fill="#00000000"
     stroke="yellow"
     radius={40}

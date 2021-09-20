@@ -2,49 +2,62 @@ import { group, groupEnd } from 'console';
 import React from 'react';
 import { Image, Rect, Transformer, Group } from 'react-konva';
 import { NormalHoldCircleProps, NormalHoldCircle } from './NormalHoldCircle';
+import { useImperativeHandle, forwardRef } from 'react';
 
 export type ResizableImageProps = {
+  ref?: React.ForwardedRef<HTMLInputElement>;
   shapeProps:any;
   isSelected:boolean;
   onSelect:any;
   onChange: any;
-  onNormalHoldAdded: any
   src: CanvasImageSource | undefined
 }
 
-export const ResizableImage = ({ shapeProps, isSelected, onSelect, onChange, onNormalHoldAdded, src } : ResizableImageProps) => {
+// export const ResizableImage = ({shapeProps, isSelected, onSelect, onChange, src } : ResizableImageProps) => {
+let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
+
   // ここを直す 
   const shapeRef = React.useRef<any>();
   const trRef = React.useRef<any>(null);
-  const rectRef = React.useRef<any>(null);
   const [holds, useHolds] = React.useState<NormalHoldCircleProps[]>([]);
 
-  React.useEffect(() => {
-    useHolds([onNormalHoldAdded]);
-    // if (isSelected) {
-    //   trRef.current.nodes([shapeRef.current, rectRef.current]);
-    //   trRef.current.getLayer().batchDraw();
-    // }
-  }, [onNormalHoldAdded]);
+  // const useHold = (props: NormalHoldCircleProps) => {
+  //   useHolds(holds.concat([props]));
+  // }
+
+  useImperativeHandle(ref, () => ({
+    useHold: () => {
+      const normalHold = {
+        key: holds.length++,
+        x: window.innerWidth / 2,
+        y: window.innerHeight / 2
+      }
+      console.log(holds.length);
+      useHolds(holds.concat([normalHold]));
+    }
+  }));
 
   React.useEffect(() => {
-    if (isSelected) {
-      trRef.current.nodes([shapeRef.current, rectRef.current]);
+    if (props.isSelected) {
+      trRef.current.nodes([shapeRef.current]);
       trRef.current.getLayer().batchDraw();
     }
-  }, [isSelected]);
+  }, [props.isSelected]);
 
   return (
     <Group>
       <Image
-        image={src}
-        onClick={onSelect}
-        onTap={onSelect}
+        // image={src}
+        // onClick={onSelect}
+        // onTap={onSelect}
+        image={props.src}
+        onClick={props.onSelect}
+        onTap={props.onSelect}
         ref={shapeRef}
-        {...shapeProps}
+        {...props.shapeProps}
         onDragEnd={(e) => {
-          onChange({
-            ...shapeProps,
+          props.onChange({
+            ...props.shapeProps,
             x: e.target.x(),
             y: e.target.y(),
           });
@@ -59,8 +72,10 @@ export const ResizableImage = ({ shapeProps, isSelected, onSelect, onChange, onN
 
           node.scaleX(1);
           node.scaleY(1);
-          onChange({
-            ...shapeProps,
+          // onChange({
+          // ...shapeProps,
+          props.onChange({
+            ...props.shapeProps,
             x: node.x(),
             y: node.y(),
             width: Math.max(5, node.width() * scaleX),
@@ -68,8 +83,9 @@ export const ResizableImage = ({ shapeProps, isSelected, onSelect, onChange, onN
           });
         }}
       />
-      {holds.map(() => <NormalHoldCircle />)}
-      {isSelected && (
+      {holds.map((props, i) => <NormalHoldCircle {...props}/>)}
+      {/* {isSelected && ( */}
+      {props.isSelected && (
         <Transformer
           keepRatio
           enabledAnchors={[
@@ -90,3 +106,5 @@ export const ResizableImage = ({ shapeProps, isSelected, onSelect, onChange, onN
     </Group>
   );
 };
+
+export const ResizableImage = forwardRef(ResizableImageBase)
