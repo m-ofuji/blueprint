@@ -1,23 +1,35 @@
 import { group, groupEnd } from 'console';
 import React from 'react';
 import { Image, Rect, Transformer, Group } from 'react-konva';
+import { NormalHoldCircleProps, NormalHoldCircle } from './NormalHoldCircle';
 
 export type ResizableImageProps = {
   shapeProps:any;
   isSelected:boolean;
   onSelect:any;
   onChange: any;
+  onNormalHoldAdded: any
   src: CanvasImageSource | undefined
 }
 
-export const ResizableImage = ({ shapeProps, isSelected, onSelect, onChange, src } : ResizableImageProps) => {
-  // ここを直す
+export const ResizableImage = ({ shapeProps, isSelected, onSelect, onChange, onNormalHoldAdded, src } : ResizableImageProps) => {
+  // ここを直す 
   const shapeRef = React.useRef<any>();
   const trRef = React.useRef<any>(null);
+  const rectRef = React.useRef<any>(null);
+  const [holds, useHolds] = React.useState<NormalHoldCircleProps[]>([]);
+
+  React.useEffect(() => {
+    useHolds([onNormalHoldAdded]);
+    // if (isSelected) {
+    //   trRef.current.nodes([shapeRef.current, rectRef.current]);
+    //   trRef.current.getLayer().batchDraw();
+    // }
+  }, [onNormalHoldAdded]);
 
   React.useEffect(() => {
     if (isSelected) {
-      trRef.current.nodes([shapeRef.current]);
+      trRef.current.nodes([shapeRef.current, rectRef.current]);
       trRef.current.getLayer().batchDraw();
     }
   }, [isSelected]);
@@ -30,7 +42,6 @@ export const ResizableImage = ({ shapeProps, isSelected, onSelect, onChange, src
         onTap={onSelect}
         ref={shapeRef}
         {...shapeProps}
-        draggable
         onDragEnd={(e) => {
           onChange({
             ...shapeProps,
@@ -57,10 +68,11 @@ export const ResizableImage = ({ shapeProps, isSelected, onSelect, onChange, src
           });
         }}
       />
+      {holds.map(() => <NormalHoldCircle />)}
       {isSelected && (
-         <Transformer
-           keepRatio
-           enabledAnchors={[
+        <Transformer
+          keepRatio
+          enabledAnchors={[
             'top-left',
             'top-right',
             'bottom-left',
