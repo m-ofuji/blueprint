@@ -1,5 +1,5 @@
 import { group, groupEnd } from 'console';
-import React from 'react';
+import React, { createRef, useRef } from 'react';
 import { Image, Rect, Transformer, Group } from 'react-konva';
 import { NormalHoldCircleProps, NormalHoldCircle } from './NormalHoldCircle';
 import { useImperativeHandle, forwardRef } from 'react';
@@ -16,8 +16,17 @@ export type ResizableImageProps = {
 // export const ResizableImage = ({shapeProps, isSelected, onSelect, onChange, src } : ResizableImageProps) => {
 let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
 
+  const item = [
+    { x: window.innerWidth / 2, y: window.innerHeight / 2 },
+    { x: window.innerWidth / 2 + 20, y: window.innerHeight / 2 + 20},
+    { x: window.innerWidth / 2 + 40, y: window.innerHeight / 2 + 40},
+  ];
+
   // ここを直す 
   const shapeRef = React.useRef<any>();
+  // const circleRefs = item.map(() => createRef<any>());
+  const circleRefs = useRef(item.map(() => createRef<any>()))
+  console.log(circleRefs);
   const trRef = React.useRef<any>(null);
   const [holds, useHolds] = React.useState<NormalHoldCircleProps[]>([]);
 
@@ -34,10 +43,15 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
       }
       console.log(holds.length);
       useHolds(holds.concat([normalHold]));
+      // circleRef = holds.map(() => React.useRef<any>());
     }
   }));
 
   React.useEffect(() => {
+    console.log(circleRefs);
+    console.log(shapeRef)
+    if (circleRefs == undefined) return;
+
     if (props.isSelected) {
       trRef.current.nodes([shapeRef.current]);
       trRef.current.getLayer().batchDraw();
@@ -83,7 +97,10 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
           });
         }}
       />
-      {holds.map((props, i) => <NormalHoldCircle {...props}/>)}
+      {item.map((props, i) => <NormalHoldCircle ref={circleRefs.current[i]} {...props}/>)}
+      {/* <NormalHoldCircle ref={circleRef[i]} {...props}/>
+      <NormalHoldCircle ref={circleRef[i]} {...props}/> */}
+      {/* {holds.map((props, i) => <NormalHoldCircle ref={circleRefs[i]} {...props}/>)} */}
       {/* {isSelected && ( */}
       {props.isSelected && (
         <Transformer
