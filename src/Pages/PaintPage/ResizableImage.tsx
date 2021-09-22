@@ -24,9 +24,11 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
 
   // ここを直す 
   const shapeRef = React.useRef<any>();
-  // const circleRefs = item.map(() => createRef<any>());
-  const circleRefs = useRef(item.map(() => createRef<any>()))
-  console.log(circleRefs);
+  const circleRefs = useRef(item.map(() => createRef<any>()));
+  // const circleRefs = useRef(holds.map(() => createRef<any>()))
+  // const [cir, useCir] = React.useState<React.MutableRefObject<React.RefObject<any>[]>>();
+
+  // console.log(circleRefs);
   const trRef = React.useRef<any>(null);
   const [holds, useHolds] = React.useState<NormalHoldCircleProps[]>([]);
 
@@ -38,7 +40,7 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
     useHold: () => {
       const normalHold = {
         key: holds.length++,
-        x: window.innerWidth / 2,
+        x: window.innerWidth / 2 + holds.length *10,
         y: window.innerHeight / 2
       }
       console.log(holds.length);
@@ -53,7 +55,7 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
     if (circleRefs == undefined) return;
 
     if (props.isSelected) {
-      trRef.current.nodes([shapeRef.current]);
+      trRef.current.nodes([shapeRef.current].concat(circleRefs.current.map(x => x.current)));
       trRef.current.getLayer().batchDraw();
     }
   }, [props.isSelected]);
@@ -61,9 +63,6 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
   return (
     <Group>
       <Image
-        // image={src}
-        // onClick={onSelect}
-        // onTap={onSelect}
         image={props.src}
         onClick={props.onSelect}
         onTap={props.onSelect}
@@ -86,8 +85,6 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
 
           node.scaleX(1);
           node.scaleY(1);
-          // onChange({
-          // ...shapeProps,
           props.onChange({
             ...props.shapeProps,
             x: node.x(),
@@ -100,7 +97,7 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
       {item.map((props, i) => <NormalHoldCircle ref={circleRefs.current[i]} {...props}/>)}
       {/* <NormalHoldCircle ref={circleRef[i]} {...props}/>
       <NormalHoldCircle ref={circleRef[i]} {...props}/> */}
-      {/* {holds.map((props, i) => <NormalHoldCircle ref={circleRefs[i]} {...props}/>)} */}
+      {/* {holds.map((props, i) => <NormalHoldCircle ref={circleRefs.current[i]} {...props}/>)} */}
       {/* {isSelected && ( */}
       {props.isSelected && (
         <Transformer

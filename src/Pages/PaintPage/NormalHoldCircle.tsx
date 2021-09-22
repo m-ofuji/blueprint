@@ -5,7 +5,6 @@ import { forwardRef } from 'react';
 
 export type NormalHoldCircleProps = {
   // key:number,
-
   x: number,
   y: number
 }
@@ -13,7 +12,8 @@ export type NormalHoldCircleProps = {
 // export const NormalHoldCircle = (props: NormalHoldCircleProps) => {
 let NormalHoldCircleBase = (props : NormalHoldCircleProps, ref : any) => {
   return <Circle
-    // key={props.key}
+    ref={ref}  
+  // key={props.key}
     fill="#00000000"
     stroke="yellow"
     radius={40}
