@@ -1,6 +1,6 @@
 import { group, groupEnd } from 'console';
-import React, { createRef, useRef } from 'react';
-import { Image, Rect, Transformer, Group } from 'react-konva';
+import React, { createRef, useState } from 'react';
+import { Image, Transformer, Group } from 'react-konva';
 import { NormalHoldCircleProps, NormalHoldCircle } from './NormalHoldCircle';
 import { useImperativeHandle, forwardRef } from 'react';
 
@@ -13,28 +13,13 @@ export type ResizableImageProps = {
   src: CanvasImageSource | undefined
 }
 
-// export const ResizableImage = ({shapeProps, isSelected, onSelect, onChange, src } : ResizableImageProps) => {
 let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
-
-  const item = [
-    { x: window.innerWidth / 2, y: window.innerHeight / 2 },
-    { x: window.innerWidth / 2 + 20, y: window.innerHeight / 2 + 20},
-    { x: window.innerWidth / 2 + 40, y: window.innerHeight / 2 + 40},
-  ];
 
   // ここを直す 
   const shapeRef = React.useRef<any>();
-  const circleRefs = useRef(item.map(() => createRef<any>()));
-  // const circleRefs = useRef(holds.map(() => createRef<any>()))
-  // const [cir, useCir] = React.useState<React.MutableRefObject<React.RefObject<any>[]>>();
-
-  // console.log(circleRefs);
+  const [circleRefs, useCircleRefs] = useState<React.RefObject<any>[]>([]);
   const trRef = React.useRef<any>(null);
   const [holds, useHolds] = React.useState<NormalHoldCircleProps[]>([]);
-
-  // const useHold = (props: NormalHoldCircleProps) => {
-  //   useHolds(holds.concat([props]));
-  // }
 
   useImperativeHandle(ref, () => ({
     useHold: () => {
@@ -43,9 +28,8 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
         x: window.innerWidth / 2 + holds.length *10,
         y: window.innerHeight / 2
       }
-      console.log(holds.length);
       useHolds(holds.concat([normalHold]));
-      // circleRef = holds.map(() => React.useRef<any>());
+      useCircleRefs(circleRefs.concat([createRef<any>()]));
     }
   }));
 
@@ -55,7 +39,7 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
     if (circleRefs == undefined) return;
 
     if (props.isSelected) {
-      trRef.current.nodes([shapeRef.current].concat(circleRefs.current.map(x => x.current)));
+      trRef.current.nodes([shapeRef.current].concat(circleRefs.filter(x => x.current != null).map(x => x.current)));
       trRef.current.getLayer().batchDraw();
     }
   }, [props.isSelected]);
@@ -94,20 +78,11 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
           });
         }}
       />
-      {item.map((props, i) => <NormalHoldCircle ref={circleRefs.current[i]} {...props}/>)}
-      {/* <NormalHoldCircle ref={circleRef[i]} {...props}/>
-      <NormalHoldCircle ref={circleRef[i]} {...props}/> */}
-      {/* {holds.map((props, i) => <NormalHoldCircle ref={circleRefs.current[i]} {...props}/>)} */}
-      {/* {isSelected && ( */}
+      {holds.map((props, i) => <NormalHoldCircle ref={circleRefs[i]} {...props}/>)}
       {props.isSelected && (
         <Transformer
           keepRatio
-          enabledAnchors={[
-            'top-left',
-            'top-right',
-            'bottom-left',
-            'bottom-right'
-          ]}
+          enabledAnchors={['top-left','top-right','bottom-left','bottom-right']}
           ref={trRef}
           boundBoxFunc={(oldBox, newBox) => {
             if (newBox.width < 5 || newBox.height < 5) {
