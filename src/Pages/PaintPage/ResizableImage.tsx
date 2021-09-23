@@ -1,4 +1,3 @@
-import { group, groupEnd } from 'console';
 import React, { createRef, useState } from 'react';
 import { Image, Transformer, Group } from 'react-konva';
 import { NormalHoldCircleProps, NormalHoldCircle } from './NormalHoldCircle';
@@ -10,7 +9,11 @@ export type ResizableImageProps = {
   isSelected:boolean;
   onSelect:any;
   onChange: any;
-  src: CanvasImageSource | undefined
+  centerX: number;
+  centerY: number;
+  src: CanvasImageSource | undefined;
+  x?: number;
+  y?: number;
 }
 
 let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
@@ -19,23 +22,28 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
   const shapeRef = React.useRef<any>();
   const [circleRefs, useCircleRefs] = useState<React.RefObject<any>[]>([]);
   const trRef = React.useRef<any>(null);
-  const [holds, useHolds] = React.useState<NormalHoldCircleProps[]>([]);
+  const [holds, useHolds] = useState<NormalHoldCircleProps[]>([]);
 
   useImperativeHandle(ref, () => ({
     useHold: () => {
+      circleRefs.push(createRef<any>());
+      useCircleRefs(circleRefs);
+
+      const image = shapeRef.current;
+      console.log(image.x());
+      console.log(image.y());
+
       const normalHold = {
         key: holds.length++,
-        x: window.innerWidth / 2 + holds.length *10,
-        y: window.innerHeight / 2
+        x: (window.innerWidth / 2) - shapeRef.current.x(),
+        y: (window.innerHeight / 2) - shapeRef.current.y()
       }
-      useHolds(holds.concat([normalHold]));
-      useCircleRefs(circleRefs.concat([createRef<any>()]));
+      useHolds(holds.concat([normalHold]).filter(x => x));
+      trRef?.current?.nodes([shapeRef.current].concat(circleRefs.filter(x => x.current != null).map(x => x.current)));
     }
   }));
 
   React.useEffect(() => {
-    console.log(circleRefs);
-    console.log(shapeRef)
     if (circleRefs == undefined) return;
 
     if (props.isSelected) {
