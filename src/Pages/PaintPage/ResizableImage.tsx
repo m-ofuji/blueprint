@@ -30,8 +30,9 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
       useCircleRefs(circleRefs);
 
       const image = shapeRef.current;
-      console.log(image.x());
-      console.log(image.y());
+      // console.log(image.x());
+      // console.log(image.y());
+      console.log(shapeRef.current);
 
       const normalHold = {
         key: holds.length++,
@@ -53,13 +54,24 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
   }, [props.isSelected]);
 
   return (
-    <Group>
+    <Group
+      onDragEnd={(e) => {
+        console.log(e);
+        props.onChange({
+          ...props.shapeProps,
+          x: e.target.x(),
+          y: e.target.y()
+        });
+      }}>
       <Image
         image={props.src}
         onClick={props.onSelect}
         onTap={props.onSelect}
         ref={shapeRef}
         {...props.shapeProps}
+        onDragMove={(e) => {
+          console.log(e);
+        }}
         onDragEnd={(e) => {
           props.onChange({
             ...props.shapeProps,
