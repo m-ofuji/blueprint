@@ -24,7 +24,6 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
   const [circleRefs, useCircleRefs] = useState<React.RefObject<any>[]>([]);
   const trRef = React.useRef<any>(null);
   const [holds, useHolds] = useState<NormalHoldCircleProps[]>([]);
-  const [coords, useCoords] = useState({x:0, y:0});
 
   useImperativeHandle(ref, () => ({
     useHold: () => {
@@ -32,16 +31,30 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
       useCircleRefs(circleRefs);
       const normalHold = {
         key: holds.length++,
-        x: (window.innerWidth / 2) - coords.x,
-        y: (window.innerHeight / 2) - coords.y
+        x: (window.innerWidth / 2),
+        y: (window.innerHeight / 2)
       }
       useHolds(holds.concat([normalHold]).filter(x => x));
       trRef?.current?.nodes([shapeRef.current].concat(circleRefs.filter(x => x.current != null).map(x => x.current)));
     }
   }));
 
-  const OnDragEnd = (e: Konva.KonvaEventObject<DragEvent>) => {
-    useCoords({x: e.target.x(), y: e.target.y()});
+  const OnTransformEnd = (e: Konva.KonvaEventObject<Event>) => {
+    const node = shapeRef.current;
+
+    if (node == null) return;
+
+    const scaleX = node.scaleX();
+    const scaleY = node.scaleY();
+    node.scaleX(1);
+    node.scaleY(1);
+    props.onChange({
+      ...props.shapeProps,
+      x: node.x(),
+      y: node.y(),
+      width: Math.max(5, node.width() * scaleX),
+      height: Math.max(node.height() * scaleY),
+    });
   }
 
   React.useEffect(() => {
@@ -62,27 +75,7 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
         onTap={props.onSelect}
         ref={shapeRef}
         {...props.shapeProps}
-        onDragMove={(e) => {
-          // console.log(e);
-        }}
-        onDragEnd={OnDragEnd}
-        onTransformEnd={(e) => {
-          const node = shapeRef.current;
-
-          if (node == null) return;
-
-          const scaleX = node.scaleX();
-          const scaleY = node.scaleY();
-          node.scaleX(1);
-          node.scaleY(1);
-          props.onChange({
-            ...props.shapeProps,
-            x: node.x(),
-            y: node.y(),
-            width: Math.max(5, node.width() * scaleX),
-            height: Math.max(node.height() * scaleY),
-          });
-        }}
+        onTransformEnd={OnTransformEnd}
       />
       {holds.map((props, i) => <NormalHoldCircle ref={circleRefs[i]} {...props}/>)}
       <Transformer

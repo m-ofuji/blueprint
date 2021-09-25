@@ -95,7 +95,6 @@ const PaintPage = () => {
               centerX={window.innerWidth / 2}
               centerY={window.innerHeight / 2}
               onChange={(newAttrs: any) => {
-                // console.log(newAttrs);
                 initialRectangles = newAttrs;
                 setRectangles(initialRectangles);
               }}

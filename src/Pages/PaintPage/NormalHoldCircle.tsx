@@ -6,7 +6,7 @@ export type NormalHoldCircleProps = {
   y: number
 }
 
-let NormalHoldCircleBase = (props : NormalHoldCircleProps, ref : any) => {
+let NormalHoldCircleBase = (props: NormalHoldCircleProps, ref: any) => {
   return <Circle
     ref={ref}  
     fill="#00000000"
