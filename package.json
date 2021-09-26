@@ -18,7 +18,9 @@
     "react-scripts": "4.0.3",
     "typescript": "^4.3.5",
     "use-image": "^1.0.8",
-    "web-vitals": "^1.1.2"
+    "web-vitals": "^1.1.2",
+    "onsenui": "^2.11.2",
+    "react-onsenui": "^1.11.4"
   },
   "scripts": {
     "start": "react-scripts start",

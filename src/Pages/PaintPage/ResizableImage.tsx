@@ -66,8 +66,45 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
     }
   }, [props.isSelected]);
 
+  let lastDist = 0;
+
+  // const getDistance = (p1:{x:number, y:number}, p2:{x:number, y:number}) => {
+  //   return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2));
+  // }
+
+  const getDistance = (p1:Touch, p2:Touch) => {
+    return Math.sqrt(Math.pow(p2.clientX - p1.clientX, 2) + Math.pow(p2.clientY - p1.clientY, 2));
+  }
+
   return (
-    <React.Fragment>
+    <Group
+      onTouchMove={res => {
+      const stage = res.currentTarget;
+      var touch1 = res.evt.touches[0];
+      var touch2 = res.evt.touches[1];
+
+      if (touch1 && touch2) {
+        var dist = getDistance(touch1,touch2);
+
+        if (!lastDist) {
+          lastDist = dist;
+        }
+        console.log("3", dist);
+
+        var scale = (stage.scaleX() * dist) / lastDist;
+
+        console.log("4", lastDist);
+        stage.scaleX(scale);
+        stage.scaleY(scale);
+        stage.draw();
+        lastDist = dist;
+        res.evt.preventDefault();
+      }
+    }}
+    onTouchEnd={() => {
+      lastDist = 0;
+    }}
+    >
       <Image
         draggable={true}
         image={props.src}
@@ -102,7 +139,7 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
           }}
         />
       )} */}
-    </React.Fragment>
+    </Group>
   );
 };
 
