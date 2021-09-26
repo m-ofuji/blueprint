@@ -3,6 +3,7 @@ import { Image, Transformer, Group } from 'react-konva';
 import { NormalHoldCircleProps, NormalHoldCircle } from './NormalHoldCircle';
 import { useImperativeHandle, forwardRef } from 'react';
 import Konva from 'konva';
+import { triggerAsyncId } from 'async_hooks';
 
 export type ResizableImageProps = {
   ref?: React.ForwardedRef<HTMLInputElement>;
@@ -48,7 +49,7 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
   const getDistance = (p1:Touch, p2:Touch) => {
     return Math.sqrt(Math.pow(p2.clientX - p1.clientX, 2) + Math.pow(p2.clientY - p1.clientY, 2));
   }
-
+  Konva.hitOnDragEnabled = true;
   return (
     <Group
       draggable={true}
@@ -58,6 +59,10 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
         var touch2 = res.evt.touches[1];
 
         if (touch1 && touch2) {
+          if (stage.isDragging()) {
+            stage.stopDrag();
+          }
+
           var dist = getDistance(touch1,touch2);
 
           if (!lastDist) {
