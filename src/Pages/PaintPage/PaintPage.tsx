@@ -101,14 +101,14 @@ const PaintPage = () => {
             />
           </Group>
           <Circle
-              fill="#00000000"
-              stroke="blue"
-              radius={40}
-              strokeWidth={5}
-              x={window.innerWidth / 2}
-              y={window.innerHeight / 2}
-              draggable={false}
-            />
+            fill="#00000000"
+            stroke="blue"
+            radius={40}
+            strokeWidth={5}
+            x={window.innerWidth / 2}
+            y={window.innerHeight / 2}
+            draggable={false}
+          />
         </Layer>
       </Stage>
       <HoldFloatMenu
