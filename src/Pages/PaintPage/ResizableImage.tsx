@@ -3,7 +3,6 @@ import { Image, Transformer, Group } from 'react-konva';
 import { NormalHoldCircleProps, NormalHoldCircle } from './NormalHoldCircle';
 import { useImperativeHandle, forwardRef } from 'react';
 import Konva from 'konva';
-import { triggerAsyncId } from 'async_hooks';
 
 export type ResizableImageProps = {
   ref?: React.ForwardedRef<HTMLInputElement>;
@@ -23,7 +22,6 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
   // ここを直す 
   const shapeRef = React.useRef<any>();
   const [circleRefs, useCircleRefs] = useState<React.RefObject<any>[]>([]);
-  const trRef = React.useRef<any>(null);
   const [holds, useHolds] = useState<NormalHoldCircleProps[]>([]);
   const [coords, useCoords] = useState({x:0, y:0});
 
@@ -44,44 +42,78 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
     useCoords({x: e.target.x(), y: e.target.y()});
   }
 
-  let lastDist = 0;
-
   const getDistance = (p1:Touch, p2:Touch) => {
     return Math.sqrt(Math.pow(p2.clientX - p1.clientX, 2) + Math.pow(p2.clientY - p1.clientY, 2));
   }
+
+  function getCenter(p1:Touch, p2:Touch) {
+    return {
+      x: (p1.clientX + p2.clientX) / 2,
+      y: (p1.clientY + p2.clientY) / 2,
+    };
+  }
+
+  let lastDist = 0;
+  let lastCenter: {x: number, y:number} | null = null;
   Konva.hitOnDragEnabled = true;
   return (
     <Group
       draggable={true}
-      onTouchMove={res => {
-        const stage = res.currentTarget;
-        var touch1 = res.evt.touches[0];
-        var touch2 = res.evt.touches[1];
+      onTouchMove={e => {
+        e.evt.preventDefault();
+        const touch1 = e.evt.touches[0];
+        const touch2 = e.evt.touches[1];
 
         if (touch1 && touch2) {
+          const stage = e.currentTarget;
           if (stage.isDragging()) {
             stage.stopDrag();
           }
 
-          var dist = getDistance(touch1,touch2);
+          if (!lastCenter) {
+            lastCenter = getCenter(touch1, touch2);
+            return;
+          }
+          var newCenter = getCenter(touch2, touch2);
+
+          var dist = getDistance(touch1, touch2);
 
           if (!lastDist) {
             lastDist = dist;
           }
-          console.log("3", dist);
 
-          var scale = (stage.scaleX() * dist) / lastDist;
+          var pointTo = {
+            x: (newCenter.x - stage.x()) / stage.scaleX(),
+            y: (newCenter.y - stage.y()) / stage.scaleX(),
+          };
 
-          console.log("4", lastDist);
+          var scale = stage.scaleX() * (dist / lastDist);
+          circleRefs.forEach(x => {
+            x.current.scaleX(scale);
+            x.current.scaleY(scale);
+          });
+
           stage.scaleX(scale);
           stage.scaleY(scale);
-          stage.draw();
+
+          // calculate new position of the stage
+          var dx = newCenter.x - lastCenter.x;
+          var dy = newCenter.y - lastCenter.y;
+
+          var newPos = {
+            x: newCenter.x - pointTo.x * scale + dx,
+            y: newCenter.y - pointTo.y * scale + dy,
+          };
+
+          stage.position(newPos);
+
           lastDist = dist;
-          res.evt.preventDefault();
+          lastCenter = newCenter;
         }
       }}
       onTouchEnd={() => {
         lastDist = 0;
+        lastCenter = null;
       }}
       onDragEnd={OnDragEnd}
     >
