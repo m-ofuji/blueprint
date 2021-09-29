@@ -55,16 +55,16 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
     const touch1 = e.evt.touches[0];
     const touch2 = e.evt.touches[1];
 
+    const isDoubleTouched = touch1 && touch2;
+
     const stage = e.currentTarget;
-    if (stage.isDragging()) {
+    if (isDoubleTouched && stage.isDragging()) {
       stage.stopDrag();
     }
 
-    const isDoubleTouched = touch1 && touch2;
+    useLastCenter(isDoubleTouched ? lastCenter ?? getCenter(touch1, touch2) : lastCenter);
 
-    useLastCenter(isDoubleTouched ? lastCenter ?? getCenter(touch1, touch2) : null);
-
-    const newCenter = isDoubleTouched ? getCenter(touch1, touch2) : null;
+    const newCenter = isDoubleTouched ? getCenter(touch1, touch2) : lastCenter;
 
     const dist = isDoubleTouched ? getDistance(touch1, touch2) : 0;
 
@@ -75,14 +75,16 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
       y: newCenter ? (newCenter.y - stage.y()) / stage.scaleX() : 0,
     };
 
-    useScale(lastDist === 0 ? 1 : 1 / (stage.scaleX() * (dist / lastDist)));
+    useScale(lastDist === 0 ? lastDist : 1 / (stage.scaleX() * (dist / lastDist)));
 
     // const scale = stage.scaleX() * (dist / lastDist);
 
-    stage.scaleX(scale);
-    stage.scaleY(scale);
+    
 
     if (isDoubleTouched) {
+      stage.scaleX(scale);
+      stage.scaleY(scale);
+
       // calculate new position of the stage
       const dx = newCenter ? newCenter.x - (lastCenter?.x ?? 0) : 0;
       const dy = newCenter ? newCenter.y - (lastCenter?.y ?? 0) : 0;
