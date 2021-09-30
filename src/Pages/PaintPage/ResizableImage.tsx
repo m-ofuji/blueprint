@@ -75,7 +75,7 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
       y: newCenter ? (newCenter.y - stage.y()) / stage.scaleX() : 0,
     };
 
-    useScale(lastDist === 0 ? lastDist : 1 / (stage.scaleX() * (dist / lastDist)));
+    useScale(isDoubleTouched ? 1 / (stage.scaleX() * (dist / lastDist)): lastDist);
 
     // const scale = stage.scaleX() * (dist / lastDist);
 
