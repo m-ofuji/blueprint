@@ -62,43 +62,49 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
       stage.stopDrag();
     }
 
-    useLastCenter(isDoubleTouched ? lastCenter ?? getCenter(touch1, touch2) : lastCenter);
-
-    const newCenter = isDoubleTouched ? getCenter(touch1, touch2) : lastCenter;
-
-    const dist = isDoubleTouched ? getDistance(touch1, touch2) : 0;
-
-    useLastDist(isDoubleTouched ? lastDist ?? dist : 0);
-
-    const pointTo = {
-      x: newCenter ? (newCenter.x - stage.x()) / stage.scaleX() : 0,
-      y: newCenter ? (newCenter.y - stage.y()) / stage.scaleX() : 0,
-    };
-
-    useScale(isDoubleTouched ? 1 / (stage.scaleX() * (dist / lastDist)): lastDist);
-
-    // const scale = stage.scaleX() * (dist / lastDist);
-
-    
+    let newLastCenter = lastCenter;
+    let newDist = lastDist;
+    let newScale = scale;
 
     if (isDoubleTouched) {
-      stage.scaleX(scale);
-      stage.scaleY(scale);
+      if (!newLastCenter) {
+        // alert('!newLastCenter');
+        newLastCenter = getCenter(touch1, touch2);
+      } else {
+        // alert('newLastCenter');
+        newLastCenter = getCenter(touch1, touch2);
+        newDist = getDistance(touch1, touch2);
+        const pointTo = {
+          x: (newLastCenter.x - stage.x()) / stage.scaleX(),
+          y: (newLastCenter.y - stage.y()) / stage.scaleX(),
+        };
+        // alert(newDist);
+        // alert(lastDist);
 
-      // calculate new position of the stage
-      const dx = newCenter ? newCenter.x - (lastCenter?.x ?? 0) : 0;
-      const dy = newCenter ? newCenter.y - (lastCenter?.y ?? 0) : 0;
+        const dividing = !lastDist ? newDist : lastDist;
 
-      const newPos = {
-        x: newCenter ? newCenter.x - pointTo.x * scale + dx : 0,
-        y: newCenter ? newCenter.y - pointTo.y * scale + dy : 0,
-      };
-
-      stage.position(newPos);
+        newScale = stage.scaleX() * (newDist / (dividing));
+        stage.scaleX(newScale);
+        stage.scaleY(newScale);
+        // const dx = newCenter.x - lastCenter.x;
+        // const dy = newCenter.y - lastCenter.y;
+        // const newPos = {
+        //   x: newCenter.x - pointTo.x * scale + dx,
+        //   y: newCenter.y - pointTo.y * scale + dy,
+        // };
+  
+        // stage.position(newPos);
+      }
     }
 
-    useLastDist(dist);
-    useLastCenter(newCenter);
+    // alert(newLastCenter);
+    // alert(newDist);
+    // alert(newScale);
+
+    useLastCenter(newLastCenter);
+    useLastDist(newDist);
+    useScale(1 / newScale);
+
 
     // if (touch1 && touch2) {
     //   const stage = e.currentTarget;
