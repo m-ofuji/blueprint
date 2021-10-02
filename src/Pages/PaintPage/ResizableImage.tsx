@@ -7,12 +7,10 @@ import { KonvaEventObject } from 'konva/lib/Node';
 
 export type ResizableImageProps = {
   ref?: React.ForwardedRef<HTMLInputElement>;
-  shapeProps:any;
-  isSelected:boolean;
-  onSelect:any;
-  onChange: any;
   centerX: number;
   centerY: number;
+  // height: number;
+  // width: number;
   src: CanvasImageSource | undefined;
   x?: number;
   y?: number;
@@ -39,7 +37,8 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
         scale: 1 / scale
       }
       useHolds(holds.concat([normalHold]).filter(x => x));
-    }
+    },
+    height: groupRef?.current?.height ?? 0
   }));
 
   const OnTouchMove = (e: KonvaEventObject<TouchEvent>) => {
@@ -161,9 +160,9 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
     >
       <Image
         image={props.src}
-        onClick={props.onSelect}
-        onTap={props.onSelect}
-        {...props.shapeProps}
+        // height={props.height}
+        // width={props.width}
+        // {...props.shapeProps}
       />
       {holds.map((props, i) => <NormalHoldCircle ref={circleRefs[i]} {...props}/>)}
     </Group>

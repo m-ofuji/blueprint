@@ -17,20 +17,12 @@ const PaintPage = () => {
   }
 
   const [wallImage, setWallImage] = useState<CanvasImageSource | null>(null);
-  const [wallImageHeight, updatewallImageHeight] = useState<number>(0);
+  const [wallImageWidth, updateWallImageWidth] = useState<number>(window.innerWidth);
+  const [stageHeight, updateStageHeight] = useState<number>(window.innerHeight);
+  const [stageWidth, updateStageWidth] = useState<number>(window.innerWidth);
   const stage = useRef<any>(null);
   const resizableImage = useRef<any>(null);
-  const [selectedId, selectShape] = useState<string | null>(null);
-  const [rectangles, setRectangles] = useState<any>(null);
   const ref = createRef<HTMLInputElement>();
-
-  let initialRectangles = {
-    x: window.innerWidth / 2,
-    y: window.innerHeight / 2,
-    width: wallImage?.width,
-    height: wallImage?.height,
-    id: 'rect1',
-  };
 
   const selectPicture = () => {
     const option = {
@@ -57,20 +49,16 @@ const PaintPage = () => {
     i.src = dataURL;
     setWallImage(i);
     i.onload = () => {
-      updatewallImageHeight(window.innerWidth * (i.naturalHeight / i.naturalWidth));  
+      console.log(resizableImage.current);
+      // updatewallImageHeight(window.innerWidth * (i.naturalHeight / i.naturalWidth));
+      // updateStageWidth(resizableImage.current.width);
+      // updateStageHeight(resizableImage.current.height);
     }
   }
 
-  const checkDeselect = (e:any) => {
-    const clickedOnEmpty = e.target === e.target.getStage();
-    if (clickedOnEmpty) {
-      selectShape(null);
-    }
-  };
-
   const handleExport = () => {
     if (stage == null) return;
-
+    stage.current.widht = resizableImage.current.width;
     const uri = stage.current.toDataURL();
     downloadURI(uri, "topo.png")
   };
@@ -78,10 +66,8 @@ const PaintPage = () => {
   return (
     <Page onShow={selectPicture} renderToolbar={() => <NavBar {...param}/>}>
       <Stage 
-        width={window.innerWidth} 
-        height={window.innerHeight} 
-        onMouseDown={checkDeselect} 
-        onTouchStart={checkDeselect}
+        width={stageWidth} 
+        height={stageHeight} 
         ref={stage}>
         <Layer>
           <Group draggable>
@@ -89,15 +75,10 @@ const PaintPage = () => {
               ref={resizableImage}
               src={wallImage ?? undefined}
               key={'wallImage'}
-              shapeProps={rectangles}
-              isSelected={true}
-              onSelect={() => selectShape(initialRectangles.id)}
               centerX={window.innerWidth / 2}
               centerY={window.innerHeight / 2}
-              onChange={(newAttrs: any) => {
-                initialRectangles = newAttrs;
-                setRectangles(initialRectangles);
-              }}
+              // height={wallImageWidth}
+              // width={wallImageWidth}
             />
           </Group>
           <Circle
@@ -127,6 +108,7 @@ const PaintPage = () => {
         style={{ display: 'none' }}
         type={'file'}
       />
+
     </Page>
   )
 }
