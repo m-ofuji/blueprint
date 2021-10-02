@@ -21,16 +21,12 @@ export type ResizableImageProps = {
 let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
 
   // ここを直す 
-  const shapeRef = React.useRef<any>();
+  const groupRef = React.useRef<any>();
   const [circleRefs, useCircleRefs] = useState<React.RefObject<any>[]>([]);
   const [holds, useHolds] = useState<NormalHoldCircleProps[]>([]);
-  const [coords, useCoords] = useState({x:0, y:0});
   const [scale, useScale] = useState(1);
   const [lastDist, useLastDist] = useState(0);
   const [lastCenter, useLastCenter] = useState<{x: number, y: number} | null>(null);
-
-  // let lastDist = 0;
-  // let lastCenter: {x: number, y:number} | null = null;
 
   useImperativeHandle(ref, () => ({
     useHold: () => {
@@ -38,20 +34,13 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
       useCircleRefs(circleRefs);
       const normalHold = {
         key: holds.length++,
-        // x: (window.innerWidth / 2),
-        // y: (window.innerHeight / 2),
-        x: (window.innerWidth / 2) - (coords.x * 1 / scale),
-        y: (window.innerHeight / 2) - (coords.y * 1 / scale),
+        x: ((window.innerWidth / 2) - (groupRef.current.x())) * (1 / scale),
+        y: ((window.innerHeight / 2) - (groupRef.current.y())) * (1 / scale),
         scale: 1 / scale
       }
       useHolds(holds.concat([normalHold]).filter(x => x));
     }
   }));
-
-  const OnDragEnd = (e: Konva.KonvaEventObject<DragEvent>) => {
-    useCoords({x: e.target.x(), y: e.target.y()});
-    // useCoords({x: shapeRef.current.x(), y: shapeRef.current.y()});
-  }
 
   const OnTouchMove = (e: KonvaEventObject<TouchEvent>) => {
     e.evt.preventDefault();
@@ -71,18 +60,14 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
 
     if (isDoubleTouched) {
       if (!newLastCenter) {
-        // alert('!newLastCenter');
         newLastCenter = getCenter(touch1, touch2);
       } else {
-        // alert('newLastCenter');
         newLastCenter = getCenter(touch1, touch2);
         newDist = getDistance(touch1, touch2);
         const pointTo = {
           x: (newLastCenter.x - stage.x()) / stage.scaleX(),
           y: (newLastCenter.y - stage.y()) / stage.scaleX(),
         };
-        // alert(newDist);
-        // alert(lastDist);
 
         const dividing = !lastDist ? newDist : lastDist;
 
@@ -100,14 +85,9 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
       }
     }
 
-    // alert(newLastCenter);
-    // alert(newDist);
-    // alert(newScale);
-
     useLastCenter(newLastCenter);
     useLastDist(newDist);
     useScale(newScale);
-
 
     // if (touch1 && touch2) {
     //   const stage = e.currentTarget;
@@ -171,20 +151,18 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
     };
   }
 
-
   Konva.hitOnDragEnabled = true;
   return (
     <Group
       draggable={true}
       onTouchMove={OnTouchMove}
       onTouchEnd={OnTouchEnd}
-      onDragEnd={OnDragEnd}
+      ref={groupRef}
     >
       <Image
         image={props.src}
         onClick={props.onSelect}
         onTap={props.onSelect}
-        ref={shapeRef}
         {...props.shapeProps}
       />
       {holds.map((props, i) => <NormalHoldCircle ref={circleRefs[i]} {...props}/>)}
