@@ -4,7 +4,7 @@ import { Fab, Icon, List, ListItem, Navigator, Page } from 'react-onsenui';
 
 const HomePage = ({route, navigator}: {route: any, navigator: Navigator}) => {
   const handlePaintPage = () => {
-    navigator.pushPage({comp: PaintPage, key: 'Page2'});
+    navigator.pushPage({comp: PaintPage, props: {navigator: navigator}});
   }
 
   const renderToolBar = () => {

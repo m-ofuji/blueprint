@@ -1,5 +1,6 @@
 import NavBar from '../MainPage/NavBar';
 import ons from 'onsenui'
+import { Navigator } from 'react-onsenui';
 import { createRef, ChangeEvent, useState, useRef, useDebugValue } from 'react';
 import { Page, Fab, Icon } from 'react-onsenui';
 import { Stage, Layer, Group, Circle, Rect, Image } from 'react-konva';
@@ -7,7 +8,7 @@ import { ResizableImage, ResizableImageProps } from './ResizableImage';
 import { downloadURI } from './DownloadUri';
 import { HoldFloatMenu } from './HoldFloatMenu';
 
-const PaintPage = () => {
+const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
 
   const param = {
     title: 'PaintPage',
@@ -17,14 +18,17 @@ const PaintPage = () => {
   }
 
   const [wallImage, setWallImage] = useState<CanvasImageSource | null>(null);
-  const [dWallImage, setDWallImage] = useState<CanvasImageSource | null>(null);
   const [stageHeight, updateStageHeight] = useState<number>(window.innerHeight);
   const [stageWidth, updateStageWidth] = useState<number>(window.innerWidth);
+  const [imageHeight, updateImageHeight] = useState<number>(window.innerHeight);
+  const [imageWidth, updateImageWidth] = useState<number>(window.innerWidth);
   const [stageX, updateStageX] = useState<number>(0);
   const [stageY, updateStageY] = useState<number>(0);
+  const [imageX, updateImgeX] = useState<number>(0);
+  const [imageY, updateImageY] = useState<number>(0);
+  const [isTargetVisible, updateTargetVisibility] = useState<boolean>(true);
 
   const stage = useRef<any>(null);
-  const dsref = useRef<any>(null);
   const resizableImage = useRef<any>(null);
   
   const ref = createRef<HTMLInputElement>();
@@ -53,50 +57,51 @@ const PaintPage = () => {
     const i = new window.Image();
     i.src = dataURL;
     setWallImage(i);
-    i.onload = () => {
-      console.log(resizableImage.current);
-      updateStageWidth(i.naturalWidth);
-      updateStageHeight(i.naturalHeight);
-      // updatewallImageHeight(window.innerWidth * (i.naturalHeight / i.naturalWidth));
-      // updateStageWidth(resizableImage.current.width);
-      // updateStageHeight(resizableImage.current.height);
+    i.onload = (evt) => {
+      updateImageWidth(i.width);
+      updateImageHeight(i.height);
     }
   }
 
-  const handleExport = () => {
-    // console.log(resizableImage.current);
-    if (!stage || !resizableImage) return;
-    // const isWidthLonger = resizableImage.current.width > resizableImage.current.height;
-    // // const imageWidth = resizableImage.current.naturalWidth;
-    // // const imageHeight = resizableImage.current.naturalHeight;
-    // const ratio = resizableImage.current.width / resizableImage.current.height;
-    // const w = isWidthLonger ? 100 : window.innerHeight * ratio;
-    // const h = isWidthLonger ? window.innerWidth * (1 / ratio) : 100;
+  const sleep = (msec: number) => new Promise(resolve => setTimeout(resolve, msec));
 
-    // console.log(resizableImage);
-    // console.log(resizableImage.current);
-
-    // console.log(isWidthLonger);
-    // console.log(ratio);
-    // console.log(w);
-    // console.log(h);
+  const handleExport = async () => {
+    if (!stage) return;
+    // alert("clicked");
 
     // return;
+    updateTargetVisibility(false);
+    updateStageWidth(imageWidth);
+    updateStageHeight(imageHeight);
+    updateStageX(imageX);
+    updateStageY(imageY);
 
-    // updateStageWidth(w);
-    // updateStageHeight(h);
-    setDWallImage(wallImage);
-    const uri = stage.current.toDataURL();
-    downloadURI(uri, "topo.png")
+    // alert("state updated");
+
+    // delayをかけないと値が更新される前にダウンロードが走る。
+    await sleep(1);
+    
+    // 長辺の最大値を設定
+    const maxSideLength = 600;
+    const fixPixelRatio = imageWidth > maxSideLength || imageHeight > maxSideLength;
+    const pixelRatio = fixPixelRatio ? maxSideLength / Math.max(imageWidth, imageHeight) : 1;
+    const uri = stage.current.toDataURL({pixelRatio: pixelRatio});
+
+    // alert("ratio calculated");
+
+    downloadURI(uri, "topo.png");
+
+    // alert("downloaded");
+    navigator.popPage();
   };
 
   return (
     <Page onShow={selectPicture} renderToolbar={() => <NavBar {...param}/>}>
       <Stage 
-        // x={stageX}
-        // y={stageY}
-        width={window.innerWidth} 
-        height={window.innerWidth} 
+        offsetX={stageX}
+        offsetY={stageY}
+        width={stageWidth} 
+        height={stageHeight}
         ref={stage}>
         <Layer>
           <Group draggable>
@@ -106,12 +111,8 @@ const PaintPage = () => {
               key={'wallImage'}
               centerX={window.innerWidth / 2}
               centerY={window.innerHeight / 2}
-              updateX={updateStageX}
-              updateY={updateStageY}
-              updateHeight={updateStageHeight}
-              updateWidth={updateStageWidth}
-              // height={wallImageWidth}
-              // width={wallImageWidth}
+              updateX={updateImgeX}
+              updateY={updateImageY}
             />
           </Group>
           <Circle
@@ -119,8 +120,9 @@ const PaintPage = () => {
             stroke="blue"
             radius={40}
             strokeWidth={5}
-            x={window.innerWidth / 2}
-            y={window.innerHeight / 2}
+            visible={isTargetVisible}
+            x={window.innerWidth / 2 - stageX}
+            y={window.innerHeight / 2 - stageY}
             draggable={false}
           />
         </Layer>
@@ -141,35 +143,6 @@ const PaintPage = () => {
         style={{ display: 'none' }}
         type={'file'}
       />
-      {/* <Stage 
-        width={window.innerWidth} 
-        height={window.innerHeight} 
-        ref={stage}>
-        <Layer>
-          <Group draggable>
-            <ResizableImage
-              ref={resizableImage}
-              src={wallImage ?? undefined}
-              key={'wallImage'}
-              centerX={window.innerWidth / 2}
-              centerY={window.innerHeight / 2}
-              updateHeight={updateStageHeight}
-              updateWidth={updateStageWidth}
-              // height={wallImageWidth}
-              // width={wallImageWidth}
-            />
-          </Group>
-          <Circle
-            fill="#00000000"
-            stroke="blue"
-            radius={40}
-            strokeWidth={5}
-            x={window.innerWidth / 2}
-            y={window.innerHeight / 2}
-            draggable={false}
-          />
-        </Layer>
-      </Stage> */}
     </Page>
   )
 }

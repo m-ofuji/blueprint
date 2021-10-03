@@ -16,8 +16,8 @@ export type ResizableImageProps = {
   y?: number;
   updateX: React.Dispatch<React.SetStateAction<number>>;
   updateY: React.Dispatch<React.SetStateAction<number>>;
-  updateWidth: React.Dispatch<React.SetStateAction<number>>;
-  updateHeight: React.Dispatch<React.SetStateAction<number>>;
+  // updateWidth: React.Dispatch<React.SetStateAction<number>>;
+  // updateHeight: React.Dispatch<React.SetStateAction<number>>;
 }
 
 let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
@@ -90,10 +90,12 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
     useLastCenter(newLastCenter);
     useLastDist(newDist);
     useScale(newScale);
-    props.updateX(groupRef.current.x());
-    props.updateY(groupRef.current.y());
-    props.updateWidth(groupRef.current.width);
-    props.updateHeight(groupRef.current.height);
+    // console.log(groupRef.current);
+    // props.updateX(groupRef.current.x());
+    // props.updateY(groupRef.current.y());
+    // console.log(groupRef.current.attrs.x);
+    // props.updateWidth(groupRef.current.width);
+    // props.updateHeight(groupRef.current.height);
 
     // if (touch1 && touch2) {
     //   const stage = e.currentTarget;
@@ -144,13 +146,14 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
   const OnTouchEnd = () => {
     useLastDist(0);
     useLastCenter(null);
+    props.updateX(groupRef.current.scaleX());
+    props.updateY(groupRef.current.scaleY());
   }
 
-  // const OnDragEnd = () => {
-  //   console.log(groupRef.current.x());
-  //   props.updateX(groupRef.current.x());
-  //   props.updateY(groupRef.current.y());
-  // }
+  const OnDragEnd = () => {
+    props.updateX(groupRef.current.x());
+    props.updateY(groupRef.current.y());
+  }
 
   const getDistance = (p1:Touch, p2:Touch) => {
     return Math.sqrt(Math.pow(p2.clientX - p1.clientX, 2) + Math.pow(p2.clientY - p1.clientY, 2));
@@ -169,16 +172,11 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
       draggable={true}
       onTouchMove={OnTouchMove}
       onTouchEnd={OnTouchEnd}
-      // onDragStart={OnDragEnd}
-      // onDragMove={OnDragEnd}
-      // onDragEnd={OnDragEnd}
+      onDragEnd={OnDragEnd}
       ref={groupRef}
     >
       <Image
         image={props.src}
-        // height={props.height}
-        // width={props.width}
-        // {...props.shapeProps}
       />
       {holds.map((props, i) => <NormalHoldCircle ref={circleRefs[i]} {...props}/>)}
     </Group>
