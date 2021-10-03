@@ -26,6 +26,10 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
   const [stageY, updateStageY] = useState<number>(0);
   const [imageX, updateImgeX] = useState<number>(0);
   const [imageY, updateImageY] = useState<number>(0);
+  const [stageScaleX, updateStageScaleX] = useState<number>(1);
+  const [stageScaleY, updateStageScaleY] = useState<number>(1);
+  const [imageScaleX, updateImageScaleX] = useState<number>(1);
+  const [imageScaleY, updateImageScaleY] = useState<number>(1);
   const [isTargetVisible, updateTargetVisibility] = useState<boolean>(true);
 
   const stage = useRef<any>(null);
@@ -75,6 +79,8 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
     updateStageHeight(imageHeight);
     updateStageX(imageX);
     updateStageY(imageY);
+    updateStageScaleX(1 / imageScaleX);
+    updateStageScaleY(1 / imageScaleY);
 
     // alert("state updated");
 
@@ -100,6 +106,8 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
       <Stage 
         offsetX={stageX}
         offsetY={stageY}
+        scaleX={stageScaleX}
+        scaleY={stageScaleY}
         width={stageWidth} 
         height={stageHeight}
         ref={stage}>
@@ -113,6 +121,8 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
               centerY={window.innerHeight / 2}
               updateX={updateImgeX}
               updateY={updateImageY}
+              updateScaleX={updateImageScaleX}
+              updateScaleY={updateImageScaleY}
             />
           </Group>
           <Circle

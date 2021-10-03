@@ -16,6 +16,8 @@ export type ResizableImageProps = {
   y?: number;
   updateX: React.Dispatch<React.SetStateAction<number>>;
   updateY: React.Dispatch<React.SetStateAction<number>>;
+  updateScaleX: React.Dispatch<React.SetStateAction<number>>;
+  updateScaleY: React.Dispatch<React.SetStateAction<number>>;
   // updateWidth: React.Dispatch<React.SetStateAction<number>>;
   // updateHeight: React.Dispatch<React.SetStateAction<number>>;
 }
@@ -90,6 +92,10 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
     useLastCenter(newLastCenter);
     useLastDist(newDist);
     useScale(newScale);
+    props.updateScaleX(newScale);
+    props.updateScaleY(newScale);
+    props.updateX(groupRef.current.x());
+    props.updateY(groupRef.current.y());
     // console.log(groupRef.current);
     // props.updateX(groupRef.current.x());
     // props.updateY(groupRef.current.y());
@@ -146,8 +152,10 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
   const OnTouchEnd = () => {
     useLastDist(0);
     useLastCenter(null);
-    props.updateX(groupRef.current.scaleX());
-    props.updateY(groupRef.current.scaleY());
+    // props.updateX(groupRef.current.x());
+    // props.updateY(groupRef.current.y());
+    // props.updateScaleX(newScale);
+    // props.updateScaleY(newScale);
   }
 
   const OnDragEnd = () => {
