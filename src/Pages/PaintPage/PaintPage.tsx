@@ -7,7 +7,6 @@ import { Stage, Layer, Group, Circle, Rect, Image } from 'react-konva';
 import { ResizableImage, ResizableImageProps } from './ResizableImage';
 import { downloadURI } from './DownloadUri';
 import { HoldFloatMenu } from './HoldFloatMenu';
-import { KonvaEventObject } from 'konva/lib/Node';
 
 const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
 
@@ -32,7 +31,6 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
   const [imageScaleX, updateImageScaleX] = useState<number>(1);
   const [imageScaleY, updateImageScaleY] = useState<number>(1);
   const [isTargetVisible, updateTargetVisibility] = useState<boolean>(true);
-  const [lastCenter, updatelastCenter] = useState({x:0, y:0});
 
   const stage = useRef<any>(null);
   const resizableImage = useRef<any>(null);
@@ -73,9 +71,7 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
 
   const handleExport = async () => {
     if (!stage) return;
-    // alert("clicked");
 
-    // return;
     updateTargetVisibility(false);
     updateStageWidth(imageWidth);
     updateStageHeight(imageHeight);
@@ -83,8 +79,6 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
     updateStageY(imageY);
     updateStageScaleX(1 / imageScaleX);
     updateStageScaleY(1 / imageScaleY);
-
-    // alert("state updated");
 
     // delayをかけないと値が更新される前にダウンロードが走る。
     await sleep(1);
@@ -95,11 +89,8 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
     const pixelRatio = fixPixelRatio ? maxSideLength / Math.max(imageWidth, imageHeight) : 1;
     const uri = stage.current.toDataURL({pixelRatio: pixelRatio});
 
-    // alert("ratio calculated");
-
     downloadURI(uri, "topo.png");
 
-    // alert("downloaded");
     navigator.popPage();
   };
 
@@ -108,39 +99,6 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
       x: (p1.clientX + p2.clientX) / 2,
       y: (p1.clientY + p2.clientY) / 2,
     };
-  }
-
-  const OnMultiplePinched = (e: KonvaEventObject<TouchEvent>) => {
-    console.log('stage touched');
-    e.evt.preventDefault();
-    const touch1 = e.evt.touches[0];
-    const touch2 = e.evt.touches[1];
-
-    console.log(lastCenter);
-    const isDoubleTouched = touch1 && touch2;
-
-    updatelastCenter(isDoubleTouched ? getCenter(touch1, touch2) : lastCenter);
-    // lastCenter = getCenter(touch1, touch2);
-    const newCenter = getCenter(touch1, touch2);
-
-    // local coordinates of center point
-    const pointTo = {
-      x: (newCenter.x - stage.current.x()) / stage.current.scaleX(),
-      y: (newCenter.y - stage.current.y()) / stage.current.scaleX(),
-    };
-
-    // calculate new position of the stage
-    var dx = newCenter.x - lastCenter.x;
-    var dy = newCenter.y - lastCenter.y;
-
-    var newPos = {
-      x: newCenter.x - pointTo.x * stage.current.scaleX + dx,
-      y: newCenter.y - pointTo.y * stage.current.scaleX + dy,
-    };
-
-    stage.current.position(newPos);
-    console.log('stage updated');
-    console.log(newPos);
   }
 
   return (
@@ -152,9 +110,7 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
         scaleY={stageScaleY}
         width={stageWidth} 
         height={stageHeight}
-        ref={stage}
-        onTouchMove={OnMultiplePinched}
-        onTouchEnd={OnMultiplePinched}>
+        ref={stage}>
         <Layer>
           <Group draggable>
             <ResizableImage

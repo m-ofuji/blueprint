@@ -9,8 +9,6 @@ export type ResizableImageProps = {
   ref?: React.ForwardedRef<HTMLInputElement>;
   centerX: number;
   centerY: number;
-  // height: number;
-  // width: number;
   src: CanvasImageSource | undefined;
   x?: number;
   y?: number;
@@ -18,8 +16,6 @@ export type ResizableImageProps = {
   updateY: React.Dispatch<React.SetStateAction<number>>;
   updateScaleX: React.Dispatch<React.SetStateAction<number>>;
   updateScaleY: React.Dispatch<React.SetStateAction<number>>;
-  // updateWidth: React.Dispatch<React.SetStateAction<number>>;
-  // updateHeight: React.Dispatch<React.SetStateAction<number>>;
 }
 
 let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
@@ -61,6 +57,7 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
     let newLastCenter = lastCenter;
     let newDist = lastDist;
     let newScale = scale;
+    let pointTo: {x:number, y:number} | null = null;
 
     if (isDoubleTouched) {
       if (!newLastCenter) {
@@ -68,7 +65,7 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
       } else {
         newLastCenter = getCenter(touch1, touch2);
         newDist = getDistance(touch1, touch2);
-        const pointTo = {
+        pointTo = {
           x: (newLastCenter.x - stage.x()) / stage.scaleX(),
           y: (newLastCenter.y - stage.y()) / stage.scaleX(),
         };
@@ -78,15 +75,19 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
         newScale = stage.scaleX() * (newDist / (dividing));
         stage.scaleX(newScale);
         stage.scaleY(newScale);
-        // const dx = newCenter.x - lastCenter.x;
-        // const dy = newCenter.y - lastCenter.y;
-        // const newPos = {
-        //   x: newCenter.x - pointTo.x * scale + dx,
-        //   y: newCenter.y - pointTo.y * scale + dy,
-        // };
-  
-        // stage.position(newPos);
       }
+    }
+
+    if (lastCenter !== null && newLastCenter !== null && pointTo !== null && isDoubleTouched) {
+
+      const dx = newLastCenter.x - lastCenter.x;
+      const dy = newLastCenter.y - lastCenter.y;
+  
+      const newPos = {
+        x: newLastCenter.x - pointTo.x * stage.scaleX() + dx,
+        y: newLastCenter.y - pointTo.y * stage.scaleX() + dy,
+      };
+      stage.position(newPos);
     }
 
     useLastCenter(newLastCenter);
@@ -96,66 +97,11 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
     props.updateScaleY(newScale);
     props.updateX(groupRef.current.x());
     props.updateY(groupRef.current.y());
-    // console.log(groupRef.current);
-    // props.updateX(groupRef.current.x());
-    // props.updateY(groupRef.current.y());
-    // console.log(groupRef.current.attrs.x);
-    // props.updateWidth(groupRef.current.width);
-    // props.updateHeight(groupRef.current.height);
-
-    // if (touch1 && touch2) {
-    //   const stage = e.currentTarget;
-    //   if (stage.isDragging()) {
-    //     stage.stopDrag();
-    //   }
-
-    //   if (!lastCenter) {
-    //     lastCenter = getCenter(touch1, touch2);
-    //     return;
-    //   }
-    //   const newCenter = getCenter(touch1, touch2);
-
-    //   const dist = getDistance(touch1, touch2);
-
-    //   if (!lastDist) {
-    //     lastDist = dist;
-    //   }
-
-    //   const pointTo = {
-    //     x: (newCenter.x - stage.x()) / stage.scaleX(),
-    //     y: (newCenter.y - stage.y()) / stage.scaleX(),
-    //   };
-
-    //   scaled = 1 / (stage.scaleX() * (dist / lastDist));
-
-    //   const scale = stage.scaleX() * (dist / lastDist);
-
-    //   stage.scaleX(scale);
-    //   stage.scaleY(scale);
-
-    //   // calculate new position of the stage
-    //   const dx = newCenter.x - lastCenter.x;
-    //   const dy = newCenter.y - lastCenter.y;
-
-    //   const newPos = {
-    //     x: newCenter.x - pointTo.x * scale + dx,
-    //     y: newCenter.y - pointTo.y * scale + dy,
-    //   };
-
-    //   stage.position(newPos);
-
-    //   lastDist = dist;
-    //   lastCenter = newCenter;
-    // }
   }
 
   const OnTouchEnd = () => {
     useLastDist(0);
     useLastCenter(null);
-    // props.updateX(groupRef.current.x());
-    // props.updateY(groupRef.current.y());
-    // props.updateScaleX(newScale);
-    // props.updateScaleY(newScale);
   }
 
   const OnDragEnd = () => {
