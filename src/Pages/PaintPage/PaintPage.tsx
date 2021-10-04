@@ -94,13 +94,6 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
     navigator.popPage();
   };
 
-  function getCenter(p1:Touch, p2:Touch) {
-    return {
-      x: (p1.clientX + p2.clientX) / 2,
-      y: (p1.clientY + p2.clientY) / 2,
-    };
-  }
-
   return (
     <Page onShow={selectPicture} renderToolbar={() => <NavBar {...param}/>}>
       <Stage 
