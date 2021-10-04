@@ -127,6 +127,8 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
             x={window.innerWidth / 2 - stageX}
             y={window.innerHeight / 2 - stageY}
             draggable={false}
+            onTap={() => {resizableImage.current.useHold()}}
+            onClick={() => resizableImage.current.useHold()}
           />
         </Layer>
       </Stage>
