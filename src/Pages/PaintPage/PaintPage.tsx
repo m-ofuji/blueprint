@@ -14,8 +14,8 @@ export type SizeProps = {
   y: number,
   scaleX: number,
   scaleY: number,
-  stageWidth: number,
-  stageHeight: number
+  width: number,
+  height: number
 }
 
 const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
@@ -32,8 +32,8 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
     y: 0,
     scaleX: 1,
     scaleY: 1,
-    stageWidth: window.innerWidth,
-    stageHeight: window.innerHeight
+    width: window.innerWidth,
+    height: window.innerHeight
   };
 
   const [wallImage, setWallImage] = useState<CanvasImageSource | null>(null);
@@ -97,20 +97,22 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
     if (!stage) return;
 
     updateTargetVisibility(false);
-    updateStageWidth(imageWidth);
-    updateStageHeight(imageHeight);
-    updateStageX(imageX);
-    updateStageY(imageY);
-    updateStageScaleX(1 / imageScaleX);
-    updateStageScaleY(1 / imageScaleY);
-
+    setStageSizeProps({...stageSizeProps, ...{
+      width: imageSizeProps.width,
+      height: imageSizeProps.height,
+      x: imageSizeProps.x,
+      y: imageSizeProps.y,
+      scaleX: imageSizeProps.scaleX,
+      scaleY: imageSizeProps.scaleY
+    }});
+    
     // delayをかけないと値が更新される前にダウンロードが走る。
     await sleep(1);
     
     // 長辺の最大値を設定
     const maxSideLength = 600;
-    const fixPixelRatio = imageWidth > maxSideLength || imageHeight > maxSideLength;
-    const pixelRatio = fixPixelRatio ? maxSideLength / Math.max(imageWidth, imageHeight) : 1;
+    const fixPixelRatio = imageSizeProps.width > maxSideLength || imageSizeProps.height > maxSideLength;
+    const pixelRatio = fixPixelRatio ? maxSideLength / Math.max(imageSizeProps.width, imageSizeProps.height) : 1;
     const uri = stage.current.toDataURL({pixelRatio: pixelRatio});
 
     downloadURI(uri, "topo.png");
@@ -121,12 +123,12 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
   return (
     <Page onShow={selectPicture} renderToolbar={() => <NavBar {...param}/>}>
       <Stage 
-        offsetX={stageX}
-        offsetY={stageY}
-        scaleX={stageScaleX}
-        scaleY={stageScaleY}
-        width={stageWidth} 
-        height={stageHeight}
+        offsetX={stageSizeProps.x}
+        offsetY={stageSizeProps.y}
+        scaleX={stageSizeProps.scaleX}
+        scaleY={stageSizeProps.scaleY}
+        width={stageSizeProps.width} 
+        height={stageSizeProps.height}
         ref={stage}>
         <Layer>
           <Group draggable>
@@ -136,15 +138,17 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
               key={'wallImage'}
               centerX={window.innerWidth / 2}
               centerY={window.innerHeight / 2}
-              updateX={updateImgeX}
-              updateY={updateImageY}
-              updateScaleX={updateImageScaleX}
-              updateScaleY={updateImageScaleY}
+              sizeProps={imageSizeProps}
+              updateSizeProps={setImageSizeProps}
+              // updateX={setImageSizeProps}
+              // updateY={updateImageY}
+              // updateScaleX={updateImageScaleX}
+              // updateScaleY={updateImageScaleY}
             />
           </Group>
           <NormalTarget
-            x={window.innerWidth / 2 - stageX}
-            y={window.innerHeight / 2 - stageY}
+            x={window.innerWidth / 2 - stageSizeProps.x}
+            y={window.innerHeight / 2 - stageSizeProps.y}
             isVisible={isTargetVisible}
             onTapped={() => resizableImage.current.useHold()}
           />
