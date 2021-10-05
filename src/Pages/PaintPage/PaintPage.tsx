@@ -7,6 +7,16 @@ import { Stage, Layer, Group, Circle, Rect, Image } from 'react-konva';
 import { ResizableImage, ResizableImageProps } from './ResizableImage';
 import { downloadURI } from './DownloadUri';
 import { HoldFloatMenu } from './HoldFloatMenu';
+import { NormalTarget } from './Targets/NormalTarget';
+
+export type SizeProps = {
+  x: number,
+  y: number,
+  scaleX: number,
+  scaleY: number,
+  stageWidth: number,
+  stageHeight: number
+}
 
 const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
 
@@ -17,19 +27,32 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
     hasBackButton: true
   }
 
+  const sizeProps = {
+    x: 0,
+    y: 0,
+    scaleX: 1,
+    scaleY: 1,
+    stageWidth: window.innerWidth,
+    stageHeight: window.innerHeight
+  };
+
   const [wallImage, setWallImage] = useState<CanvasImageSource | null>(null);
-  const [stageHeight, updateStageHeight] = useState<number>(window.innerHeight);
-  const [stageWidth, updateStageWidth] = useState<number>(window.innerWidth);
-  const [imageHeight, updateImageHeight] = useState<number>(window.innerHeight);
-  const [imageWidth, updateImageWidth] = useState<number>(window.innerWidth);
-  const [stageX, updateStageX] = useState<number>(0);
-  const [stageY, updateStageY] = useState<number>(0);
-  const [imageX, updateImgeX] = useState<number>(0);
-  const [imageY, updateImageY] = useState<number>(0);
-  const [stageScaleX, updateStageScaleX] = useState<number>(1);
-  const [stageScaleY, updateStageScaleY] = useState<number>(1);
-  const [imageScaleX, updateImageScaleX] = useState<number>(1);
-  const [imageScaleY, updateImageScaleY] = useState<number>(1);
+  const [stageSizeProps, setStageSizeProps] = useState<SizeProps>(sizeProps);
+  const [imageSizeProps, setImageSizeProps] = useState<SizeProps>(sizeProps);
+
+
+  // const [stageHeight, updateStageHeight] = useState<number>(window.innerHeight);
+  // const [stageWidth, updateStageWidth] = useState<number>(window.innerWidth);
+  // const [imageHeight, updateImageHeight] = useState<number>(window.innerHeight);
+  // const [imageWidth, updateImageWidth] = useState<number>(window.innerWidth);
+  // const [stageX, updateStageX] = useState<number>(0);
+  // const [stageY, updateStageY] = useState<number>(0);
+  // const [imageX, updateImgeX] = useState<number>(0);
+  // const [imageY, updateImageY] = useState<number>(0);
+  // const [stageScaleX, updateStageScaleX] = useState<number>(1);
+  // const [stageScaleY, updateStageScaleY] = useState<number>(1);
+  // const [imageScaleX, updateImageScaleX] = useState<number>(1);
+  // const [imageScaleY, updateImageScaleY] = useState<number>(1);
   const [isTargetVisible, updateTargetVisibility] = useState<boolean>(true);
 
   const stage = useRef<any>(null);
@@ -62,8 +85,9 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
     i.src = dataURL;
     setWallImage(i);
     i.onload = (evt) => {
-      updateImageWidth(i.width);
-      updateImageHeight(i.height);
+      setImageSizeProps({...imageSizeProps, ...{width: i.width, height: i.height}});
+      // updateImageWidth(i.width);
+      // updateImageHeight(i.height);
     }
   }
 
@@ -118,17 +142,11 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
               updateScaleY={updateImageScaleY}
             />
           </Group>
-          <Circle
-            fill="#00000000"
-            stroke="blue"
-            radius={40}
-            strokeWidth={5}
-            visible={isTargetVisible}
+          <NormalTarget
             x={window.innerWidth / 2 - stageX}
             y={window.innerHeight / 2 - stageY}
-            draggable={false}
-            onTap={() => {resizableImage.current.useHold()}}
-            // onClick={() => resizableImage.current.useHold()}
+            isVisible={isTargetVisible}
+            onTapped={() => resizableImage.current.useHold()}
           />
         </Layer>
       </Stage>
