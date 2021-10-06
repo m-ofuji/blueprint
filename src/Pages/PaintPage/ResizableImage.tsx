@@ -5,6 +5,7 @@ import { useImperativeHandle, forwardRef } from 'react';
 import Konva from 'konva';
 import { KonvaEventObject } from 'konva/lib/Node';
 import { SizeProps } from './PaintPage';
+import { updateSourceFile } from 'typescript';
 
 export type ResizableImageProps = {
   ref?: React.ForwardedRef<HTMLInputElement>;
@@ -13,11 +14,12 @@ export type ResizableImageProps = {
   src: CanvasImageSource | undefined;
   x?: number;
   y?: number;
-  sizeProps: SizeProps;
-  updateSizeProps:React.Dispatch<React.SetStateAction<SizeProps>>;
-  // updateY: React.Dispatch<React.SetStateAction<SizeProps>>;
-  // updateScaleX: React.Dispatch<React.SetStateAction<SizeProps>>;
-  // updateScaleY: React.Dispatch<React.SetStateAction<SizeProps>>;
+  // sizeProps: SizeProps;
+  // updateSizeProps:React.Dispatch<React.SetStateAction<SizeProps>>;
+  updateX: React.Dispatch<React.SetStateAction<number>>;
+  updateY: React.Dispatch<React.SetStateAction<number>>;
+  updateScaleX: React.Dispatch<React.SetStateAction<number>>;
+  updateScaleY: React.Dispatch<React.SetStateAction<number>>;
 }
 
 let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
@@ -95,10 +97,16 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
     useLastCenter(newLastCenter);
     useLastDist(newDist);
     useScale(newScale);
-    props.updateSizeProps({...props.sizeProps, ...{scaleX: newScale}});
-    props.updateSizeProps({...props.sizeProps, ...{scaleY: newScale}});
-    props.updateSizeProps({...props.sizeProps, ...{x: groupRef.current.x()}});
-    props.updateSizeProps({...props.sizeProps, ...{y: groupRef.current.y()}});
+
+    props.updateScaleX(newScale);
+    props.updateScaleY(newScale);
+    props.updateX(groupRef.current.x());
+    props.updateY(groupRef.current.y());
+
+    // props.updateSizeProps({...props.sizeProps, ...{scaleX: newScale}});
+    // props.updateSizeProps({...props.sizeProps, ...{scaleY: newScale}});
+    // props.updateSizeProps({...props.sizeProps, ...{x: groupRef.current.x()}});
+    // props.updateSizeProps({...props.sizeProps, ...{y: groupRef.current.y()}});
   }
 
   const OnTouchEnd = () => {
@@ -107,8 +115,11 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
   }
 
   const OnDragEnd = () => {
-    props.updateSizeProps({...props.sizeProps, ...{x: groupRef.current.x()}});
-    props.updateSizeProps({...props.sizeProps, ...{y: groupRef.current.y()}});
+    
+    props.updateX(groupRef.current.x());
+    props.updateY(groupRef.current.y());
+    // props.updateSizeProps({...props.sizeProps, ...{x: groupRef.current.x()}});
+    // props.updateSizeProps({...props.sizeProps, ...{y: groupRef.current.y()}});
 
     // props.updateX(groupRef.current.x());
     // props.updateY(groupRef.current.y());

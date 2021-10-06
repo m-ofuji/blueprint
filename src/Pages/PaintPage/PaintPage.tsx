@@ -1,10 +1,10 @@
 import NavBar from '../MainPage/NavBar';
 import ons from 'onsenui'
 import { Navigator } from 'react-onsenui';
-import { createRef, ChangeEvent, useState, useRef, useDebugValue } from 'react';
+import { createRef, ChangeEvent, useState, useRef, useEffect } from 'react';
 import { Page, Fab, Icon } from 'react-onsenui';
-import { Stage, Layer, Group, Circle, Rect, Image } from 'react-konva';
-import { ResizableImage, ResizableImageProps } from './ResizableImage';
+import { Stage, Layer, Group } from 'react-konva';
+import { ResizableImage } from './ResizableImage';
 import { downloadURI } from './DownloadUri';
 import { HoldFloatMenu } from './HoldFloatMenu';
 import { NormalTarget } from './Targets/NormalTarget';
@@ -37,22 +37,16 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
   };
 
   const [wallImage, setWallImage] = useState<CanvasImageSource | null>(null);
-  const [stageSizeProps, setStageSizeProps] = useState<SizeProps>(sizeProps);
-  const [imageSizeProps, setImageSizeProps] = useState<SizeProps>(sizeProps);
+  const [stageSizeProps, setStageSizeProps] = useState(sizeProps);
+  // const [imageSizeProps, setImageSizeProps] = useState<SizeProps>(sizeProps);
+  const [imageHeight, updateImageHeight] = useState<number>(window.innerHeight);
+  const [imageWidth, updateImageWidth] = useState<number>(window.innerWidth);
+  const [imageX, updateImgeX] = useState<number>(0);
+  const [imageY, updateImageY] = useState<number>(0);
+  const [imageScaleX, updateImageScaleX] = useState<number>(1);
+  const [imageScaleY, updateImageScaleY] = useState<number>(1);
+  const [execDownload, updateExecDownload] = useState<boolean>(false);
 
-
-  // const [stageHeight, updateStageHeight] = useState<number>(window.innerHeight);
-  // const [stageWidth, updateStageWidth] = useState<number>(window.innerWidth);
-  // const [imageHeight, updateImageHeight] = useState<number>(window.innerHeight);
-  // const [imageWidth, updateImageWidth] = useState<number>(window.innerWidth);
-  // const [stageX, updateStageX] = useState<number>(0);
-  // const [stageY, updateStageY] = useState<number>(0);
-  // const [imageX, updateImgeX] = useState<number>(0);
-  // const [imageY, updateImageY] = useState<number>(0);
-  // const [stageScaleX, updateStageScaleX] = useState<number>(1);
-  // const [stageScaleY, updateStageScaleY] = useState<number>(1);
-  // const [imageScaleX, updateImageScaleX] = useState<number>(1);
-  // const [imageScaleY, updateImageScaleY] = useState<number>(1);
   const [isTargetVisible, updateTargetVisibility] = useState<boolean>(true);
 
   const stage = useRef<any>(null);
@@ -85,39 +79,44 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
     i.src = dataURL;
     setWallImage(i);
     i.onload = (evt) => {
-      setImageSizeProps({...imageSizeProps, ...{width: i.width, height: i.height}});
-      // updateImageWidth(i.width);
-      // updateImageHeight(i.height);
+      updateImageWidth(i.width);
+      updateImageHeight(i.height);
     }
   }
 
-  const sleep = (msec: number) => new Promise(resolve => setTimeout(resolve, msec));
-
-  const handleExport = async () => {
-    if (!stage) return;
-
-    updateTargetVisibility(false);
-    setStageSizeProps({...stageSizeProps, ...{
-      width: imageSizeProps.width,
-      height: imageSizeProps.height,
-      x: imageSizeProps.x,
-      y: imageSizeProps.y,
-      scaleX: imageSizeProps.scaleX,
-      scaleY: imageSizeProps.scaleY
-    }});
-    
-    // delayをかけないと値が更新される前にダウンロードが走る。
-    await sleep(1);
-    
-    // 長辺の最大値を設定
+  const download = () => {
+    if (!execDownload) return;
     const maxSideLength = 600;
-    const fixPixelRatio = imageSizeProps.width > maxSideLength || imageSizeProps.height > maxSideLength;
-    const pixelRatio = fixPixelRatio ? maxSideLength / Math.max(imageSizeProps.width, imageSizeProps.height) : 1;
+    const fixPixelRatio = imageWidth > maxSideLength || imageHeight > maxSideLength;
+    const pixelRatio = fixPixelRatio ? maxSideLength / Math.max(imageWidth, imageHeight) : 1;
+    console.log('stage', stage.current);
     const uri = stage.current.toDataURL({pixelRatio: pixelRatio});
 
+    console.log('useEffect');
     downloadURI(uri, "topo.png");
 
     navigator.popPage();
+  };
+
+  useEffect(download);
+
+  const handleExport = () => {
+    if (!stage) return;
+
+    updateTargetVisibility(false);
+
+    setStageSizeProps((old) => {
+      return {...old, 
+        width: imageWidth,
+        height: imageHeight,
+        x: imageX,
+        y: imageY,
+        scaleX: imageScaleX,
+        scaleY: imageScaleY
+      };
+    });
+
+    updateExecDownload(true);
   };
 
   return (
@@ -129,7 +128,8 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
         scaleY={stageSizeProps.scaleY}
         width={stageSizeProps.width} 
         height={stageSizeProps.height}
-        ref={stage}>
+        ref={stage}
+      >
         <Layer>
           <Group draggable>
             <ResizableImage
@@ -138,12 +138,12 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
               key={'wallImage'}
               centerX={window.innerWidth / 2}
               centerY={window.innerHeight / 2}
-              sizeProps={imageSizeProps}
-              updateSizeProps={setImageSizeProps}
-              // updateX={setImageSizeProps}
-              // updateY={updateImageY}
-              // updateScaleX={updateImageScaleX}
-              // updateScaleY={updateImageScaleY}
+              // sizeProps={imageSizeProps}
+              // updateSizeProps={setImageSizeProps}
+              updateX={updateImgeX}
+              updateY={updateImageY}
+              updateScaleX={updateImageScaleX}
+              updateScaleY={updateImageScaleY}
             />
           </Group>
           <NormalTarget
