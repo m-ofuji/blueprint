@@ -39,12 +39,6 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
   const [wallImage, setWallImage] = useState<CanvasImageSource | null>(null);
   const [stageSizeProps, setStageSizeProps] = useState<SizeProps>(sizeProps);
   const [imageSizeProps, setImageSizeProps] = useState<SizeProps>(sizeProps);
-  // const [imageHeight, updateImageHeight] = useState<number>(window.innerHeight);
-  // const [imageWidth, updateImageWidth] = useState<number>(window.innerWidth);
-  // const [imageX, updateImgeX] = useState<number>(0);
-  // const [imageY, updateImageY] = useState<number>(0);
-  // const [imageScaleX, updateImageScaleX] = useState<number>(1);
-  // const [imageScaleY, updateImageScaleY] = useState<number>(1);
   const [execDownload, updateExecDownload] = useState<boolean>(false);
 
   const [isTargetVisible, updateTargetVisibility] = useState<boolean>(true);
@@ -80,10 +74,11 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
     setWallImage(i);
     i.onload = (evt) => {
       setImageSizeProps((old) => { return { ...old, width: i.width, height: i.height } });
-      // updateImageWidth(i.width);
-      // updateImageHeight(i.height);
     }
   }
+
+  console.log('関数トップ');
+  console.log(imageSizeProps);
 
   const download = () => {
     if (!execDownload) return;
@@ -105,6 +100,8 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
     if (!stage) return;
 
     updateTargetVisibility(false);
+
+    console.log(imageSizeProps);
 
     setStageSizeProps((old) => {
       return {...old, 
@@ -139,12 +136,7 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
               key={'wallImage'}
               centerX={window.innerWidth / 2}
               centerY={window.innerHeight / 2}
-              // sizeProps={imageSizeProps}
               updateSizeProps={setImageSizeProps}
-              // updateX={updateImgeX}
-              // updateY={updateImageY}
-              // updateScaleX={updateImageScaleX}
-              // updateScaleY={updateImageScaleY}
             />
           </Group>
           <NormalTarget

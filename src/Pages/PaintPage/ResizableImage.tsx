@@ -14,12 +14,7 @@ export type ResizableImageProps = {
   src: CanvasImageSource | undefined;
   x?: number;
   y?: number;
-  // sizeProps: SizeProps;
   updateSizeProps:React.Dispatch<React.SetStateAction<SizeProps>>;
-  // updateX: React.Dispatch<React.SetStateAction<number>>;
-  // updateY: React.Dispatch<React.SetStateAction<number>>;
-  // updateScaleX: React.Dispatch<React.SetStateAction<number>>;
-  // updateScaleY: React.Dispatch<React.SetStateAction<number>>;
 }
 
 let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
@@ -98,25 +93,19 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
     useLastDist(newDist);
     useScale(newScale);
 
-    // props.updateScaleX(newScale);
-    // props.updateScaleY(newScale);
-    // props.updateX(groupRef.current.x());
-    // props.updateY(groupRef.current.y());
-
-    props.updateSizeProps((old) => { 
+    console.log('update imagesize');
+    props.updateSizeProps((old) => {
+      console.log('scale changed');
+      console.log(old);
       return {
         ...old,
-        scaleX: newScale,
-        scaleY: newScale,
+        scaleX: 1 / newScale,
+        scaleY: 1 / newScale,
         x: groupRef.current.x(),
         y: groupRef.current.y()
       } 
     });
 
-    // props.updateSizeProps({...props.sizeProps, ...{scaleX: newScale}});
-    // props.updateSizeProps({...props.sizeProps, ...{scaleY: newScale}});
-    // props.updateSizeProps({...props.sizeProps, ...{x: groupRef.current.x()}});
-    // props.updateSizeProps({...props.sizeProps, ...{y: groupRef.current.y()}});
   }
 
   const OnTouchEnd = () => {
@@ -125,17 +114,7 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
   }
 
   const OnDragEnd = () => {
-    
-    // props.updateX(groupRef.current.x());
-    // props.updateY(groupRef.current.y());
-
     props.updateSizeProps((old) => { return { ...old, x: groupRef.current.x(), y: groupRef.current.y() }});
-
-    // props.updateSizeProps({...props.sizeProps, ...{x: groupRef.current.x()}});
-    // props.updateSizeProps({...props.sizeProps, ...{y: groupRef.current.y()}});
-
-    // props.updateX(groupRef.current.x());
-    // props.updateY(groupRef.current.y());
   }
 
   const getDistance = (p1:Touch, p2:Touch) => {
