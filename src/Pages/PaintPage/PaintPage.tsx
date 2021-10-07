@@ -37,14 +37,14 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
   };
 
   const [wallImage, setWallImage] = useState<CanvasImageSource | null>(null);
-  const [stageSizeProps, setStageSizeProps] = useState(sizeProps);
-  // const [imageSizeProps, setImageSizeProps] = useState<SizeProps>(sizeProps);
-  const [imageHeight, updateImageHeight] = useState<number>(window.innerHeight);
-  const [imageWidth, updateImageWidth] = useState<number>(window.innerWidth);
-  const [imageX, updateImgeX] = useState<number>(0);
-  const [imageY, updateImageY] = useState<number>(0);
-  const [imageScaleX, updateImageScaleX] = useState<number>(1);
-  const [imageScaleY, updateImageScaleY] = useState<number>(1);
+  const [stageSizeProps, setStageSizeProps] = useState<SizeProps>(sizeProps);
+  const [imageSizeProps, setImageSizeProps] = useState<SizeProps>(sizeProps);
+  // const [imageHeight, updateImageHeight] = useState<number>(window.innerHeight);
+  // const [imageWidth, updateImageWidth] = useState<number>(window.innerWidth);
+  // const [imageX, updateImgeX] = useState<number>(0);
+  // const [imageY, updateImageY] = useState<number>(0);
+  // const [imageScaleX, updateImageScaleX] = useState<number>(1);
+  // const [imageScaleY, updateImageScaleY] = useState<number>(1);
   const [execDownload, updateExecDownload] = useState<boolean>(false);
 
   const [isTargetVisible, updateTargetVisibility] = useState<boolean>(true);
@@ -79,16 +79,17 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
     i.src = dataURL;
     setWallImage(i);
     i.onload = (evt) => {
-      updateImageWidth(i.width);
-      updateImageHeight(i.height);
+      setImageSizeProps((old) => { return { ...old, width: i.width, height: i.height } });
+      // updateImageWidth(i.width);
+      // updateImageHeight(i.height);
     }
   }
 
   const download = () => {
     if (!execDownload) return;
     const maxSideLength = 600;
-    const fixPixelRatio = imageWidth > maxSideLength || imageHeight > maxSideLength;
-    const pixelRatio = fixPixelRatio ? maxSideLength / Math.max(imageWidth, imageHeight) : 1;
+    const fixPixelRatio = imageSizeProps.width > maxSideLength || imageSizeProps.height > maxSideLength;
+    const pixelRatio = fixPixelRatio ? maxSideLength / Math.max(imageSizeProps.width, imageSizeProps.height) : 1;
     console.log('stage', stage.current);
     const uri = stage.current.toDataURL({pixelRatio: pixelRatio});
 
@@ -107,12 +108,12 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
 
     setStageSizeProps((old) => {
       return {...old, 
-        width: imageWidth,
-        height: imageHeight,
-        x: imageX,
-        y: imageY,
-        scaleX: imageScaleX,
-        scaleY: imageScaleY
+        width: imageSizeProps.width,
+        height: imageSizeProps.height,
+        x: imageSizeProps.x,
+        y: imageSizeProps.y,
+        scaleX: imageSizeProps.scaleX,
+        scaleY: imageSizeProps.scaleY
       };
     });
 
@@ -139,11 +140,11 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
               centerX={window.innerWidth / 2}
               centerY={window.innerHeight / 2}
               // sizeProps={imageSizeProps}
-              // updateSizeProps={setImageSizeProps}
-              updateX={updateImgeX}
-              updateY={updateImageY}
-              updateScaleX={updateImageScaleX}
-              updateScaleY={updateImageScaleY}
+              updateSizeProps={setImageSizeProps}
+              // updateX={updateImgeX}
+              // updateY={updateImageY}
+              // updateScaleX={updateImageScaleX}
+              // updateScaleY={updateImageScaleY}
             />
           </Group>
           <NormalTarget

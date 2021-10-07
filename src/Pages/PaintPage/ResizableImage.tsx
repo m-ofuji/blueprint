@@ -15,11 +15,11 @@ export type ResizableImageProps = {
   x?: number;
   y?: number;
   // sizeProps: SizeProps;
-  // updateSizeProps:React.Dispatch<React.SetStateAction<SizeProps>>;
-  updateX: React.Dispatch<React.SetStateAction<number>>;
-  updateY: React.Dispatch<React.SetStateAction<number>>;
-  updateScaleX: React.Dispatch<React.SetStateAction<number>>;
-  updateScaleY: React.Dispatch<React.SetStateAction<number>>;
+  updateSizeProps:React.Dispatch<React.SetStateAction<SizeProps>>;
+  // updateX: React.Dispatch<React.SetStateAction<number>>;
+  // updateY: React.Dispatch<React.SetStateAction<number>>;
+  // updateScaleX: React.Dispatch<React.SetStateAction<number>>;
+  // updateScaleY: React.Dispatch<React.SetStateAction<number>>;
 }
 
 let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
@@ -98,10 +98,20 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
     useLastDist(newDist);
     useScale(newScale);
 
-    props.updateScaleX(newScale);
-    props.updateScaleY(newScale);
-    props.updateX(groupRef.current.x());
-    props.updateY(groupRef.current.y());
+    // props.updateScaleX(newScale);
+    // props.updateScaleY(newScale);
+    // props.updateX(groupRef.current.x());
+    // props.updateY(groupRef.current.y());
+
+    props.updateSizeProps((old) => { 
+      return {
+        ...old,
+        scaleX: newScale,
+        scaleY: newScale,
+        x: groupRef.current.x(),
+        y: groupRef.current.y()
+      } 
+    });
 
     // props.updateSizeProps({...props.sizeProps, ...{scaleX: newScale}});
     // props.updateSizeProps({...props.sizeProps, ...{scaleY: newScale}});
@@ -116,8 +126,11 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
 
   const OnDragEnd = () => {
     
-    props.updateX(groupRef.current.x());
-    props.updateY(groupRef.current.y());
+    // props.updateX(groupRef.current.x());
+    // props.updateY(groupRef.current.y());
+
+    props.updateSizeProps((old) => { return { ...old, x: groupRef.current.x(), y: groupRef.current.y() }});
+
     // props.updateSizeProps({...props.sizeProps, ...{x: groupRef.current.x()}});
     // props.updateSizeProps({...props.sizeProps, ...{y: groupRef.current.y()}});
 
