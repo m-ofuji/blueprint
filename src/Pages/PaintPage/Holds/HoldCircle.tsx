@@ -1,19 +1,20 @@
 import { Circle } from 'react-konva';
 import { forwardRef } from 'react';
 
-export type NormalHoldCircleProps = {
+export type HoldCircleProps = {
   x: number,
   y: number,
-  scale: number | undefined
+  scale: number | undefined,
+  color: string
 }
 
-let NormalHoldCircleBase = (props: NormalHoldCircleProps, ref: any) => {
+let HoldCircleBase = (props: HoldCircleProps, ref: any) => {
   return <Circle
     scaleX={props.scale}
     scaleY={props.scale}
     ref={ref}  
     fill="#00000000"
-    stroke="yellow"
+    stroke={props.color}
     radius={40}
     strokeWidth={5}
     x={props.x}
@@ -22,4 +23,4 @@ let NormalHoldCircleBase = (props: NormalHoldCircleProps, ref: any) => {
   />
 }
 
-export const NormalHoldCircle = forwardRef(NormalHoldCircleBase)
+export const HoldCircle = forwardRef(HoldCircleBase)

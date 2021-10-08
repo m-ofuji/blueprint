@@ -5,10 +5,10 @@ import { createRef, ChangeEvent, useState, useRef, useEffect } from 'react';
 import { Page, Fab, Icon } from 'react-onsenui';
 import { Stage, Layer, Group } from 'react-konva';
 import { ResizableImage } from './ResizableImage';
-import { ResizableImage2 } from './ResizableImage2';
 import { downloadURI } from './DownloadUri';
 import { HoldFloatMenu } from './HoldFloatMenu';
 import { NormalTarget } from './Targets/NormalTarget';
+import { TextTarget } from './Targets/TextTarget';
 
 export type SizeProps = {
   x: number,
@@ -41,8 +41,10 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
   const [stageSizeProps, setStageSizeProps] = useState<SizeProps>(sizeProps);
   const [imageSizeProps, setImageSizeProps] = useState<SizeProps>(sizeProps);
   const [execDownload, updateExecDownload] = useState<boolean>(false);
-
-  const [isTargetVisible, updateTargetVisibility] = useState<boolean>(true);
+  const [circleColor, setCircleColor] = useState<string>('yellow');
+  const [isHoldTargetVisible, updateHoldTargetVisibility] = useState<boolean>(true);
+  const [holdText, setHoldText] = useState<string>('S');
+  const [isTextTargetVisible, updateTextTargetVisibility] = useState<boolean>(false);
 
   const stage = useRef<any>(null);
   const resizableImage = useRef<any>(null);
@@ -95,9 +97,8 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
   const handleExport = () => {
     if (!stage) return;
 
-    updateTargetVisibility(false);
-
-    console.log(imageSizeProps);
+    updateHoldTargetVisibility(false);
+    updateTextTargetVisibility(false);
 
     setStageSizeProps((old) => {
       return {...old, 
@@ -112,6 +113,18 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
 
     updateExecDownload(true);
   };
+
+  const activateHoldTarget = (color: string) => {
+    updateHoldTargetVisibility(true);
+    updateTextTargetVisibility(false);
+    setCircleColor(color);
+  }
+
+  const activateTextTarget = (holdText: string) => {
+    updateHoldTargetVisibility(false);
+    updateTextTargetVisibility(true);
+    setHoldText(holdText);
+  }
 
   return (
     <Page onShow={selectPicture} renderToolbar={() => <NavBar {...param}/>}>
@@ -138,17 +151,24 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
           <NormalTarget
             x={window.innerWidth / 2 - stageSizeProps.x}
             y={window.innerHeight / 2 - stageSizeProps.y}
-            isVisible={isTargetVisible}
-            onTapped={() => resizableImage.current.useHold()}
+            isVisible={isHoldTargetVisible}
+            onTapped={() => resizableImage.current.useHold(circleColor)}
+          />
+          <TextTarget
+            x={window.innerWidth / 2 - stageSizeProps.x}
+            y={window.innerHeight / 2 - stageSizeProps.y}
+            character={holdText}
+            isVisible={isTextTargetVisible}
+            onTapped={() => resizableImage.current.useHoldText(holdText)}
           />
         </Layer>
       </Stage>
       <HoldFloatMenu
         position={'bottom right'}
-        onNormalClick={() => resizableImage.current.useHold()}
-        onFootClick={() => {}}
-        onStartClick={() => {}}
-        onGoalClick={() => {}}
+        onNormalClick={() => activateHoldTarget('yellow')}
+        onSpecialClick={() => activateHoldTarget('red')}
+        onStartClick={() => activateTextTarget('S')}
+        onGoalClick={() => activateTextTarget('G')}
       />
       <Fab onClick={handleExport} position={'bottom left'}>
         <Icon icon='fa-plus' size={26} fixedWidth={false} />

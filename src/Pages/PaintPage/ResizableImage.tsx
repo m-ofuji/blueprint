@@ -1,6 +1,7 @@
 import React, { createRef, useState } from 'react';
 import { Image, Transformer, Group } from 'react-konva';
-import { NormalHoldCircleProps, NormalHoldCircle } from './NormalHoldCircle';
+import { HoldCircleProps, HoldCircle } from './Holds/HoldCircle';
+import { HoldTextProps, HoldText } from './Holds/HoldText';
 import { useImperativeHandle, forwardRef } from 'react';
 import Konva from 'konva';
 import { KonvaEventObject } from 'konva/lib/Node';
@@ -22,22 +23,37 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
   // ここを直す 
   const groupRef = React.useRef<any>();
   const [circleRefs, useCircleRefs] = useState<React.RefObject<any>[]>([]);
-  const [holds, useHolds] = useState<NormalHoldCircleProps[]>([]);
+  const [textRefs, useTextRefs] = useState<React.RefObject<any>[]>([]);
+  const [holds, useHolds] = useState<HoldCircleProps[]>([]);
+  const [texts, useHoldText] = useState<HoldTextProps[]>([]);
   const [scale, useScale] = useState(1);
   const [lastDist, useLastDist] = useState(0);
   const [lastCenter, useLastCenter] = useState<{x: number, y: number} | null>(null);
 
   useImperativeHandle(ref, () => ({
-    useHold: () => {
+    useHold: (color: string) => {
       circleRefs.push(createRef<any>());
       useCircleRefs(circleRefs);
       const normalHold = {
         key: holds.length++,
         x: ((window.innerWidth / 2) - (groupRef.current.x())) * (1 / scale),
         y: ((window.innerHeight / 2) - (groupRef.current.y())) * (1 / scale),
-        scale: 1 / scale
+        scale: 1 / scale,
+        color:color
       }
       useHolds(holds.concat([normalHold]).filter(x => x));
+    },
+    useHoldText: (text: string) => {
+      textRefs.push(createRef<any>());
+      useTextRefs(textRefs);
+      const t = {
+        key: holds.length++,
+        x: ((window.innerWidth / 2) - (groupRef.current.x())) * (1 / scale),
+        y: ((window.innerHeight / 2) - (groupRef.current.y())) * (1 / scale),
+        scale: 1 / scale,
+        character:text
+      }
+      useHoldText(texts.concat([t]).filter(x => x));
     }
   }));
 
@@ -135,7 +151,8 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
       ref={groupRef}
     >
       <Image image={props.src}/>
-      {holds.map((props, i) => <NormalHoldCircle ref={circleRefs[i]} {...props}/>)}
+      {holds.map((props, i) => <HoldCircle ref={circleRefs[i]} {...props}/>)}
+      {texts.map((props, i) => <HoldText ref={textRefs[i]} {...props}/>)}
     </Group>
   );
 };

@@ -1,6 +1,5 @@
 import React, { createRef, useState } from 'react';
 import { Image, Transformer, Group } from 'react-konva';
-import { NormalHoldCircleProps, NormalHoldCircle } from './NormalHoldCircle';
 import { useImperativeHandle, forwardRef } from 'react';
 import Konva from 'konva';
 import { KonvaEventObject } from 'konva/lib/Node';
