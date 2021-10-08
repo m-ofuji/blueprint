@@ -93,10 +93,7 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
     useLastDist(newDist);
     useScale(newScale);
 
-    console.log('update imagesize');
     props.updateSizeProps((old) => {
-      console.log('scale changed');
-      console.log(old);
       return {
         ...old,
         scaleX: 1 / newScale,
@@ -137,9 +134,7 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
       onDragEnd={OnDragEnd}
       ref={groupRef}
     >
-      <Image
-        image={props.src}
-      />
+      <Image image={props.src}/>
       {holds.map((props, i) => <NormalHoldCircle ref={circleRefs[i]} {...props}/>)}
     </Group>
   );

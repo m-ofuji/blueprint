@@ -5,6 +5,7 @@ import { createRef, ChangeEvent, useState, useRef, useEffect } from 'react';
 import { Page, Fab, Icon } from 'react-onsenui';
 import { Stage, Layer, Group } from 'react-konva';
 import { ResizableImage } from './ResizableImage';
+import { ResizableImage2 } from './ResizableImage2';
 import { downloadURI } from './DownloadUri';
 import { HoldFloatMenu } from './HoldFloatMenu';
 import { NormalTarget } from './Targets/NormalTarget';
@@ -77,18 +78,13 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
     }
   }
 
-  console.log('関数トップ');
-  console.log(imageSizeProps);
-
   const download = () => {
     if (!execDownload) return;
     const maxSideLength = 600;
     const fixPixelRatio = imageSizeProps.width > maxSideLength || imageSizeProps.height > maxSideLength;
     const pixelRatio = fixPixelRatio ? maxSideLength / Math.max(imageSizeProps.width, imageSizeProps.height) : 1;
-    console.log('stage', stage.current);
     const uri = stage.current.toDataURL({pixelRatio: pixelRatio});
 
-    console.log('useEffect');
     downloadURI(uri, "topo.png");
 
     navigator.popPage();
