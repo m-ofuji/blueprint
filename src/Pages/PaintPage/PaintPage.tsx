@@ -1,7 +1,7 @@
 import NavBar from '../MainPage/NavBar';
 import ons from 'onsenui'
 import { Navigator } from 'react-onsenui';
-import { createRef, ChangeEvent, useState, useRef, useEffect } from 'react';
+import { createRef, ChangeEvent, useState, useRef, useEffect, useLayoutEffect} from 'react';
 import { Page, Fab, Icon } from 'react-onsenui';
 import { Stage, Layer, Group } from 'react-konva';
 import { ResizableImage } from './ResizableImage';
@@ -40,6 +40,7 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
   const [wallImage, setWallImage] = useState<CanvasImageSource | null>(null);
   const [stageSizeProps, setStageSizeProps] = useState<SizeProps>(sizeProps);
   const [imageSizeProps, setImageSizeProps] = useState<SizeProps>(sizeProps);
+  const [isImageLoaded, updateIsImageLoaded] = useState<boolean>(false);
   const [execDownload, updateExecDownload] = useState<boolean>(false);
   const [circleColor, setCircleColor] = useState<string>('yellow');
   const [isHoldTargetVisible, updateHoldTargetVisibility] = useState<boolean>(true);
@@ -52,22 +53,30 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
   const ref = createRef<HTMLInputElement>();
 
   const selectPicture = () => {
-    const option = {
-      title:'壁画像選択', buttonLabels:['いいえ','はい']
+    if (ref.current && !isImageLoaded) {
+      ref.current.click();
     }
-    ons.notification.confirm('壁の画像を選択してください。', option).then(onAlertClose);
+
+    // const option = {
+    //   title:'壁画像選択', buttonLabels:['OK']
+    // }
+    // ons.notification.confirm('壁の画像を選択してください。', option).then(onAlertClose);
   }
 
   const onAlertClose = (index: HTMLElement) => {
-    if (ref.current && Number(index) === 1) {
-      ref.current.click()
+    if (ref.current) {
+      ref.current.click();
     }
   }
+
+  useLayoutEffect(()=> {
+    selectPicture();
+  });
 
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files === null) return;
 
-    const file = event.target.files.item(0)
+    const file = event.target.files.item(0);
 
     if (file === null) return;
 
@@ -78,6 +87,7 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
     i.onload = (evt) => {
       setImageSizeProps((old) => { return { ...old, width: i.width, height: i.height } });
     }
+    updateIsImageLoaded(true);
   }
 
   const download = () => {
@@ -127,7 +137,9 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
   }
 
   return (
-    <Page onShow={selectPicture} renderToolbar={() => <NavBar {...param}/>}>
+    <Page 
+      // onShow={selectPicture} 
+      renderToolbar={() => <NavBar {...param}/>}>
       <Stage 
         offsetX={stageSizeProps.x}
         offsetY={stageSizeProps.y}
@@ -173,12 +185,14 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
       <Fab onClick={handleExport} position={'bottom left'}>
         <Icon icon='fa-plus' size={26} fixedWidth={false} />
       </Fab>
-      <input
-        onChange={onChange}
-        ref={ref}
-        style={{ display: 'none' }}
-        type={'file'}
-      />
+      
+        <input
+          onChange={onChange}
+          ref={ref}
+          style={{ display: 'none' }}
+          type='file'
+          accept='image/*'
+        />
     </Page>
   )
 }
