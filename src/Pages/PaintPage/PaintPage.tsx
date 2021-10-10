@@ -3,6 +3,7 @@ import ons from 'onsenui'
 import { Navigator } from 'react-onsenui';
 import { createRef, ChangeEvent, useState, useRef, useEffect, useLayoutEffect} from 'react';
 import { Page, Fab, Icon } from 'react-onsenui';
+import { KonvaEventObject } from 'konva/lib/Node';
 import { Stage, Layer, Group } from 'react-konva';
 import { ResizableImage } from './ResizableImage';
 import { downloadURI } from './DownloadUri';
@@ -38,16 +39,23 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
     height: window.innerHeight * 0.8
   };
 
+  
+
   const [wallImage, setWallImage] = useState<CanvasImageSource | null>(null);
   const [stageSizeProps, setStageSizeProps] = useState<SizeProps>(sizeProps);
   const [imageSizeProps, setImageSizeProps] = useState<SizeProps>(sizeProps);
   const [isImageLoaded, updateIsImageLoaded] = useState<boolean>(false);
   const [execDownload, updateExecDownload] = useState<boolean>(false);
   const [circleColor, setCircleColor] = useState<string>('yellow');
-  const [isHoldTargetVisible, updateHoldTargetVisibility] = useState<boolean>(true);
-  const [holdText, setHoldText] = useState<string>('S');
-  const [isTextTargetVisible, updateTextTargetVisibility] = useState<boolean>(false);
   const [selectedButton, updateSelectedButton] = useState<boolean[]>([true, false, false, false]);
+  const [holdText, setHoldText] = useState<string>('S');
+
+  const initialButton = [
+    { text: 'ホールド', isSelected: selectedButton[0], onTapped: () => activateHoldTarget(0, 'yellow') },
+    { text: 'S・Gホールド', isSelected: selectedButton[1], onTapped: () => activateHoldTarget(1, 'red') },
+    { text: 'Sマーク', isSelected: selectedButton[2], onTapped: () => activateHoldTarget(2, 'yellow') },
+    { text: 'ホールド', isSelected: selectedButton[3], onTapped: () => activateHoldTarget(3, 'yellow') }
+  ];
 
   const stage = useRef<any>(null);
   const resizableImage = useRef<any>(null);
@@ -109,8 +117,8 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
   const handleExport = () => {
     if (!stage) return;
 
-    updateHoldTargetVisibility(false);
-    updateTextTargetVisibility(false);
+    // updateHoldTargetVisibility(false);
+    // updateTextTargetVisibility(false);
 
     setStageSizeProps((old) => {
       return {...old, 
@@ -127,8 +135,8 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
   };
 
   const activateHoldTarget = (index:number, color: string) => {
-    updateHoldTargetVisibility(true);
-    updateTextTargetVisibility(false);
+    // updateHoldTargetVisibility(true);
+    // updateTextTargetVisibility(false);
     setCircleColor(color);
     const selected = [false, false, false, false];
     selected[index] = true;
@@ -137,12 +145,17 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
   }
 
   const activateTextTarget = (index:number, holdText: string) => {
-    updateHoldTargetVisibility(false);
-    updateTextTargetVisibility(true);
+    // updateHoldTargetVisibility(false);
+    // updateTextTargetVisibility(true);
     setHoldText(holdText);
     const selected = [false, false, false, false];
     selected[index] = true;
     updateSelectedButton(selected);
+  }
+
+  const holdTargetTapped = (evt: KonvaEventObject<Event>) => {
+    const index = selectedButton.map((val, index) => index);
+    resizableImage.current.useHold(circleColor)
   }
 
   return (
@@ -172,25 +185,18 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
           <NormalTarget
             x={window.innerWidth / 2 - stageSizeProps.x}
             y={window.innerHeight / 2 - stageSizeProps.y}
-            isVisible={isHoldTargetVisible}
+            isVisible={selectedButton[0] || selectedButton[1]}
             onTapped={() => resizableImage.current.useHold(circleColor)}
           />
           <TextTarget
             x={window.innerWidth / 2 - stageSizeProps.x}
             y={window.innerHeight / 2 - stageSizeProps.y}
             character={holdText}
-            isVisible={isTextTargetVisible}
+            isVisible={selectedButton[2] || selectedButton[3]}
             onTapped={() => resizableImage.current.useHoldText(holdText)}
           />
         </Layer>
       </Stage>
-      {/* <HoldFloatMenu
-        position={'bottom right'}
-        onNormalClick={() => activateHoldTarget('yellow')}
-        onSpecialClick={() => activateHoldTarget('red')}
-        onStartClick={() => activateTextTarget('S')}
-        onGoalClick={() => activateTextTarget('G')}
-      /> */}
       <Fab onClick={handleExport} position={'bottom left'}>
         <Icon icon='fa-plus' size={26} fixedWidth={false} />
       </Fab>
