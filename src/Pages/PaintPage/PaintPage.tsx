@@ -9,6 +9,7 @@ import { downloadURI } from './DownloadUri';
 import { HoldFloatMenu } from './HoldFloatMenu';
 import { NormalTarget } from './Targets/NormalTarget';
 import { TextTarget } from './Targets/TextTarget';
+import { RoundButton } from '../../Components/RoundButton';
 
 export type SizeProps = {
   x: number,
@@ -34,7 +35,7 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
     scaleX: 1,
     scaleY: 1,
     width: window.innerWidth,
-    height: window.innerHeight
+    height: window.innerHeight * 0.8
   };
 
   const [wallImage, setWallImage] = useState<CanvasImageSource | null>(null);
@@ -46,6 +47,7 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
   const [isHoldTargetVisible, updateHoldTargetVisibility] = useState<boolean>(true);
   const [holdText, setHoldText] = useState<string>('S');
   const [isTextTargetVisible, updateTextTargetVisibility] = useState<boolean>(false);
+  const [selectedButton, updateSelectedButton] = useState<boolean[]>([true, false, false, false]);
 
   const stage = useRef<any>(null);
   const resizableImage = useRef<any>(null);
@@ -124,16 +126,23 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
     updateExecDownload(true);
   };
 
-  const activateHoldTarget = (color: string) => {
+  const activateHoldTarget = (index:number, color: string) => {
     updateHoldTargetVisibility(true);
     updateTextTargetVisibility(false);
     setCircleColor(color);
+    const selected = [false, false, false, false];
+    selected[index] = true;
+    updateSelectedButton(selected);
+    // updateSelectedButton((old) => { return {...[false, false, false, false], index: true}});
   }
 
-  const activateTextTarget = (holdText: string) => {
+  const activateTextTarget = (index:number, holdText: string) => {
     updateHoldTargetVisibility(false);
     updateTextTargetVisibility(true);
     setHoldText(holdText);
+    const selected = [false, false, false, false];
+    selected[index] = true;
+    updateSelectedButton(selected);
   }
 
   return (
@@ -175,24 +184,29 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
           />
         </Layer>
       </Stage>
-      <HoldFloatMenu
+      {/* <HoldFloatMenu
         position={'bottom right'}
         onNormalClick={() => activateHoldTarget('yellow')}
         onSpecialClick={() => activateHoldTarget('red')}
         onStartClick={() => activateTextTarget('S')}
         onGoalClick={() => activateTextTarget('G')}
-      />
+      /> */}
       <Fab onClick={handleExport} position={'bottom left'}>
         <Icon icon='fa-plus' size={26} fixedWidth={false} />
       </Fab>
-      
-        <input
-          onChange={onChange}
-          ref={ref}
-          style={{ display: 'none' }}
-          type='file'
-          accept='image/*'
-        />
+      <div className={'horizontal-container'}>
+        <RoundButton isSelected={selectedButton[0]} text='ホールド' onTapped={() => activateHoldTarget(0, 'yellow')} />
+        <RoundButton isSelected={selectedButton[1]} text='S・Gホールド' onTapped={() => activateHoldTarget(1, 'red')} />
+        <RoundButton isSelected={selectedButton[2]} text='Sマーク' onTapped={() => activateTextTarget(2, 'S')} />
+        <RoundButton isSelected={selectedButton[3]} text='Gマーク' onTapped={() => activateTextTarget(3, 'G')} />
+      </div>
+      <input
+        onChange={onChange}
+        ref={ref}
+        style={{ display: 'none' }}
+        type='file'
+        accept='image/*'
+      />
     </Page>
   )
 }

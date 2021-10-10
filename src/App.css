@@ -11,6 +11,36 @@
   text-align: center;
 }
 
+.horizontal-container {
+  width: 80%;
+  display: flex;
+  align-items: center;
+  overflow: scroll;
+  height:12%;
+}
+
+.horizontal-container::-webkit-scrollbar {  /* Chrome, Safari 対応 */
+  display:none;
+}
+
+.round-button.selected {
+  color: whitesmoke;
+  background-color: blue;
+}
+
+.round-button {
+  margin: 1%;
+  border-radius: 1.1rem; 
+  padding: 2% 5%;
+  text-align: center;
+  width: fit-content;
+  /* height: fit-content; */
+  font-size: 1rem;
+  white-space: nowrap;
+  color: black;
+  background-color: gainsboro;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
