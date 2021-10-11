@@ -39,22 +39,20 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
     height: window.innerHeight * 0.8
   };
 
-  
-
   const [wallImage, setWallImage] = useState<CanvasImageSource | null>(null);
   const [stageSizeProps, setStageSizeProps] = useState<SizeProps>(sizeProps);
   const [imageSizeProps, setImageSizeProps] = useState<SizeProps>(sizeProps);
   const [isImageLoaded, updateIsImageLoaded] = useState<boolean>(false);
   const [execDownload, updateExecDownload] = useState<boolean>(false);
-  const [circleColor, setCircleColor] = useState<string>('yellow');
+  // const [circleColor, setCircleColor] = useState<string>('yellow');
   const [selectedButton, updateSelectedButton] = useState<boolean[]>([true, false, false, false]);
   const [holdText, setHoldText] = useState<string>('S');
 
   const initialButton = [
-    { text: 'ホールド', isSelected: selectedButton[0], onTapped: () => activateHoldTarget(0, 'yellow') },
-    { text: 'S・Gホールド', isSelected: selectedButton[1], onTapped: () => activateHoldTarget(1, 'red') },
-    { text: 'Sマーク', isSelected: selectedButton[2], onTapped: () => activateHoldTarget(2, 'yellow') },
-    { text: 'ホールド', isSelected: selectedButton[3], onTapped: () => activateHoldTarget(3, 'yellow') }
+    { text: 'ホールド', isSelected: selectedButton[0], onTapped: () => activateHoldTarget(0) },
+    { text: 'S・Gホールド', isSelected: selectedButton[1], onTapped: () => activateHoldTarget(1) },
+    { text: 'Sマーク', isSelected: selectedButton[2], onTapped: () => activateTextTarget(2) },
+    { text: 'Gマーク', isSelected: selectedButton[3], onTapped: () => activateTextTarget(3) }
   ];
 
   const stage = useRef<any>(null);
@@ -134,33 +132,65 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
     updateExecDownload(true);
   };
 
-  const activateHoldTarget = (index:number, color: string) => {
+  const activateHoldTarget = (index:number) => {
     // updateHoldTargetVisibility(true);
+    
     // updateTextTargetVisibility(false);
-    setCircleColor(color);
+    
     const selected = [false, false, false, false];
     selected[index] = true;
     updateSelectedButton(selected);
+
+    const color = getHoldColor(selectedButton);
+    console.log(color);
+    if (!color) return;
+    // setCircleColor(color);
+    
     // updateSelectedButton((old) => { return {...[false, false, false, false], index: true}});
   }
 
-  const activateTextTarget = (index:number, holdText: string) => {
+  const activateTextTarget = (index:number) => {
     // updateHoldTargetVisibility(false);
     // updateTextTargetVisibility(true);
-    setHoldText(holdText);
+    
     const selected = [false, false, false, false];
     selected[index] = true;
     updateSelectedButton(selected);
+    console.log(selected);
+    const text = getText(selectedButton);
+    console.log(text);
+    if (!text) return;
+    setHoldText(text);
+  }
+
+  const getHoldColor = (selected: boolean[]) => {
+    const index = selected.findIndex((val, i) => val);
+    console.log(index);
+    if (index >= 2 || index < 0) return undefined;
+    return index === 0 ? 'yellow' : 'red';
+  }
+
+  const getText = (selected: boolean[]) => {
+    const index = selected.findIndex((val, i) => val);
+    console.log(index);
+    if (index <= 1) return undefined;
+    return index === 2 ? 'S' : 'G';
   }
 
   const holdTargetTapped = (evt: KonvaEventObject<Event>) => {
-    const index = selectedButton.map((val, index) => index);
-    resizableImage.current.useHold(circleColor)
+    const color = getHoldColor(selectedButton);
+    if (!color) return;
+    resizableImage.current.useHold(color)
+  }
+
+  const textTargetTapped = (evt: KonvaEventObject<Event>) => {
+    const text = getText(selectedButton);
+    if (!text) return;
+    resizableImage.current.useHoldText(text)
   }
 
   return (
     <Page 
-      // onShow={selectPicture} 
       renderToolbar={() => <NavBar {...param}/>}>
       <Stage 
         offsetX={stageSizeProps.x}
@@ -186,14 +216,14 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
             x={window.innerWidth / 2 - stageSizeProps.x}
             y={window.innerHeight / 2 - stageSizeProps.y}
             isVisible={selectedButton[0] || selectedButton[1]}
-            onTapped={() => resizableImage.current.useHold(circleColor)}
+            onTapped={holdTargetTapped}
           />
           <TextTarget
             x={window.innerWidth / 2 - stageSizeProps.x}
             y={window.innerHeight / 2 - stageSizeProps.y}
             character={holdText}
             isVisible={selectedButton[2] || selectedButton[3]}
-            onTapped={() => resizableImage.current.useHoldText(holdText)}
+            onTapped={textTargetTapped}
           />
         </Layer>
       </Stage>
@@ -201,10 +231,12 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
         <Icon icon='fa-plus' size={26} fixedWidth={false} />
       </Fab>
       <div className={'horizontal-container'}>
-        <RoundButton isSelected={selectedButton[0]} text='ホールド' onTapped={() => activateHoldTarget(0, 'yellow')} />
-        <RoundButton isSelected={selectedButton[1]} text='S・Gホールド' onTapped={() => activateHoldTarget(1, 'red')} />
-        <RoundButton isSelected={selectedButton[2]} text='Sマーク' onTapped={() => activateTextTarget(2, 'S')} />
-        <RoundButton isSelected={selectedButton[3]} text='Gマーク' onTapped={() => activateTextTarget(3, 'G')} />
+        {initialButton.map((props, i) => <RoundButton {...props}/>)}
+        
+        {/* <RoundButton isSelected={selectedButton[0]} text='ホールド' onTapped={() => activateHoldTarget(0)} />
+        <RoundButton isSelected={selectedButton[1]} text='S・Gホールド' onTapped={() => activateHoldTarget(1)} />
+        <RoundButton isSelected={selectedButton[2]} text='Sマーク' onTapped={() => activateTextTarget(2)} />
+        <RoundButton isSelected={selectedButton[3]} text='Gマーク' onTapped={() => activateTextTarget(3)} /> */}
       </div>
       <input
         onChange={onChange}
