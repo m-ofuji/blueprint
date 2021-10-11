@@ -16,6 +16,7 @@ export type ResizableImageProps = {
   x?: number;
   y?: number;
   updateSizeProps:React.Dispatch<React.SetStateAction<SizeProps>>;
+  updateUndoMethods:React.Dispatch<React.SetStateAction<(() => void)[]>>;
 }
 
 let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
@@ -42,6 +43,8 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
         color:color
       }
       useHolds(holds.concat([normalHold]).filter(x => x));
+      const undo = () => useHolds(holds.filter(x => x !== normalHold ));
+      props.updateUndoMethods(old => old.concat(undo));
     },
     useHoldText: (text: string) => {
       textRefs.push(createRef<any>());
@@ -54,6 +57,8 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
         character:text
       }
       useHoldText(texts.concat([t]).filter(x => x));
+      const undo = () => useHoldText(texts.filter(x => x !== t));
+      props.updateUndoMethods(old => old.concat(undo));
     }
   }));
 

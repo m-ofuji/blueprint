@@ -22,6 +22,8 @@ export type SizeProps = {
   height: number
 }
 
+// export type Undo = () => void;
+
 const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
 
   const param = {
@@ -47,6 +49,7 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
   const [execDownload, updateExecDownload] = useState<boolean>(false);
   const [selectedButton, updateSelectedButton] = useState<boolean[]>([true, false, false, false]);
   const [holdText, setHoldText] = useState<string>('S');
+  const [undoMethods, updateUndoMethods] = useState<(() => void)[]>([]);
 
   const initialButton = [
     { text: 'ホールド', isSelected: selectedButton[0], onTapped: () => activateHoldTarget(0) },
@@ -190,6 +193,7 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
               centerX={window.innerWidth / 2}
               centerY={window.innerHeight / 2}
               updateSizeProps={setImageSizeProps}
+              updateUndoMethods={updateUndoMethods}
             />
           </Group>
           <NormalTarget
