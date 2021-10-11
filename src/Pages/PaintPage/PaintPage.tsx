@@ -11,6 +11,7 @@ import { HoldFloatMenu } from './HoldFloatMenu';
 import { NormalTarget } from './Targets/NormalTarget';
 import { TextTarget } from './Targets/TextTarget';
 import { RoundButton } from '../../Components/RoundButton';
+import { DownloadButton } from './DownloadButton';
 
 export type SizeProps = {
   x: number,
@@ -36,7 +37,7 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
     scaleX: 1,
     scaleY: 1,
     width: window.innerWidth,
-    height: window.innerHeight * 0.8
+    height: window.innerHeight - 56
   };
 
   const [wallImage, setWallImage] = useState<CanvasImageSource | null>(null);
@@ -44,7 +45,6 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
   const [imageSizeProps, setImageSizeProps] = useState<SizeProps>(sizeProps);
   const [isImageLoaded, updateIsImageLoaded] = useState<boolean>(false);
   const [execDownload, updateExecDownload] = useState<boolean>(false);
-  // const [circleColor, setCircleColor] = useState<string>('yellow');
   const [selectedButton, updateSelectedButton] = useState<boolean[]>([true, false, false, false]);
   const [holdText, setHoldText] = useState<string>('S');
 
@@ -115,9 +115,6 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
   const handleExport = () => {
     if (!stage) return;
 
-    // updateHoldTargetVisibility(false);
-    // updateTextTargetVisibility(false);
-
     setStageSizeProps((old) => {
       return {...old, 
         width: imageSizeProps.width,
@@ -133,46 +130,28 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
   };
 
   const activateHoldTarget = (index:number) => {
-    // updateHoldTargetVisibility(true);
-    
-    // updateTextTargetVisibility(false);
-    
     const selected = [false, false, false, false];
     selected[index] = true;
     updateSelectedButton(selected);
-
-    const color = getHoldColor(selectedButton);
-    console.log(color);
-    if (!color) return;
-    // setCircleColor(color);
-    
-    // updateSelectedButton((old) => { return {...[false, false, false, false], index: true}});
   }
 
   const activateTextTarget = (index:number) => {
-    // updateHoldTargetVisibility(false);
-    // updateTextTargetVisibility(true);
-    
     const selected = [false, false, false, false];
     selected[index] = true;
     updateSelectedButton(selected);
-    console.log(selected);
-    const text = getText(selectedButton);
-    console.log(text);
+    const text = getText(selected);
     if (!text) return;
     setHoldText(text);
   }
 
   const getHoldColor = (selected: boolean[]) => {
     const index = selected.findIndex((val, i) => val);
-    console.log(index);
     if (index >= 2 || index < 0) return undefined;
     return index === 0 ? 'yellow' : 'red';
   }
 
   const getText = (selected: boolean[]) => {
     const index = selected.findIndex((val, i) => val);
-    console.log(index);
     if (index <= 1) return undefined;
     return index === 2 ? 'S' : 'G';
   }
@@ -193,6 +172,7 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
     <Page 
       renderToolbar={() => <NavBar {...param}/>}>
       <Stage 
+        className={'image-stage'}
         offsetX={stageSizeProps.x}
         offsetY={stageSizeProps.y}
         scaleX={stageSizeProps.scaleX}
@@ -227,17 +207,10 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
           />
         </Layer>
       </Stage>
-      <Fab onClick={handleExport} position={'bottom left'}>
-        <Icon icon='fa-plus' size={26} fixedWidth={false} />
-      </Fab>
       <div className={'horizontal-container'}>
         {initialButton.map((props, i) => <RoundButton {...props}/>)}
-        
-        {/* <RoundButton isSelected={selectedButton[0]} text='ホールド' onTapped={() => activateHoldTarget(0)} />
-        <RoundButton isSelected={selectedButton[1]} text='S・Gホールド' onTapped={() => activateHoldTarget(1)} />
-        <RoundButton isSelected={selectedButton[2]} text='Sマーク' onTapped={() => activateTextTarget(2)} />
-        <RoundButton isSelected={selectedButton[3]} text='Gマーク' onTapped={() => activateTextTarget(3)} /> */}
       </div>
+      <DownloadButton  onTapped={handleExport}/>
       <input
         onChange={onChange}
         ref={ref}
