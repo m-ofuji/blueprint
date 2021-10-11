@@ -15,6 +15,20 @@
   position: absolute;
 }
 
+.undo-button {
+  position: absolute;
+  right: 10px;
+  bottom: 25%;
+  height: 20px;
+  width: 20px;
+  border-radius: 35px; 
+  padding: 15px;
+  vertical-align:auto;
+  color: whitesmoke;
+  background-color: #004898;
+  box-shadow: 1px 2px 4px rgba(0,0,0,0.5);
+}
+
 .download-button {
   position: absolute;
   right: 10px;

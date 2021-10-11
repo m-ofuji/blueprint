@@ -171,6 +171,12 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
     resizableImage.current.useHoldText(text)
   }
 
+  const undo = () => {
+    if (undoMethods.length <= 0) return;
+    undoMethods[undoMethods.length - 1]();
+    undoMethods.pop();
+  }
+
   return (
     <Page 
       renderToolbar={() => <NavBar {...param}/>}>
@@ -215,6 +221,10 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
         {initialButton.map((props, i) => <RoundButton {...props}/>)}
       </div>
       <DownloadButton  onTapped={handleExport}/>
+      <Fab
+        position={'bottom right'}
+        onClick={undo}
+      />
       <input
         onChange={onChange}
         ref={ref}

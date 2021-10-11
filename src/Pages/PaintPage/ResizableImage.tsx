@@ -43,8 +43,8 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
         color:color
       }
       useHolds(holds.concat([normalHold]).filter(x => x));
-      const undo = () => useHolds(holds.filter(x => x !== normalHold ));
-      props.updateUndoMethods(old => old.concat(undo));
+      const Undo = () => useHolds(holds.filter(x => x !== normalHold ));
+      props.updateUndoMethods(old => old.concat(Undo));
     },
     useHoldText: (text: string) => {
       textRefs.push(createRef<any>());
@@ -57,8 +57,8 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
         character:text
       }
       useHoldText(texts.concat([t]).filter(x => x));
-      const undo = () => useHoldText(texts.filter(x => x !== t));
-      props.updateUndoMethods(old => old.concat(undo));
+      const Undo = () => useHoldText(texts.filter(x => x !== t));
+      props.updateUndoMethods(old => old.concat(Undo));
     }
   }));
 
