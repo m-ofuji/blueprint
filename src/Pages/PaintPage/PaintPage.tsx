@@ -50,6 +50,8 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
   const [selectedButton, updateSelectedButton] = useState<boolean[]>([true, false, false, false]);
   const [holdText, setHoldText] = useState<string>('S');
   const [undoMethods, updateUndoMethods] = useState<(() => void)[]>([]);
+  const [redoMethods, updateRedoMethods] = useState<(() => void)[]>([]);
+  const [history, updateHistory] = useState<[(() => void), (() => void)][]>([]);
 
   const initialButton = [
     { text: 'ホールド', isSelected: selectedButton[0], onTapped: () => activateHoldTarget(0) },
@@ -172,9 +174,11 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
   }
 
   const undo = () => {
-    if (undoMethods.length <= 0) return;
-    undoMethods[undoMethods.length - 1]();
-    undoMethods.pop();
+    resizableImage.current.Undo();
+  }
+
+  const redo = () => {
+    resizableImage.current.Redo();
   }
 
   return (
@@ -199,7 +203,7 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
               centerX={window.innerWidth / 2}
               centerY={window.innerHeight / 2}
               updateSizeProps={setImageSizeProps}
-              updateUndoMethods={updateUndoMethods}
+              updateUndoMethods={updateHistory}
             />
           </Group>
           <NormalTarget
@@ -224,6 +228,10 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
       <Fab
         position={'bottom right'}
         onClick={undo}
+      />
+      <Fab
+        position={'top right'}
+        onClick={redo}
       />
       <input
         onChange={onChange}

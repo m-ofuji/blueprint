@@ -8,6 +8,14 @@ export type HoldTextProps = {
   scale: number | undefined
 }
 
+export const isHoldTextProps = (arg: unknown): arg is HoldTextProps =>
+    typeof arg === "object" &&
+    arg !== null &&
+    typeof (arg as HoldTextProps).x === 'number' &&
+    typeof (arg as HoldTextProps).y === 'number' &&
+    (typeof (arg as HoldTextProps).scale === 'number' || (arg as HoldTextProps).scale === undefined) &&
+    typeof (arg as HoldTextProps).character === 'string';
+
 let HoldTextBase = (props: HoldTextProps, ref: any) => {
   return <Text
     scaleX={props.scale}

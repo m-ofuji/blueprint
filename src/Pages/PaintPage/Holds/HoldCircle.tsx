@@ -8,6 +8,14 @@ export type HoldCircleProps = {
   color: string
 }
 
+export const isHoldCircleProps = (arg: unknown): arg is HoldCircleProps =>
+    typeof arg === "object" &&
+    arg !== null &&
+    typeof (arg as HoldCircleProps).x === 'number' &&
+    typeof (arg as HoldCircleProps).y === 'number' &&
+    (typeof (arg as HoldCircleProps).scale === 'number' || (arg as HoldCircleProps).scale === undefined) &&
+    typeof (arg as HoldCircleProps).color === 'string';
+
 let HoldCircleBase = (props: HoldCircleProps, ref: any) => {
   return <Circle
     scaleX={props.scale}
