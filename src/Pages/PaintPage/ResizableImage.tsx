@@ -16,7 +16,8 @@ export type ResizableImageProps = {
   x?: number;
   y?: number;
   updateSizeProps: React.Dispatch<React.SetStateAction<SizeProps>>;
-  updateUndoMethods: React.Dispatch<React.SetStateAction<[() => void, () => void][]>>;
+  updateIsUndoEnabled: React.Dispatch<React.SetStateAction<boolean>>;
+  updateIsRedoEnabled: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
@@ -45,12 +46,10 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
         color:color
       }
       useHolds(holds.concat([normalHold]).filter(x => x));
-      // useHistory(old => old.concat(normalHold));
-      // const Redo = () => useHolds(holds.concat([normalHold]).filter(x => x));
-      // props.updateUndoMethods(old => old.concat([Undo, Redo]));
 
       const Undo = () => useHolds(holds.filter(x => x !== normalHold ));
       useUndo(old => [...old, [normalHold, Undo]]);
+      props.updateIsUndoEnabled(true);
       useRedo([]);
     },
     useHoldText: (text: string) => {
@@ -64,55 +63,61 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
         character:text
       }
       useHoldText(texts.concat([t]).filter(x => x));
-      // useHistory(old => old.concat(t));
-      
-      // const Redo = () => useHoldText(texts.concat([t]).filter(x => x));
-      // props.updateUndoMethods(old => old.concat([Undo, Redo]));
       const Undo = () => useHoldText(texts.filter(x => x !== t));
-      // useUndo(old => old.concat([t, Undo]));
       useUndo(old => [...old, [t, Undo]]);
+      props.updateIsUndoEnabled(true);
       useRedo([]);
     },
     Undo: () => {
       const last = undo[undo.length - 1];
-      const lastItem = last[0];
-      let Redo : () => void;
-      if (isHoldCircleProps(lastItem)) {
-        Redo = () => useHolds(holds.concat([lastItem]).filter(x => x));
-        // Redo = addHold(lastItem);
-      } else if (isHoldTextProps(lastItem)) {
-        Redo = () => useHoldText(texts.concat([lastItem]).filter(x => x));
-        // Redo = addText(lastItem);
+      const isEmpty = !last;
+      let Redo: () => void;
+      let lastItem: any;
+      if (!isEmpty) {
+        lastItem = last[0];
+        if (isHoldCircleProps(lastItem)) {
+          Redo = () => useHolds(holds.concat([lastItem]).filter(x => x));
+        } else if (isHoldTextProps(lastItem)) {
+          Redo = () => useHoldText(texts.concat([lastItem]).filter(x => x));
+        }
       }
-      // useRedo(old => old.concat([lastItem, Redo]));
-      useRedo(old => [...old, [lastItem, Redo]]);
-      last[1]();
-      undo.pop();
+
+      useRedo(old => isEmpty ? old : [...old, [lastItem, Redo]]);
+
+      if (!isEmpty) {
+        last[1]();
+        undo.pop();
+      }
+      props.updateIsUndoEnabled(undo.length <= 0);
       useUndo(undo);
     },
     Redo: () => {
       const last = redo[redo.length - 1];
-      const lastItem = last[0];
+
+      const isEmpty = !last;
       let Undo: () => void;
-      if (isHoldCircleProps(lastItem)) {
-        // undo = removeHold(lastItem);
-        Undo = () => useHolds(holds.filter(x => x !== lastItem ));
-      } else if (isHoldTextProps(lastItem)) {
-        // Undo = removeText(lastItem);
-        Undo = () => useHoldText(texts.filter(x => x !== lastItem));
+      let lastItem: any;
+      if (!isEmpty) {
+        lastItem = last[0];
+        if (isHoldCircleProps(lastItem)) {
+          Undo = () => useHolds(holds.filter(x => x !== lastItem ));
+        } else if (isHoldTextProps(lastItem)) {
+          Undo = () => useHoldText(texts.filter(x => x !== lastItem));
+        }
       }
-      // useUndo(old => old.concat([lastItem, Undo]));
-      useUndo(old => [...old, [lastItem, Undo]]);
-      last[1]();
-      redo.pop();
+      
+      useUndo(old => isEmpty ? old : [...old, [lastItem, Undo]]);
+      if (!isEmpty) {
+        console.log('redo')
+        last[1]();
+        redo.pop();
+        
+      }
+
+      props.updateIsRedoEnabled(redo.length <= 0);
       useRedo(redo);
     }
   }));
-
-  // const removeHold = (hold: HoldCircleProps) => () =>  useHolds(holds.filter(x => x !== hold ));
-  // const addHold = (hold: HoldCircleProps) => () =>  useHolds(holds.concat([hold]).filter(x => x));
-  // const removeText = (text: HoldTextProps) => () =>  useHoldText(texts.filter(x => x !== text));
-  // const addText = (text: HoldTextProps) => () =>  useHoldText(texts.concat([text]).filter(x => x));
 
   const OnTouchMove = (e: KonvaEventObject<TouchEvent>) => {
     e.evt.preventDefault();

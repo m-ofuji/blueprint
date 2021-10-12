@@ -12,6 +12,7 @@ import { NormalTarget } from './Targets/NormalTarget';
 import { TextTarget } from './Targets/TextTarget';
 import { RoundButton } from '../../Components/RoundButton';
 import { DownloadButton } from './DownloadButton';
+import { OnReadOpts } from 'net';
 
 export type SizeProps = {
   x: number,
@@ -49,9 +50,8 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
   const [execDownload, updateExecDownload] = useState<boolean>(false);
   const [selectedButton, updateSelectedButton] = useState<boolean[]>([true, false, false, false]);
   const [holdText, setHoldText] = useState<string>('S');
-  const [undoMethods, updateUndoMethods] = useState<(() => void)[]>([]);
-  const [redoMethods, updateRedoMethods] = useState<(() => void)[]>([]);
-  const [history, updateHistory] = useState<[(() => void), (() => void)][]>([]);
+  const [isUndoEnabled, useIsUndoEnabled] = useState<boolean>(false);
+  const [isRedoEnabled, useIsRedoEnabled] = useState<boolean>(false);
 
   const initialButton = [
     { text: 'ホールド', isSelected: selectedButton[0], onTapped: () => activateHoldTarget(0) },
@@ -203,7 +203,8 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
               centerX={window.innerWidth / 2}
               centerY={window.innerHeight / 2}
               updateSizeProps={setImageSizeProps}
-              updateUndoMethods={updateHistory}
+              updateIsRedoEnabled={useIsRedoEnabled}
+              updateIsUndoEnabled={useIsUndoEnabled}
             />
           </Group>
           <NormalTarget
@@ -228,10 +229,12 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
       <Fab
         position={'bottom right'}
         onClick={undo}
+        disabled={!isUndoEnabled}
       />
       <Fab
         position={'top right'}
         onClick={redo}
+        disabled={!isRedoEnabled}
       />
       <input
         onChange={onChange}
