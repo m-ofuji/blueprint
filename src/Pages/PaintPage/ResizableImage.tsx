@@ -6,8 +6,6 @@ import { useImperativeHandle, forwardRef } from 'react';
 import Konva from 'konva';
 import { KonvaEventObject } from 'konva/lib/Node';
 import { SizeProps } from './PaintPage';
-import { updateSourceFile } from 'typescript';
-import { X_OK } from 'constants';
 
 export type ResizableImageProps = {
   ref?: React.ForwardedRef<HTMLInputElement>;
@@ -116,11 +114,8 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
         }
       }
       
-      // useUndo(old => { return isEmpty ? old : [...old, [lastItem, Undo]]});
-
       useUndo(old => {
         if (!isEmpty) {
-          console.log("undo pushed!");
           old.push([lastItem, Undo]);
         }
         const newUndo = old;
@@ -136,8 +131,6 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
 
       props.updateIsRedoEnabled(redo.length <= 0);
       useRedo(redo);
-      console.log('undo', undo);
-      console.log('redo', redo);
     }
   }));
 

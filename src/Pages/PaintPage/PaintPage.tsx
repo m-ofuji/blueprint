@@ -1,18 +1,17 @@
 import NavBar from '../MainPage/NavBar';
-import ons from 'onsenui'
 import { Navigator } from 'react-onsenui';
 import { createRef, ChangeEvent, useState, useRef, useEffect, useLayoutEffect} from 'react';
 import { Page, Fab, Icon } from 'react-onsenui';
 import { KonvaEventObject } from 'konva/lib/Node';
 import { Stage, Layer, Group } from 'react-konva';
 import { ResizableImage } from './ResizableImage';
-import { downloadURI } from './DownloadUri';
-import { HoldFloatMenu } from './HoldFloatMenu';
+import { downloadURI } from '../../Common/Functions/DownloadUri';
 import { NormalTarget } from './Targets/NormalTarget';
 import { TextTarget } from './Targets/TextTarget';
 import { RoundButton } from '../../Components/RoundButton';
-import { DownloadButton } from './DownloadButton';
-import { OnReadOpts } from 'net';
+import { DownloadButton } from './Components/DownloadButton';
+import { UndoButton } from './Components/UndoButton';
+import { RedoButton } from './Components/RedoButton';
 
 export type SizeProps = {
   x: number,
@@ -225,8 +224,14 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
       <div className={'horizontal-container'}>
         {initialButton.map((props, i) => <RoundButton {...props}/>)}
       </div>
+      <div className={'undo-and-redo-container'}>
+        <UndoButton disabled={isUndoEnabled} onTapped={undo}/>
+        <RedoButton disabled={isRedoEnabled} onTapped={redo}/>
+      </div>
+      
       <DownloadButton  onTapped={handleExport}/>
-      <Fab
+
+      {/* <Fab
         position={'bottom right'}
         onClick={undo}
         disabled={isUndoEnabled}
@@ -235,7 +240,7 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
         position={'top right'}
         onClick={redo}
         disabled={isRedoEnabled}
-      />
+      /> */}
       <input
         onChange={onChange}
         ref={ref}
