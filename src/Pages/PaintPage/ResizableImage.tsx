@@ -49,8 +49,9 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
 
       const Undo = () => useHolds(holds.filter(x => x !== normalHold ));
       useUndo(old => [...old, [normalHold, Undo]]);
-      props.updateIsUndoEnabled(true);
+      props.updateIsUndoEnabled(false);
       useRedo([]);
+      props.updateIsRedoEnabled(true);
     },
     useHoldText: (text: string) => {
       textRefs.push(createRef<any>());
@@ -65,8 +66,9 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
       useHoldText(texts.concat([t]).filter(x => x));
       const Undo = () => useHoldText(texts.filter(x => x !== t));
       useUndo(old => [...old, [t, Undo]]);
-      props.updateIsUndoEnabled(true);
+      props.updateIsUndoEnabled(false);
       useRedo([]);
+      props.updateIsRedoEnabled(true);
     },
     Undo: () => {
       const last = undo[undo.length - 1];
@@ -82,13 +84,21 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
         }
       }
 
-      useRedo(old => isEmpty ? old : [...old, [lastItem, Redo]]);
+      useRedo(old => {
+        if (!isEmpty) {
+          old.push([lastItem, Redo]);
+        }
+        const newRedo = old;
+        props.updateIsRedoEnabled(newRedo.length <= 0);
+        return newRedo;
+      });
 
       if (!isEmpty) {
         last[1]();
         undo.pop();
       }
       props.updateIsUndoEnabled(undo.length <= 0);
+      // props.updateIsRedoEnabled(redo.length <= 0);
       useUndo(undo);
     },
     Redo: () => {
@@ -106,12 +116,21 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
         }
       }
       
-      useUndo(old => isEmpty ? old : [...old, [lastItem, Undo]]);
+      useUndo(old => { return isEmpty ? old : [...old, [lastItem, Undo]]});
+
+      useUndo(old => {
+        if (!isEmpty) {
+          old.push([lastItem, Undo]);
+        }
+        const newUndo = old;
+        props.updateIsUndoEnabled(newUndo.length <= 0);
+        return newUndo;
+      });
+
       if (!isEmpty) {
-        console.log('redo')
+        console.log('redo');
         last[1]();
         redo.pop();
-        
       }
 
       props.updateIsRedoEnabled(redo.length <= 0);
@@ -180,7 +199,6 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
         y: groupRef.current.y()
       } 
     });
-
   }
 
   const OnTouchEnd = () => {
