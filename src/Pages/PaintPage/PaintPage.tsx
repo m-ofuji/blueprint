@@ -1,10 +1,10 @@
 import NavBar from '../MainPage/NavBar';
 import { Navigator } from 'react-onsenui';
 import { createRef, ChangeEvent, useState, useRef, useEffect, useLayoutEffect} from 'react';
-import { Page, Fab, Icon } from 'react-onsenui';
+import { Page } from 'react-onsenui';
 import { KonvaEventObject } from 'konva/lib/Node';
 import { Stage, Layer, Group } from 'react-konva';
-import { ResizableImage } from './ResizableImage';
+import { WallImage } from './WallImage';
 import { downloadURI } from '../../Common/Functions/DownloadUri';
 import { NormalTarget } from './Targets/NormalTarget';
 import { TextTarget } from './Targets/TextTarget';
@@ -12,6 +12,7 @@ import { RoundButton } from '../../Components/RoundButton';
 import { DownloadButton } from './Components/DownloadButton';
 import { UndoButton } from './Components/UndoButton';
 import { RedoButton } from './Components/RedoButton';
+import { MarkerPositionX, MarkerPositionY } from './Constants';
 
 export type SizeProps = {
   x: number,
@@ -22,10 +23,7 @@ export type SizeProps = {
   height: number
 }
 
-// export type Undo = () => void;
-
 const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
-
   const param = {
     title: 'PaintPage',
     barTextColor: '#000000',
@@ -195,26 +193,26 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
       >
         <Layer>
           <Group draggable>
-            <ResizableImage
+            <WallImage
               ref={resizableImage}
               src={wallImage ?? undefined}
               key={'wallImage'}
-              centerX={window.innerWidth / 2}
-              centerY={window.innerHeight / 2}
+              centerX={MarkerPositionX}
+              centerY={MarkerPositionY}
               updateSizeProps={setImageSizeProps}
               updateIsRedoEnabled={useIsRedoEnabled}
               updateIsUndoEnabled={useIsUndoEnabled}
             />
           </Group>
           <NormalTarget
-            x={window.innerWidth / 2 - stageSizeProps.x}
-            y={window.innerHeight / 2 - stageSizeProps.y}
+            x={MarkerPositionX - stageSizeProps.x}
+            y={MarkerPositionY - stageSizeProps.y}
             isVisible={selectedButton[0] || selectedButton[1]}
             onTapped={holdTargetTapped}
           />
           <TextTarget
-            x={window.innerWidth / 2 - stageSizeProps.x}
-            y={window.innerHeight / 2 - stageSizeProps.y}
+            x={MarkerPositionX - stageSizeProps.x}
+            y={MarkerPositionY - stageSizeProps.y}
             character={holdText}
             isVisible={selectedButton[2] || selectedButton[3]}
             onTapped={textTargetTapped}
@@ -228,19 +226,7 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
         <UndoButton disabled={isUndoEnabled} onTapped={undo}/>
         <RedoButton disabled={isRedoEnabled} onTapped={redo}/>
       </div>
-      
       <DownloadButton  onTapped={handleExport}/>
-
-      {/* <Fab
-        position={'bottom right'}
-        onClick={undo}
-        disabled={isUndoEnabled}
-      />
-      <Fab
-        position={'top right'}
-        onClick={redo}
-        disabled={isRedoEnabled}
-      /> */}
       <input
         onChange={onChange}
         ref={ref}

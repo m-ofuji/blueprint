@@ -1,11 +1,18 @@
-import React, { createRef, useState } from 'react';
-import { Image, Transformer, Group } from 'react-konva';
-import { useImperativeHandle, forwardRef } from 'react';
+import React, { useState, forwardRef } from 'react';
+import { Image } from 'react-konva';
 import Konva from 'konva';
 import { KonvaEventObject } from 'konva/lib/Node';
-import { SizeProps } from './PaintPage';
-import { updateSourceFile } from 'typescript';
-import { ResizableImageProps } from './ResizableImage';
+import { SizeProps } from '../PaintPage';
+
+export type ResizableImageProps = {
+  ref?: React.ForwardedRef<HTMLInputElement>;
+  centerX: number;
+  centerY: number;
+  src: CanvasImageSource | undefined;
+  x?: number;
+  y?: number;
+  updateSizeProps: React.Dispatch<React.SetStateAction<SizeProps>>;
+}
 
 let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
 
@@ -111,4 +118,4 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
   );
 };
 
-export const ResizableImage2 = forwardRef(ResizableImageBase)
+export const ResizableImage = forwardRef(ResizableImageBase)
