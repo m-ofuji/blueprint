@@ -7,6 +7,7 @@ import Konva from 'konva';
 import { KonvaEventObject } from 'konva/lib/Node';
 import { SizeProps } from './PaintPage';
 import { updateSourceFile } from 'typescript';
+import { X_OK } from 'constants';
 
 export type ResizableImageProps = {
   ref?: React.ForwardedRef<HTMLInputElement>;
@@ -47,7 +48,7 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
       }
       useHolds(holds.concat([normalHold]).filter(x => x));
 
-      const Undo = () => useHolds(holds.filter(x => x !== normalHold ));
+      const Undo = () => useHolds(old => old.filter(x => x !== normalHold ));
       useUndo(old => [...old, [normalHold, Undo]]);
       props.updateIsUndoEnabled(false);
       useRedo([]);
@@ -64,7 +65,7 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
         character:text
       }
       useHoldText(texts.concat([t]).filter(x => x));
-      const Undo = () => useHoldText(texts.filter(x => x !== t));
+      const Undo = () => useHoldText(old => old.filter(x => x !== t));
       useUndo(old => [...old, [t, Undo]]);
       props.updateIsUndoEnabled(false);
       useRedo([]);
@@ -78,9 +79,9 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
       if (!isEmpty) {
         lastItem = last[0];
         if (isHoldCircleProps(lastItem)) {
-          Redo = () => useHolds(holds.concat([lastItem]).filter(x => x));
+          Redo = () => useHolds(old => old.concat([lastItem]).filter(x => x));
         } else if (isHoldTextProps(lastItem)) {
-          Redo = () => useHoldText(texts.concat([lastItem]).filter(x => x));
+          Redo = () => useHoldText(old => old.concat([lastItem]).filter(x => x));
         }
       }
 
@@ -98,7 +99,6 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
         undo.pop();
       }
       props.updateIsUndoEnabled(undo.length <= 0);
-      // props.updateIsRedoEnabled(redo.length <= 0);
       useUndo(undo);
     },
     Redo: () => {
@@ -116,10 +116,11 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
         }
       }
       
-      useUndo(old => { return isEmpty ? old : [...old, [lastItem, Undo]]});
+      // useUndo(old => { return isEmpty ? old : [...old, [lastItem, Undo]]});
 
       useUndo(old => {
         if (!isEmpty) {
+          console.log("undo pushed!");
           old.push([lastItem, Undo]);
         }
         const newUndo = old;
@@ -135,6 +136,8 @@ let ResizableImageBase = (props : ResizableImageProps, ref : any) => {
 
       props.updateIsRedoEnabled(redo.length <= 0);
       useRedo(redo);
+      console.log('undo', undo);
+      console.log('redo', redo);
     }
   }));
 
