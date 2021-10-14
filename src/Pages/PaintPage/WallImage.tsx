@@ -41,7 +41,7 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
       const normalHold = {
         key: holds.length++,
         x: (MarkerPositionX - (groupRef.current.x())) * (1 / scale),
-        y: (MarkerPositionX - (groupRef.current.y())) * (1 / scale),
+        y: (MarkerPositionY - (groupRef.current.y())) * (1 / scale),
         scale: 1 / scale,
         color:color
       }
@@ -125,7 +125,6 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
       });
 
       if (!isEmpty) {
-        console.log('redo');
         last[1]();
         redo.pop();
       }

@@ -24,7 +24,10 @@ export type SizeProps = {
 }
 
 const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
+  console.log(MarkerPositionY);
+  console.log('関数トップ');
   const param = {
+    key:'navibar',
     title: 'PaintPage',
     barTextColor: '#000000',
     barBackgroundColor: '#ffffff',
@@ -51,10 +54,10 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
   const [isRedoEnabled, useIsRedoEnabled] = useState<boolean>(true);
 
   const initialButton = [
-    { text: 'ホールド', isSelected: selectedButton[0], onTapped: () => activateHoldTarget(0) },
-    { text: 'S・Gホールド', isSelected: selectedButton[1], onTapped: () => activateHoldTarget(1) },
-    { text: 'Sマーク', isSelected: selectedButton[2], onTapped: () => activateTextTarget(2) },
-    { text: 'Gマーク', isSelected: selectedButton[3], onTapped: () => activateTextTarget(3) }
+    { key:1, text: 'ホールド', isSelected: selectedButton[0], onTapped: () => activateHoldTarget(0) },
+    { key:2, text: 'S・Gホールド', isSelected: selectedButton[1], onTapped: () => activateHoldTarget(1) },
+    { key:3, text: 'Sマーク', isSelected: selectedButton[2], onTapped: () => activateTextTarget(2) },
+    { key:4, text: 'Gマーク', isSelected: selectedButton[3], onTapped: () => activateTextTarget(3) }
   ];
 
   const stage = useRef<any>(null);
@@ -207,6 +210,7 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
           <NormalTarget
             x={MarkerPositionX - stageSizeProps.x}
             y={MarkerPositionY - stageSizeProps.y}
+            // y={MarkerPositionY}
             isVisible={selectedButton[0] || selectedButton[1]}
             onTapped={holdTargetTapped}
           />
@@ -223,10 +227,10 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
         {initialButton.map((props, i) => <RoundButton {...props}/>)}
       </div>
       <div className={'undo-and-redo-container'}>
-        <UndoButton disabled={isUndoEnabled} onTapped={undo}/>
-        <RedoButton disabled={isRedoEnabled} onTapped={redo}/>
+        <UndoButton key={'undo'} disabled={isUndoEnabled} onTapped={undo}/>
+        <RedoButton key={'redo'} disabled={isRedoEnabled} onTapped={redo}/>
       </div>
-      <DownloadButton  onTapped={handleExport}/>
+      <DownloadButton key={'download'} onTapped={handleExport}/>
       <input
         onChange={onChange}
         ref={ref}
