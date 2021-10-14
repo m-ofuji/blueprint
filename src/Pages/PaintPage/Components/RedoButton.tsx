@@ -8,7 +8,7 @@ export type RedoButtonProps = {
 export const RedoButton = (props: RedoButtonProps) => {
   return (
     <button 
-      className={'redo-button' }
+      className={props.disabled ? 'redo-button disabled' : 'redo-button'}
       onClick={props.onTapped}
       disabled={props.disabled}
     >

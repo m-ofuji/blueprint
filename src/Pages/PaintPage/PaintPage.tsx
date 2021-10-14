@@ -1,5 +1,5 @@
 import NavBar from '../MainPage/NavBar';
-import { Navigator } from 'react-onsenui';
+import { Navigator, Segment } from 'react-onsenui';
 import { createRef, ChangeEvent, useState, useRef, useEffect, useLayoutEffect} from 'react';
 import { Page } from 'react-onsenui';
 import { KonvaEventObject } from 'konva/lib/Node';
@@ -24,8 +24,6 @@ export type SizeProps = {
 }
 
 const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
-  console.log(MarkerPositionY);
-  console.log('関数トップ');
   const param = {
     key:'navibar',
     title: 'PaintPage',
@@ -231,6 +229,7 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
         <RedoButton key={'redo'} disabled={isRedoEnabled} onTapped={redo}/>
       </div>
       <DownloadButton key={'download'} onTapped={handleExport}/>
+
       <input
         onChange={onChange}
         ref={ref}

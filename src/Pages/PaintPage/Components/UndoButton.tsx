@@ -8,7 +8,7 @@ export type UndoButtonProps = {
 export const UndoButton = (props: UndoButtonProps) => {
   return (
     <button 
-      className={'undo-button' }
+      className={props.disabled ? 'undo-button disabled' : 'undo-button'}
       // onClick={props.onTapped}
       onClick={props.onTapped}
       disabled={props.disabled}
