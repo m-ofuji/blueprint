@@ -1,5 +1,6 @@
 import { Circle } from 'react-konva';
 import { forwardRef } from 'react';
+import { HoldCircleRadius, HoldCircleStrokeWidth } from '../Constants';
 
 export type HoldCircleProps = {
   x: number,
@@ -23,8 +24,8 @@ let HoldCircleBase = (props: HoldCircleProps, ref: any) => {
     ref={ref}
     fill="#00000000"
     stroke={props.color}
-    radius={40}
-    strokeWidth={5}
+    radius={HoldCircleRadius}
+    strokeWidth={HoldCircleStrokeWidth}
     x={props.x}
     y={props.y}
     draggable={false}

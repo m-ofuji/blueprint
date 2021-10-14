@@ -1,5 +1,6 @@
 import { Circle } from 'react-konva';
 import { KonvaEventObject } from 'konva/lib/Node';
+import { HoldCircleRadius, HoldCircleStrokeWidth } from '../Constants';
 
 export type NormalTargetProps = {
   x: number,
@@ -13,8 +14,8 @@ export const NormalTarget = (props: NormalTargetProps) => {
     <Circle
       fill="#00000000"
       stroke="blue"
-      radius={40}
-      strokeWidth={5}
+      radius={HoldCircleRadius}
+      strokeWidth={HoldCircleStrokeWidth}
       visible={props.isVisible}
       x={props.x}
       y={props.y}
