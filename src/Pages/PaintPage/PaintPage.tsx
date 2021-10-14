@@ -1,4 +1,5 @@
 import NavBar from '../MainPage/NavBar';
+import ons from 'onsenui'
 import { Navigator, Segment } from 'react-onsenui';
 import { createRef, ChangeEvent, useState, useRef, useEffect, useLayoutEffect} from 'react';
 import { Page } from 'react-onsenui';
@@ -115,6 +116,18 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
 
   useEffect(download);
 
+  const onDownloadTapped = () => {
+    ons.notification.confirm({
+      title: 'ダウンロード',
+      message: 'トポの作成を終了して、画像をダウンロードしますか？',
+      buttonLabels: ['はい', 'いいえ'],
+      callback: (idx: any) => {
+        if (idx === 1) return; 
+        handleExport();
+      }
+    });
+  }
+
   const handleExport = () => {
     if (!stage) return;
 
@@ -128,6 +141,7 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
         scaleY: imageSizeProps.scaleY
       };
     });
+    updateSelectedButton([false, false, false, false]);
 
     updateExecDownload(true);
   };
@@ -228,7 +242,7 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
         <UndoButton key={'undo'} disabled={isUndoEnabled} onTapped={undo}/>
         <RedoButton key={'redo'} disabled={isRedoEnabled} onTapped={redo}/>
       </div>
-      <DownloadButton key={'download'} onTapped={handleExport}/>
+      <DownloadButton key={'download'} onTapped={onDownloadTapped}/>
 
       <input
         onChange={onChange}
