@@ -65,21 +65,18 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
   const ref = createRef<HTMLInputElement>();
 
   const selectPicture = () => {
-    if (ref.current && !isImageLoaded) {
-      ref.current.click();
-    }
-
-    // const option = {
-    //   title:'壁画像選択', buttonLabels:['OK']
-    // }
-    // ons.notification.confirm('壁の画像を選択してください。', option).then(onAlertClose);
-  }
-
-  const onAlertClose = (index: HTMLElement) => {
-    if (ref.current) {
-      ref.current.click();
-    }
-  }
+    if (isImageLoaded) return;
+    ons.notification.confirm({
+      title: '壁画像選択',
+      message: '壁の画像を選択してください。',
+      buttonLabels: ['OK'],
+      callback: () => {
+        if (ref.current) {
+          ref.current.click();
+        }
+      }
+    });
+  };
 
   useLayoutEffect(()=> {
     selectPicture();
