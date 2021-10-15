@@ -14,6 +14,7 @@ import { DownloadButton } from './Components/DownloadButton';
 import { UndoButton } from './Components/UndoButton';
 import { RedoButton } from './Components/RedoButton';
 import { MarkerPositionX, MarkerPositionY } from './Constants';
+import { on } from 'events';
 
 export type SizeProps = {
   x: number,
@@ -66,16 +67,23 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
 
   const selectPicture = () => {
     if (isImageLoaded) return;
-    ons.notification.confirm({
-      title: '壁画像選択',
-      message: '壁の画像を選択してください。',
-      buttonLabels: ['OK'],
-      callback: () => {
-        if (ref.current) {
-          ref.current.click();
-        }
+    if (ons.platform.isIOSSafari()) {
+      if (ref.current) {
+        ref.current.click();
       }
-    });
+    } else {
+      ons.notification.confirm({
+        title: '壁画像選択',
+        message: '壁の画像を選択してください。',
+        buttonLabels: ['OK'],
+        callback: () => {
+          console.log(ref.current);
+          if (ref.current) {
+            ref.current.click();
+          }
+        }
+      });
+    }
   };
 
   useLayoutEffect(()=> {
@@ -101,7 +109,7 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
 
   const download = () => {
     if (!execDownload) return;
-    const maxSideLength = 600;
+    const maxSideLength = 1000;
     const fixPixelRatio = imageSizeProps.width > maxSideLength || imageSizeProps.height > maxSideLength;
     const pixelRatio = fixPixelRatio ? maxSideLength / Math.max(imageSizeProps.width, imageSizeProps.height) : 1;
     const uri = stage.current.toDataURL({pixelRatio: pixelRatio});
