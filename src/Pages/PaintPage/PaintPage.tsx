@@ -14,7 +14,6 @@ import { DownloadButton } from './Components/DownloadButton';
 import { UndoButton } from './Components/UndoButton';
 import { RedoButton } from './Components/RedoButton';
 import { MarkerPositionX, MarkerPositionY } from './Constants';
-import { on } from 'events';
 
 export type SizeProps = {
   x: number,
@@ -40,6 +39,7 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
     scaleX: 1,
     scaleY: 1,
     width: window.innerWidth,
+    // height: window.innerHeight - 56
     height: window.innerHeight - 56
   };
 
@@ -77,7 +77,6 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
         message: '壁の画像を選択してください。',
         buttonLabels: ['OK'],
         callback: () => {
-          console.log(ref.current);
           if (ref.current) {
             ref.current.click();
           }
@@ -89,6 +88,39 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
   useLayoutEffect(()=> {
     selectPicture();
   });
+
+  const onFileInputClicked = () => {
+    console.log('clicked');
+    document.body.onfocus = getEvent;
+  }
+
+  let loaded = isImageLoaded;
+
+  const getEvent = () => {
+    console.log('clicked');
+
+    setTimeout(() => {
+      console.log('loaded', loaded);
+      if (!loaded) {
+        ons.notification.confirm({
+          title: 'トポ作成',
+          message: 'トポの作成をやめますか？',
+          buttonLabels: ons.platform.isIOSSafari() ? ['いいえ', 'はい'] : ['はい', 'いいえ'],
+          callback: (idx: any) => {
+            const isYes = idx === 0;
+            if (isYes) {
+              navigator.popPage();
+            } else {
+              if (ref.current) {
+                ref.current.click();
+              }
+            }
+          }
+        });
+      }
+      document.body.onfocus = null;
+    }, 500);
+  }
 
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files === null) return;
@@ -105,6 +137,7 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
       setImageSizeProps((old) => { return { ...old, width: i.width, height: i.height } });
     }
     updateIsImageLoaded(true);
+    loaded = true;
   }
 
   const download = () => {
@@ -125,9 +158,11 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
     ons.notification.confirm({
       title: 'ダウンロード',
       message: 'トポの作成を終了して、画像をダウンロードしますか？',
-      buttonLabels: ['はい', 'いいえ'],
+      buttonLabels: ons.platform.isIOSSafari() ? ['いいえ', 'はい'] : ['はい', 'いいえ'],
       callback: (idx: any) => {
-        if (idx === 1) return; 
+        // const isYes = ons.platform.isIOSSafari() ? idx === 0 : idx === 1;
+        const isYes = idx === 0;
+        if (!isYes) return; 
         handleExport();
       }
     });
@@ -200,7 +235,8 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
 
   return (
     <Page 
-      renderToolbar={() => <NavBar {...param}/>}>
+      // renderToolbar={() => <NavBar {...param}/>}
+      >
       <Stage 
         className={'image-stage'}
         offsetX={stageSizeProps.x}
@@ -251,6 +287,7 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
 
       <input
         onChange={onChange}
+        onClick={onFileInputClicked}
         ref={ref}
         style={{ display: 'none' }}
         type='file'
