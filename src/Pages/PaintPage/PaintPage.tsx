@@ -1,4 +1,3 @@
-import NavBar from '../MainPage/NavBar';
 import ons from 'onsenui'
 import { Navigator, Segment } from 'react-onsenui';
 import { createRef, ChangeEvent, useState, useRef, useEffect, useLayoutEffect} from 'react';
@@ -13,6 +12,7 @@ import { RoundButton } from '../../Components/RoundButton';
 import { DownloadButton } from './Components/DownloadButton';
 import { UndoButton } from './Components/UndoButton';
 import { RedoButton } from './Components/RedoButton';
+import { CloseButton } from '../../Components/CloseButton';
 import { MarkerPositionX, MarkerPositionY } from './Constants';
 
 export type SizeProps = {
@@ -39,8 +39,7 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
     scaleX: 1,
     scaleY: 1,
     width: window.innerWidth,
-    // height: window.innerHeight - 56
-    height: window.innerHeight - 56
+    height: window.innerHeight
   };
 
   const [wallImage, setWallImage] = useState<CanvasImageSource | null>(null);
@@ -89,39 +88,6 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
     selectPicture();
   });
 
-  const onFileInputClicked = () => {
-    console.log('clicked');
-    document.body.onfocus = getEvent;
-  }
-
-  let loaded = isImageLoaded;
-
-  const getEvent = () => {
-    console.log('clicked');
-
-    setTimeout(() => {
-      console.log('loaded', loaded);
-      if (!loaded) {
-        ons.notification.confirm({
-          title: 'トポ作成',
-          message: 'トポの作成をやめますか？',
-          buttonLabels: ons.platform.isIOSSafari() ? ['いいえ', 'はい'] : ['はい', 'いいえ'],
-          callback: (idx: any) => {
-            const isYes = idx === 0;
-            if (isYes) {
-              navigator.popPage();
-            } else {
-              if (ref.current) {
-                ref.current.click();
-              }
-            }
-          }
-        });
-      }
-      document.body.onfocus = null;
-    }, 500);
-  }
-
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files === null) return;
 
@@ -137,7 +103,6 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
       setImageSizeProps((old) => { return { ...old, width: i.width, height: i.height } });
     }
     updateIsImageLoaded(true);
-    loaded = true;
   }
 
   const download = () => {
@@ -160,8 +125,8 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
       message: 'トポの作成を終了して、画像をダウンロードしますか？',
       buttonLabels: ons.platform.isIOSSafari() ? ['いいえ', 'はい'] : ['はい', 'いいえ'],
       callback: (idx: any) => {
-        // const isYes = ons.platform.isIOSSafari() ? idx === 0 : idx === 1;
-        const isYes = idx === 0;
+        const isYes = ons.platform.isIOSSafari() ? idx === 1 : idx === 0;
+        // const isYes = idx === 0;
         if (!isYes) return; 
         handleExport();
       }
@@ -233,9 +198,27 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
     resizableImage.current.Redo();
   }
 
+  const onCloseTapped = () => {
+    if (isImageLoaded) {
+      ons.notification.confirm({
+        title: 'トポ作成',
+        message: '画面を閉じてもよろしいですか？\n現在編集中の内容は失われます。',
+        buttonLabels: ons.platform.isIOSSafari() ? ['いいえ', 'はい'] : ['はい', 'いいえ'],
+        callback: (idx: any) => {
+          const isYes = ons.platform.isIOSSafari() ? idx === 1 : idx === 0;
+          if (isYes) {
+            navigator.popPage();
+          }
+        }
+      });
+    } else {
+      navigator.popPage();
+    }
+    
+  }
+
   return (
     <Page 
-      // renderToolbar={() => <NavBar {...param}/>}
       >
       <Stage 
         className={'image-stage'}
@@ -283,11 +266,11 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
         <UndoButton key={'undo'} disabled={isUndoEnabled} onTapped={undo}/>
         <RedoButton key={'redo'} disabled={isRedoEnabled} onTapped={redo}/>
       </div>
+      <CloseButton key={'close'} className={'close-button float-left-top'} onTapped={onCloseTapped}></CloseButton>
       <DownloadButton key={'download'} onTapped={onDownloadTapped}/>
 
       <input
         onChange={onChange}
-        onClick={onFileInputClicked}
         ref={ref}
         style={{ display: 'none' }}
         type='file'
