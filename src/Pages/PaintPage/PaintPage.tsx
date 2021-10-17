@@ -1,5 +1,5 @@
 import ons from 'onsenui'
-import { Navigator, Segment } from 'react-onsenui';
+import { Navigator, AlertDialog, Button } from 'react-onsenui';
 import { createRef, ChangeEvent, useState, useRef, useEffect, useLayoutEffect} from 'react';
 import { Page } from 'react-onsenui';
 import { KonvaEventObject } from 'konva/lib/Node';
@@ -51,6 +51,7 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
   const [holdText, setHoldText] = useState<string>('S');
   const [isUndoEnabled, useIsUndoEnabled] = useState<boolean>(true);
   const [isRedoEnabled, useIsRedoEnabled] = useState<boolean>(true);
+  const [resizeImage, updateResizeImage] = useState<boolean>(false);
 
   const initialButton = [
     { key:1, text: 'ホールド', isSelected: selectedButton[0], onTapped: () => activateHoldTarget(0) },
@@ -66,7 +67,7 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
 
   const selectPicture = () => {
     if (isImageLoaded) return;
-    if (ons.platform.isIOSSafari()) {
+    if (ons.platform.isIOS()) {
       if (ref.current) {
         ref.current.click();
       }
@@ -107,9 +108,9 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
 
   const download = () => {
     if (!execDownload) return;
-    const maxSideLength = 1000;
+    const maxSideLength = 800;
     const fixPixelRatio = imageSizeProps.width > maxSideLength || imageSizeProps.height > maxSideLength;
-    const pixelRatio = fixPixelRatio ? maxSideLength / Math.max(imageSizeProps.width, imageSizeProps.height) : 1;
+    const pixelRatio = resizeImage && fixPixelRatio ? maxSideLength / Math.max(imageSizeProps.width, imageSizeProps.height) : 1;
     const uri = stage.current.toDataURL({pixelRatio: pixelRatio});
 
     downloadURI(uri, "topo.png");
@@ -120,20 +121,37 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
   useEffect(download);
 
   const onDownloadTapped = () => {
-    ons.notification.confirm({
-      title: 'ダウンロード',
-      message: 'トポの作成を終了して、画像をダウンロードしますか？',
-      buttonLabels: ons.platform.isIOSSafari() ? ['いいえ', 'はい'] : ['はい', 'いいえ'],
-      callback: (idx: any) => {
-        const isYes = ons.platform.isIOSSafari() ? idx === 1 : idx === 0;
-        // const isYes = idx === 0;
-        if (!isYes) return; 
-        handleExport();
+    ons.openActionSheet({
+      cancelable: true,
+      title: 'トポ画像をダウンロードしますか？',
+      buttons: ['ダウンロード', '縮小版をダウンロード', 'キャンセル'],
+      
+    }).then((idx: any) => {
+      console.log(idx);
+      if (idx === 0) {
+        HandleExport(false);
+      } else if (idx === 1) {
+        HandleExport(true);
       }
+      // const isYes = ons.platform.isIOSSafari() ? idx === 1 : idx === 0;
+      // if (!isYes) return;
+      // handleExport();
     });
+
+    // ons.notification.alert({
+    //   title: 'ダウンロード',
+    //   message: 'トポの作成を終了して、画像をダウンロードしますか？',
+    //   buttonLabels: ons.platform.isIOSSafari() ? ['いいえ', 'はい'] : ['ダウンロード', '縮小版をダウンロード' ,'いいえ'],
+    //   callback: (idx: any) => {
+    //     const isYes = ons.platform.isIOSSafari() ? idx === 1 : idx === 0;
+    //     // const isYes = idx === 0;
+    //     if (!isYes) return; 
+    //     handleExport();
+    //   }
+    // });
   }
 
-  const handleExport = () => {
+  const HandleExport = (resize: boolean) => {
     if (!stage) return;
 
     setStageSizeProps((old) => {
@@ -146,8 +164,8 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
         scaleY: imageSizeProps.scaleY
       };
     });
+    updateResizeImage(resize);
     updateSelectedButton([false, false, false, false]);
-
     updateExecDownload(true);
   };
 
