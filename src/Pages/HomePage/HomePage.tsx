@@ -3,8 +3,16 @@ import PaintPage from '../PaintPage/PaintPage';
 import { Fab, Icon, List, ListItem, Navigator, Page } from 'react-onsenui';
 
 const HomePage = ({route, navigator}: {route: any, navigator: Navigator}) => {
-  const handlePaintPage = () => {
-    navigator.pushPage({comp: PaintPage, props: {navigator: navigator}});
+  const openRightPaintPage = () => {
+    handlePaintPage(false);
+  }
+
+  const openLeftyPaintPage = () => {
+    handlePaintPage(true);
+  }
+  
+  const handlePaintPage = (isLefty: boolean) => {
+    navigator.pushPage({comp: PaintPage, props: {isLefty: isLefty, navigator: navigator}});
   }
 
   const renderToolBar = () => {
@@ -18,12 +26,12 @@ const HomePage = ({route, navigator}: {route: any, navigator: Navigator}) => {
   }
 
   return (
-    <Page key={'root'} renderToolbar={renderToolBar}>
+    <Page key={'root'}>
       <div className={'section'}>
         <p className={'section-header'}>トポを作る</p>
         <div className={'start-button-container'}>
-          <button className={'start-button'} onClick={handlePaintPage}>左利き<br/>向け</button>
-          <button className={'start-button'} onClick={handlePaintPage}>右利き<br/>向け</button>
+          <button className={'start-button'} onClick={openLeftyPaintPage}>左利き<br/>向け</button>
+          <button className={'start-button'} onClick={openRightPaintPage}>右利き<br/>向け</button>
         </div>
       </div>
       

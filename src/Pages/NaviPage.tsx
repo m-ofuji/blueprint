@@ -10,6 +10,7 @@ export const NaviPage = () => {
 
   return (
     <Navigator
+      key={'navi'}
       initialRoute={{comp: HomePage, key: 'HomePage'}}
       renderPage={renderPage}
     />

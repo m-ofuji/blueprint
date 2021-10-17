@@ -24,7 +24,7 @@ export type SizeProps = {
   height: number
 }
 
-const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
+const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, navigator: Navigator}) => {
   const param = {
     key:'navibar',
     title: 'PaintPage',
@@ -218,8 +218,7 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
   }
 
   return (
-    <Page 
-      >
+    <Page>
       <Stage 
         className={'image-stage'}
         offsetX={stageSizeProps.x}
@@ -244,13 +243,14 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
             />
           </Group>
           <NormalTarget
+            key={'normalTarget'}
             x={MarkerPositionX - stageSizeProps.x}
             y={MarkerPositionY - stageSizeProps.y}
-            // y={MarkerPositionY}
             isVisible={selectedButton[0] || selectedButton[1]}
             onTapped={holdTargetTapped}
           />
           <TextTarget
+            key={'textTarget'}
             x={MarkerPositionX - stageSizeProps.x}
             y={MarkerPositionY - stageSizeProps.y}
             character={holdText}
@@ -262,14 +262,15 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
       <div className={'horizontal-container'}>
         {initialButton.map((props, i) => <RoundButton {...props}/>)}
       </div>
-      <div className={'undo-and-redo-container'}>
+      <div className={isLefty ? 'undo-and-redo-container is-lefty' : 'undo-and-redo-container'}>
         <UndoButton key={'undo'} disabled={isUndoEnabled} onTapped={undo}/>
         <RedoButton key={'redo'} disabled={isRedoEnabled} onTapped={redo}/>
       </div>
-      <CloseButton key={'close'} className={'close-button float-left-top'} onTapped={onCloseTapped}></CloseButton>
-      <DownloadButton key={'download'} onTapped={onDownloadTapped}/>
+      <CloseButton className={isLefty ? 'close-button float-left-top': 'close-button float-right-top'} onTapped={onCloseTapped}></CloseButton>
+      <DownloadButton className={isLefty ? 'download-button is-lefty' : 'download-button'} onTapped={onDownloadTapped}/>
 
       <input
+        key={'file-uploader'}
         onChange={onChange}
         ref={ref}
         style={{ display: 'none' }}

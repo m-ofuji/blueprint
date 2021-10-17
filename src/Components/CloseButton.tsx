@@ -9,10 +9,9 @@ export const CloseButton = (props: CloseButtonProps) => {
   return (
     <button 
       className={props.className}
-      // onClick={props.onTapped}
       onClick={props.onTapped}
     >
-    <i className={'fas fa-times'}/>
+      <i className={'fas fa-times'}/>
     </button>
   )
 }
