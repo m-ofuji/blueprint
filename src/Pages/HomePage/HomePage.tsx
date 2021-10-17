@@ -1,4 +1,4 @@
-import NavBar from './NavBar';
+import NavBar from '../NavBar';
 import PaintPage from '../PaintPage/PaintPage';
 import { Fab, Icon, List, ListItem, Navigator, Page } from 'react-onsenui';
 
@@ -19,13 +19,18 @@ const HomePage = ({route, navigator}: {route: any, navigator: Navigator}) => {
 
   return (
     <Page key={'root'} renderToolbar={renderToolBar}>
-      <List
-        dataSource={['Row 1', 'Row 2']}
-        renderRow={(row, idx) => (<ListItem key={idx} modifier='longdivider'>{row}</ListItem>)}
-      />
-      <Fab  onClick={handlePaintPage} position={'bottom right'}>
-        <Icon icon='fa-plus' size={26} fixedWidth={false} />
-      </Fab>
+      <div className={'section'}>
+        <p className={'section-header'}>トポを作る</p>
+        <div className={'start-button-container'}>
+          <button className={'start-button'} onClick={handlePaintPage}>左利き<br/>向け</button>
+          <button className={'start-button'} onClick={handlePaintPage}>右利き<br/>向け</button>
+        </div>
+      </div>
+      
+      <p className={'section-header'}>作成したトポ</p>
+      <div className={'start-button-container'}>
+        <h3>coming soon</h3>
+      </div>
     </Page>
   )
 }

@@ -1,4 +1,4 @@
-import NavBar from '../MainPage/NavBar';
+import NavBar from '../NavBar';
 import { Navigator, Segment } from 'react-onsenui';
 import { createRef, ChangeEvent, useState, useRef, useEffect, useLayoutEffect} from 'react';
 import { Page } from 'react-onsenui';
