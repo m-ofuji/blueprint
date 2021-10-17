@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import NavBar from '../NavBar';
-=======
 import ons from 'onsenui'
->>>>>>> 3ee1f96ec8f1b000125773a4efce0e8424bc08dd
 import { Navigator, Segment } from 'react-onsenui';
 import { createRef, ChangeEvent, useState, useRef, useEffect, useLayoutEffect} from 'react';
 import { Page } from 'react-onsenui';
