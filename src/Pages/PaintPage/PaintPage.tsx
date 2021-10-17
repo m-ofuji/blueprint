@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import NavBar from '../NavBar';
+=======
+import ons from 'onsenui'
+>>>>>>> 3ee1f96ec8f1b000125773a4efce0e8424bc08dd
 import { Navigator, Segment } from 'react-onsenui';
 import { createRef, ChangeEvent, useState, useRef, useEffect, useLayoutEffect} from 'react';
 import { Page } from 'react-onsenui';
@@ -12,6 +16,7 @@ import { RoundButton } from '../../Components/RoundButton';
 import { DownloadButton } from './Components/DownloadButton';
 import { UndoButton } from './Components/UndoButton';
 import { RedoButton } from './Components/RedoButton';
+import { CloseButton } from '../../Components/CloseButton';
 import { MarkerPositionX, MarkerPositionY } from './Constants';
 
 export type SizeProps = {
@@ -38,7 +43,7 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
     scaleX: 1,
     scaleY: 1,
     width: window.innerWidth,
-    height: window.innerHeight - 56
+    height: window.innerHeight
   };
 
   const [wallImage, setWallImage] = useState<CanvasImageSource | null>(null);
@@ -64,21 +69,24 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
   const ref = createRef<HTMLInputElement>();
 
   const selectPicture = () => {
-    if (ref.current && !isImageLoaded) {
-      ref.current.click();
+    if (isImageLoaded) return;
+    if (ons.platform.isIOSSafari()) {
+      if (ref.current) {
+        ref.current.click();
+      }
+    } else {
+      ons.notification.confirm({
+        title: '壁画像選択',
+        message: '壁の画像を選択してください。',
+        buttonLabels: ['OK'],
+        callback: () => {
+          if (ref.current) {
+            ref.current.click();
+          }
+        }
+      });
     }
-
-    // const option = {
-    //   title:'壁画像選択', buttonLabels:['OK']
-    // }
-    // ons.notification.confirm('壁の画像を選択してください。', option).then(onAlertClose);
-  }
-
-  const onAlertClose = (index: HTMLElement) => {
-    if (ref.current) {
-      ref.current.click();
-    }
-  }
+  };
 
   useLayoutEffect(()=> {
     selectPicture();
@@ -103,7 +111,7 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
 
   const download = () => {
     if (!execDownload) return;
-    const maxSideLength = 600;
+    const maxSideLength = 1000;
     const fixPixelRatio = imageSizeProps.width > maxSideLength || imageSizeProps.height > maxSideLength;
     const pixelRatio = fixPixelRatio ? maxSideLength / Math.max(imageSizeProps.width, imageSizeProps.height) : 1;
     const uri = stage.current.toDataURL({pixelRatio: pixelRatio});
@@ -114,6 +122,20 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
   };
 
   useEffect(download);
+
+  const onDownloadTapped = () => {
+    ons.notification.confirm({
+      title: 'ダウンロード',
+      message: 'トポの作成を終了して、画像をダウンロードしますか？',
+      buttonLabels: ons.platform.isIOSSafari() ? ['いいえ', 'はい'] : ['はい', 'いいえ'],
+      callback: (idx: any) => {
+        const isYes = ons.platform.isIOSSafari() ? idx === 1 : idx === 0;
+        // const isYes = idx === 0;
+        if (!isYes) return; 
+        handleExport();
+      }
+    });
+  }
 
   const handleExport = () => {
     if (!stage) return;
@@ -128,6 +150,7 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
         scaleY: imageSizeProps.scaleY
       };
     });
+    updateSelectedButton([false, false, false, false]);
 
     updateExecDownload(true);
   };
@@ -179,9 +202,28 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
     resizableImage.current.Redo();
   }
 
+  const onCloseTapped = () => {
+    if (isImageLoaded) {
+      ons.notification.confirm({
+        title: 'トポ作成',
+        message: '画面を閉じてもよろしいですか？\n現在編集中の内容は失われます。',
+        buttonLabels: ons.platform.isIOSSafari() ? ['いいえ', 'はい'] : ['はい', 'いいえ'],
+        callback: (idx: any) => {
+          const isYes = ons.platform.isIOSSafari() ? idx === 1 : idx === 0;
+          if (isYes) {
+            navigator.popPage();
+          }
+        }
+      });
+    } else {
+      navigator.popPage();
+    }
+    
+  }
+
   return (
     <Page 
-      renderToolbar={() => <NavBar {...param}/>}>
+      >
       <Stage 
         className={'image-stage'}
         offsetX={stageSizeProps.x}
@@ -228,7 +270,8 @@ const PaintPage = ({route, navigator}: {route: any, navigator: Navigator}) => {
         <UndoButton key={'undo'} disabled={isUndoEnabled} onTapped={undo}/>
         <RedoButton key={'redo'} disabled={isRedoEnabled} onTapped={redo}/>
       </div>
-      <DownloadButton key={'download'} onTapped={handleExport}/>
+      <CloseButton key={'close'} className={'close-button float-left-top'} onTapped={onCloseTapped}></CloseButton>
+      <DownloadButton key={'download'} onTapped={onDownloadTapped}/>
 
       <input
         onChange={onChange}
