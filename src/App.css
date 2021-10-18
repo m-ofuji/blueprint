@@ -50,6 +50,10 @@
   left: 1em;
 }
 
+.rotate-image {
+  transform: rotate(0.5turn);
+}
+
 
 /* 閉じるボタン　ここから */
 

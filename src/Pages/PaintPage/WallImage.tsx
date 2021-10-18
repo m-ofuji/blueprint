@@ -226,7 +226,10 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
       onDragEnd={OnDragEnd}
       ref={groupRef}
     >
-      <Image image={props.src}/>
+      <Image 
+        image={props.src}
+        rotationDeg={0}
+      />
       {holds.map((props, i) => <HoldCircle ref={circleRefs[i]} {...props}/>)}
       {texts.map((props, i) => <HoldText ref={textRefs[i]} {...props}/>)}
     </Group>

@@ -96,10 +96,14 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
 
     if (file === null) return;
 
+    console.log('file', file);
     const dataURL = URL.createObjectURL(file);
     const i = new window.Image();
     i.src = dataURL;
+    i.className='rotate-image';
+    console.log('u', i);
     setWallImage(i);
+
     i.onload = (evt) => {
       setImageSizeProps((old) => { return { ...old, width: i.width, height: i.height } });
     }
