@@ -168,7 +168,7 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
 
   const HandleExport = (resize: boolean) => {
     if (!stage) return;
-
+    console.log('before', imageSizeProps);
     setImageSizeProps((old) => {
       return {...old, 
         imageX: 0,
@@ -176,8 +176,12 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
         imageRotation: 0,
       };
     });
+    console.log('after', imageSizeProps);
+
 
     setStageSizeProps((old) => {
+      console.log('stage', imageSizeProps);
+
       return {...old,
         width: imageSizeProps.width,
         height: imageSizeProps.height,
@@ -185,7 +189,7 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
         y: imageSizeProps.y,
         scaleX: imageSizeProps.scaleX,
         scaleY: imageSizeProps.scaleY,
-        // imageRotation:-90
+        // imageRotation: 90
       };
     });
 
