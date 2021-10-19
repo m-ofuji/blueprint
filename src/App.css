@@ -102,6 +102,7 @@
   color: whitesmoke;
   background-color: #004898;
   border: none;
+  outline: none;
   box-shadow: 1px 2px 4px rgba(0,0,0,0.5);
 }
 
@@ -116,6 +117,7 @@
   color: whitesmoke;
   background-color: #004898;
   border: none;
+  outline: none;
   box-shadow: 1px 2px 4px rgba(0,0,0,0.5);
 }
 

@@ -12,9 +12,12 @@ export type WallImageProps = {
   ref?: React.ForwardedRef<HTMLInputElement>;
   centerX: number;
   centerY: number;
-  src: CanvasImageSource | undefined;
   x?: number;
   y?: number;
+  src: CanvasImageSource | undefined;
+  imageRotation?: number,
+  imageX?: number,
+  imageY?: number,
   updateSizeProps: React.Dispatch<React.SetStateAction<SizeProps>>;
   updateIsUndoEnabled: React.Dispatch<React.SetStateAction<boolean>>;
   updateIsRedoEnabled: React.Dispatch<React.SetStateAction<boolean>>;
@@ -218,6 +221,9 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
   }
 
   Konva.hitOnDragEnabled = true;
+
+  console.log(props);
+
   return (
     <Group
       draggable={true}
@@ -225,14 +231,11 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
       onTouchEnd={OnTouchEnd}
       onDragEnd={OnDragEnd}
       ref={groupRef}
-      
     >
       <Image
-        // offsetY={200}
-        // offsetY={-800}
-        // scaleX={0.4}
-        // scaleY={0.4}
-        // rotation={90}
+        offsetX={props.imageX}
+        offsetY={props.imageY}
+        rotation={props.imageRotation}
         image={props.src}
       />
       {holds.map((props, i) => <HoldCircle ref={circleRefs[i]} {...props}/>)}

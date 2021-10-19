@@ -1,5 +1,5 @@
 import ons from 'onsenui'
-import { Navigator, AlertDialog, Button } from 'react-onsenui';
+import { Navigator } from 'react-onsenui';
 import { createRef, ChangeEvent, useState, useRef, useEffect, useLayoutEffect} from 'react';
 import { Page } from 'react-onsenui';
 import { KonvaEventObject } from 'konva/lib/Node';
@@ -21,17 +21,13 @@ export type SizeProps = {
   scaleX: number,
   scaleY: number,
   width: number,
-  height: number
+  height: number,
+  imageX?: number,
+  imageY?: number,
+  imageRotation?: number
 }
 
 const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, navigator: Navigator}) => {
-  const param = {
-    key:'navibar',
-    title: 'PaintPage',
-    barTextColor: '#000000',
-    barBackgroundColor: '#ffffff',
-    hasBackButton: true
-  }
 
   const sizeProps = {
     x: 0,
@@ -39,7 +35,10 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
     scaleX: 1,
     scaleY: 1,
     width: window.innerWidth,
-    height: window.innerHeight
+    height: window.innerHeight,
+    imageX: 0,
+    imageY: 0,
+    imageRotation: 0
   };
 
   const [wallImage, setWallImage] = useState<CanvasImageSource | null>(null);
@@ -105,13 +104,25 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
     setWallImage(i);
 
     i.onload = (evt) => {
-      setImageSizeProps((old) => { return { ...old, centerX:window.innerWidth, centerY: window.innerHeight, width: i.width, height: i.height } });
+      setImageSizeProps((old) => {
+        console.log('onload');
+        return { 
+          ...old,
+          centerX:window.innerWidth,
+          centerY: window.innerHeight,
+          width: i.width,
+          height: i.height,
+          imageRotation: 90,
+          imageY: i.height 
+        } 
+      });
     }
     updateIsImageLoaded(true);
   }
 
   const download = () => {
     if (!execDownload) return;
+    
     const maxSideLength = 800;
     const fixPixelRatio = imageSizeProps.width > maxSideLength || imageSizeProps.height > maxSideLength;
     const pixelRatio = resizeImage && fixPixelRatio ? maxSideLength / Math.max(imageSizeProps.width, imageSizeProps.height) : 1;
@@ -158,16 +169,26 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
   const HandleExport = (resize: boolean) => {
     if (!stage) return;
 
-    setStageSizeProps((old) => {
+    setImageSizeProps((old) => {
       return {...old, 
+        imageX: 0,
+        imageY: 0,
+        imageRotation: 0,
+      };
+    });
+
+    setStageSizeProps((old) => {
+      return {...old,
         width: imageSizeProps.width,
         height: imageSizeProps.height,
         x: imageSizeProps.x,
-        y: imageSizeProps.y - 100,
+        y: imageSizeProps.y,
         scaleX: imageSizeProps.scaleX,
-        scaleY: imageSizeProps.scaleY
+        scaleY: imageSizeProps.scaleY,
+        // imageRotation:-90
       };
     });
+
     updateResizeImage(resize);
     updateSelectedButton([false, false, false, false]);
     updateExecDownload(true);
@@ -250,7 +271,7 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
         width={stageSizeProps.width} 
         height={stageSizeProps.height}
         ref={stage}
-        // rotation={350}
+        rotation={stageSizeProps.imageRotation}
       >
         <Layer>
           <Group draggable>
@@ -260,6 +281,9 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
               key={'wallImage'}
               centerX={MarkerPositionX}
               centerY={MarkerPositionY}
+              imageX={imageSizeProps.imageX}
+              imageY={imageSizeProps.imageY}
+              imageRotation={imageSizeProps.imageRotation}
               updateSizeProps={setImageSizeProps}
               updateIsRedoEnabled={useIsRedoEnabled}
               updateIsUndoEnabled={useIsUndoEnabled}
