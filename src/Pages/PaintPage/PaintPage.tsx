@@ -105,7 +105,7 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
     setWallImage(i);
 
     i.onload = (evt) => {
-      setImageSizeProps((old) => { return { ...old, width: i.width, height: i.height } });
+      setImageSizeProps((old) => { return { ...old, centerX:window.innerWidth, centerY: window.innerHeight, width: i.width, height: i.height } });
     }
     updateIsImageLoaded(true);
   }
@@ -163,7 +163,7 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
         width: imageSizeProps.width,
         height: imageSizeProps.height,
         x: imageSizeProps.x,
-        y: imageSizeProps.y,
+        y: imageSizeProps.y - 100,
         scaleX: imageSizeProps.scaleX,
         scaleY: imageSizeProps.scaleY
       };
@@ -250,6 +250,7 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
         width={stageSizeProps.width} 
         height={stageSizeProps.height}
         ref={stage}
+        // rotation={350}
       >
         <Layer>
           <Group draggable>

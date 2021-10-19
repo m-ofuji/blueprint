@@ -1,4 +1,5 @@
 export const downloadURI = (uri:string, name:string) => {
+  console.log('url', uri);
   var link = document.createElement('a');
   link.download = name;
   link.href = uri;
