@@ -222,8 +222,6 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
 
   Konva.hitOnDragEnabled = true;
 
-  console.log(props);
-
   return (
     <Group
       draggable={true}

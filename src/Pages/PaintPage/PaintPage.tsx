@@ -108,12 +108,12 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
         console.log('onload');
         return { 
           ...old,
-          centerX:window.innerWidth,
+          centerX: window.innerWidth,
           centerY: window.innerHeight,
           width: i.width,
           height: i.height,
-          imageRotation: 90,
-          imageY: i.height 
+          // imageRotation: 90,
+          // imageY: i.height 
         } 
       });
     }
@@ -169,13 +169,13 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
   const HandleExport = (resize: boolean) => {
     if (!stage) return;
     console.log('before', imageSizeProps);
-    setImageSizeProps((old) => {
-      return {...old, 
-        imageX: 0,
-        imageY: 0,
-        imageRotation: 0,
-      };
-    });
+    // setImageSizeProps((old) => {
+    //   return {...old, 
+    //     imageX: 0,
+    //     imageY: 0,
+    //     imageRotation: 0,
+    //   };
+    // });
     console.log('after', imageSizeProps);
 
 
@@ -189,7 +189,7 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
         y: imageSizeProps.y,
         scaleX: imageSizeProps.scaleX,
         scaleY: imageSizeProps.scaleY,
-        // imageRotation: 90
+        // imageRotation: 270
       };
     });
 
@@ -310,9 +310,13 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
           />
         </Layer>
       </Stage>
-      <div className={'horizontal-container'}>
+      {/* <div style={{position:'absolute'}}> */}
+      <ul className={'horizontal-container'}>
         {initialButton.map((props, i) => <RoundButton {...props}/>)}
-      </div>
+      </ul>
+        
+      {/* </div> */}
+
       <div className={isLefty ? 'undo-and-redo-container is-lefty' : 'undo-and-redo-container'}>
         <UndoButton key={'undo'} disabled={isUndoEnabled} onTapped={undo}/>
         <RedoButton key={'redo'} disabled={isRedoEnabled} onTapped={redo}/>
