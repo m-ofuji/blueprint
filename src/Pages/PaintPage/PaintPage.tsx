@@ -14,6 +14,7 @@ import { UndoButton } from './Components/UndoButton';
 import { RedoButton } from './Components/RedoButton';
 import { CloseButton } from '../../Components/CloseButton';
 import { MarkerPositionX, MarkerPositionY } from './Constants';
+import { getCurrentTimestamp } from '../../Common/Functions/CurrentTimestamp'; 
 
 export type SizeProps = {
   x: number,
@@ -95,12 +96,9 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
 
     if (file === null) return;
 
-    console.log('file', file);
     const dataURL = URL.createObjectURL(file);
     const i = new window.Image();
     i.src = dataURL;
-    i.className='rotate-image';
-    console.log('u', i);
     setWallImage(i);
 
     i.onload = (evt) => {
@@ -128,7 +126,18 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
     const pixelRatio = resizeImage && fixPixelRatio ? maxSideLength / Math.max(imageSizeProps.width, imageSizeProps.height) : 1;
     const uri = stage.current.toDataURL({pixelRatio: pixelRatio});
 
-    downloadURI(uri, "topo.png");
+    downloadURI(uri, getCurrentTimestamp() + '.png');
+
+    // setStageSizeProps((old) => {
+    //   return {...old,
+    //     // x:0,
+    //     // y:0,
+    //     width: window.innerWidth,
+    //     height: window.innerHeight
+    //   };
+    // });
+
+    // updateExecDownload(false);
 
     navigator.popPage();
   };
