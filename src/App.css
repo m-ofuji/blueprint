@@ -178,11 +178,9 @@
   height:12%;
   box-sizing: border-box;
   padding: 10px;
-  /* padding-left: 1%;
-  padding-right: 1%; */
-  gap: 10%;
-  list-style: none;
-  justify-content: space-between;
+  /* gap: 10px; */
+  /* list-style: none; */
+  /* justify-content: space-between; */
 }
 
 .horizontal-container::-webkit-scrollbar {
@@ -196,20 +194,14 @@
   background-color: #004898;
 }
 
-.button-li {
-  /* margin: 10px; */
-  /* padding: 10px; */
-  /* width: 100%; */
-}
-
 .button-li::marker {
   display: none;
 }
 
 .round-button {
-  /* margin: 2%; */
-  border-radius: 1.1rem; 
-  padding: 5% 15%;
+  margin: 0% 1%;
+  border-radius: 1.3rem; 
+  padding: 2% 5%;
   text-align: center;
   width: fit-content;
   font-size: 1rem;
@@ -218,9 +210,5 @@
   background-color: whitesmoke;
   box-shadow: 1px 2px 4px rgba(0,0,0,0.5);
 }
-
-/* body {
-  overflow-x: hidden;
-} */
 
 /* スタンプメニューここまで */

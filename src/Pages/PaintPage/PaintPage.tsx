@@ -55,8 +55,8 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
   const initialButton = [
     { key:1, text: 'ホールド', isSelected: selectedButton[0], onTapped: () => activateHoldTarget(0) },
     { key:2, text: 'S・Gホールド', isSelected: selectedButton[1], onTapped: () => activateHoldTarget(1) },
-    { key:3, text: 'Sマーク', isSelected: selectedButton[2], onTapped: () => activateTextTarget(2) },
-    { key:4, text: 'Gマーク', isSelected: selectedButton[3], onTapped: () => activateTextTarget(3) }
+    { key:3, text: 'スタート', isSelected: selectedButton[2], onTapped: () => activateTextTarget(2) },
+    { key:4, text: 'ゴール', isSelected: selectedButton[3], onTapped: () => activateTextTarget(3) }
   ];
 
   const stage = useRef<any>(null);
@@ -310,12 +310,9 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
           />
         </Layer>
       </Stage>
-      {/* <div style={{position:'absolute'}}> */}
-      <ul className={'horizontal-container'}>
+      <div className={'horizontal-container'}>
         {initialButton.map((props, i) => <RoundButton {...props}/>)}
-      </ul>
-        
-      {/* </div> */}
+      </div>
 
       <div className={isLefty ? 'undo-and-redo-container is-lefty' : 'undo-and-redo-container'}>
         <UndoButton key={'undo'} disabled={isUndoEnabled} onTapped={undo}/>

@@ -8,14 +8,14 @@ export type RoundButtonProps = {
 
 export const RoundButton = (props: RoundButtonProps) => {
   return (
-    <li className={'button-li'}>
+    // <li className={'button-li'}>
       <div
         className={props.isSelected ? 'round-button selected' : 'round-button' }
         onClick={props.onTapped}
       >
         {props.text}
       </div>
-    </li>
+    // </li>
     
   )
 }
