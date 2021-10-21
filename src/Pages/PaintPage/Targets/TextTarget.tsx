@@ -13,8 +13,10 @@ export const TextTarget = (props: TextTargetProps) => {
   return (
     <Text
       text={props.character}
-      fill="blue"
-      fontSize={50}
+      strokeWidth={1}
+      stroke='white'
+      fill='#0f47ff'
+      fontSize={55}
       visible={props.isVisible}
       x={props.x}
       y={props.y}

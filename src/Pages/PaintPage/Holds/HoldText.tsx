@@ -21,8 +21,10 @@ let HoldTextBase = (props: HoldTextProps, ref: any) => {
     scaleX={props.scale}
     scaleY={props.scale}
     ref={ref}
-    fontSize={50}
-    fill={'red'}
+    fontSize={55}
+    strokeWidth={1}
+    stroke='white'
+    fill={'#ff0d0d'}
     text={props.character}
     x={props.x}
     y={props.y}

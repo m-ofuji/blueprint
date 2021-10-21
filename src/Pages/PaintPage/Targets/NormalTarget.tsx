@@ -13,7 +13,7 @@ export const NormalTarget = (props: NormalTargetProps) => {
   return (
     <Circle
       fill="#00000000"
-      stroke="blue"
+      stroke="#0f47ff"
       radius={HoldCircleRadius}
       strokeWidth={HoldCircleStrokeWidth}
       visible={props.isVisible}

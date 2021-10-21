@@ -47,7 +47,7 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
   const [imageSizeProps, setImageSizeProps] = useState<SizeProps>(sizeProps);
   const [isImageLoaded, updateIsImageLoaded] = useState<boolean>(false);
   const [execDownload, updateExecDownload] = useState<boolean>(false);
-  const [selectedButton, updateSelectedButton] = useState<boolean[]>([true, false, false, false]);
+  const [selectedButton, updateSelectedButton] = useState<boolean[]>([true, false, false, false, false, false]);
   const [holdText, setHoldText] = useState<string>('S');
   const [isUndoEnabled, useIsUndoEnabled] = useState<boolean>(true);
   const [isRedoEnabled, useIsRedoEnabled] = useState<boolean>(true);
@@ -57,7 +57,9 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
     { key:1, text: 'ホールド', isSelected: selectedButton[0], onTapped: () => activateHoldTarget(0) },
     { key:2, text: 'S・Gホールド', isSelected: selectedButton[1], onTapped: () => activateHoldTarget(1) },
     { key:3, text: 'スタート', isSelected: selectedButton[2], onTapped: () => activateTextTarget(2) },
-    { key:4, text: 'ゴール', isSelected: selectedButton[3], onTapped: () => activateTextTarget(3) }
+    { key:4, text: 'ゴール', isSelected: selectedButton[3], onTapped: () => activateTextTarget(3) },
+    { key:5, text: 'スタート右', isSelected: selectedButton[4], onTapped: () => activateTextTarget(4) },
+    { key:6, text: 'スタート右', isSelected: selectedButton[5], onTapped: () => activateTextTarget(5) }
   ];
 
   const stage = useRef<any>(null);
@@ -203,18 +205,18 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
     });
 
     updateResizeImage(resize);
-    updateSelectedButton([false, false, false, false]);
+    updateSelectedButton(initialButton.map(x => false));
     updateExecDownload(true);
   };
 
   const activateHoldTarget = (index:number) => {
-    const selected = [false, false, false, false];
+    const selected = initialButton.map(x => false);
     selected[index] = true;
     updateSelectedButton(selected);
   }
 
   const activateTextTarget = (index:number) => {
-    const selected = [false, false, false, false];
+    const selected = initialButton.map(x => false);
     selected[index] = true;
     updateSelectedButton(selected);
     const text = getText(selected);
@@ -225,13 +227,23 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
   const getHoldColor = (selected: boolean[]) => {
     const index = selected.findIndex((val, i) => val);
     if (index >= 2 || index < 0) return undefined;
-    return index === 0 ? 'yellow' : 'red';
+    return index === 0 ? '#ffff56' : '#ff3838';
   }
 
   const getText = (selected: boolean[]) => {
     const index = selected.findIndex((val, i) => val);
     if (index <= 1) return undefined;
-    return index === 2 ? 'S' : 'G';
+    if (index === 2) {
+      return 'S'
+    } else if (index === 3) {
+      return 'G';
+    } else if (index === 4) {
+      return 'S右';
+    } else if (index === 5) {
+      return 'S左';
+    } else {
+      return undefined;
+    }
   }
 
   const holdTargetTapped = (evt: KonvaEventObject<Event>) => {
@@ -314,7 +326,7 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
             x={MarkerPositionX - stageSizeProps.x}
             y={MarkerPositionY - stageSizeProps.y}
             character={holdText}
-            isVisible={selectedButton[2] || selectedButton[3]}
+            isVisible={selectedButton[2] || selectedButton[3] || selectedButton[4] || selectedButton[5]}
             onTapped={textTargetTapped}
           />
         </Layer>
