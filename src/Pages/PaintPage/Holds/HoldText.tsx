@@ -27,8 +27,8 @@ let HoldTextBase = (props: HoldTextProps, ref: any) => {
     stroke='white'
     fill={'#ff0d0d'}
     text={props.character}
-    x={props.x - (StampTextSize * props.character.length) / 2}
-    y={props.y - StampTextSize / 2}
+    x={props.x - ((StampTextSize * (props.scale ?? 1) * props.character.length) / 2)}
+    y={props.y - StampTextSize * (props.scale ?? 1) / 2}
     draggable={false}
   />
 }
