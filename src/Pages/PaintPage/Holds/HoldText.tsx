@@ -1,5 +1,6 @@
 import { Text } from 'react-konva';
 import { forwardRef } from 'react';
+import { StampTextSize } from '../Constants';
 
 export type HoldTextProps = {
   x: number,
@@ -21,13 +22,13 @@ let HoldTextBase = (props: HoldTextProps, ref: any) => {
     scaleX={props.scale}
     scaleY={props.scale}
     ref={ref}
-    fontSize={55}
+    fontSize={StampTextSize}
     strokeWidth={1}
     stroke='white'
     fill={'#ff0d0d'}
     text={props.character}
-    x={props.x}
-    y={props.y}
+    x={props.x - (StampTextSize * props.character.length) / 2}
+    y={props.y - StampTextSize / 2}
     draggable={false}
   />
 }

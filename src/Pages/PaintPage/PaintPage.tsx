@@ -47,7 +47,7 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
   const [imageSizeProps, setImageSizeProps] = useState<SizeProps>(sizeProps);
   const [isImageLoaded, updateIsImageLoaded] = useState<boolean>(false);
   const [execDownload, updateExecDownload] = useState<boolean>(false);
-  const [selectedButton, updateSelectedButton] = useState<boolean[]>([true, false, false, false, false, false]);
+  const [selectedButton, updateSelectedButton] = useState<boolean[]>([true, false, false, false, false, false, false]);
   const [holdText, setHoldText] = useState<string>('S');
   const [isUndoEnabled, useIsUndoEnabled] = useState<boolean>(true);
   const [isRedoEnabled, useIsRedoEnabled] = useState<boolean>(true);
@@ -59,7 +59,8 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
     { key:3, text: 'スタート', isSelected: selectedButton[2], onTapped: () => activateTextTarget(2) },
     { key:4, text: 'ゴール', isSelected: selectedButton[3], onTapped: () => activateTextTarget(3) },
     { key:5, text: 'スタート右', isSelected: selectedButton[4], onTapped: () => activateTextTarget(4) },
-    { key:6, text: 'スタート右', isSelected: selectedButton[5], onTapped: () => activateTextTarget(5) }
+    { key:6, text: 'スタート右', isSelected: selectedButton[5], onTapped: () => activateTextTarget(5) },
+    { key:7, text: 'カンテ', isSelected: selectedButton[6], onTapped: () => activateTextTarget(6) }
   ];
 
   const stage = useRef<any>(null);
@@ -241,6 +242,8 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
       return 'S右';
     } else if (index === 5) {
       return 'S左';
+    } else if (index === 6) {
+      return 'カンテ';
     } else {
       return undefined;
     }
@@ -326,7 +329,7 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
             x={MarkerPositionX - stageSizeProps.x}
             y={MarkerPositionY - stageSizeProps.y}
             character={holdText}
-            isVisible={selectedButton[2] || selectedButton[3] || selectedButton[4] || selectedButton[5]}
+            isVisible={selectedButton[2] || selectedButton[3] || selectedButton[4] || selectedButton[5] || selectedButton[6]}
             onTapped={textTargetTapped}
           />
         </Layer>
