@@ -30,7 +30,6 @@ export type SizeProps = {
 }
 
 const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, navigator: Navigator}) => {
-
   const sizeProps = {
     x: 0,
     y: 0,
@@ -44,14 +43,14 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
   };
 
   const initialButton = [
-    { key:1, label: 'ホールド', isSelected: true, onTapped: () => activateTarget(0), color: '#ffff56' },
-    { key:2, label: 'S・Gホールド', isSelected: false, onTapped: () => activateTarget(1), color: '#ff3838' },
-    { key:3, label: 'スタート', isSelected: false, onTapped: () => activateTextTarget(2), contentText: 'S' },
-    { key:4, label: 'ゴール', isSelected: false, onTapped: () => activateTextTarget(3), contentText: 'G' },
-    { key:5, label: 'スタート右', isSelected: false, onTapped: () => activateTextTarget(4), contentText: 'S右' },
-    { key:6, label: 'スタート左', isSelected: false, onTapped: () => activateTextTarget(5), contentText: 'S左' },
-    { key:7, label: 'カンテ', isSelected: false, onTapped: () => activateTextTarget(6), contentText: 'カンテ' },
-    { key:8, label: 'ハリボテ', isSelected: false, onTapped: () => activateTextTarget(7), contentText: 'ボテあり' }
+    { key:1, label: 'S・Gホールド', isSelected: true, onTapped: () => activateTarget(0), color: '#ff3838' },
+    { key:2, label: 'ホールド',     isSelected: false,  onTapped: () => activateTarget(1), color: '#ffff56' },
+    { key:3, label: 'スタート',     isSelected: false, onTapped: () => activateTextTarget(2), contentText: 'S' },
+    { key:4, label: 'ゴール',       isSelected: false, onTapped: () => activateTextTarget(3), contentText: 'G' },
+    { key:5, label: 'スタート右',   isSelected: false, onTapped: () => activateTextTarget(4), contentText: 'S右' },
+    { key:6, label: 'スタート左',   isSelected: false, onTapped: () => activateTextTarget(5), contentText: 'S左' },
+    { key:7, label: 'カンテ',       isSelected: false, onTapped: () => activateTextTarget(6), contentText: 'カンテ' },
+    { key:8, label: 'ハリボテ',     isSelected: false, onTapped: () => activateTextTarget(7), contentText: 'ボテあり' }
   ];
 
   const [wallImage, setWallImage] = useState<CanvasImageSource | null>(null);
@@ -130,10 +129,6 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
     const pixelRatio = resizeImage && fixPixelRatio ? maxSideLength / Math.max(imageSizeProps.width, imageSizeProps.height) : 1;
     const uri = stage.current.toDataURL({pixelRatio: pixelRatio});
 
-    const canvas = stage.current.toCanvas();
-
-    // downloadCanvas(canvas, maxSideLength, pixelRatio, getCurrentTimestamp() + '.png');
-
     downloadURI(uri, getCurrentTimestamp() + '.png');
 
     // setStageSizeProps((old) => {
@@ -207,21 +202,24 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
     });
 
     updateResizeImage(resize);
-    updateStamps((old) => {
-      const newState = old.map(x => x)
-      newState.forEach(x => x.isSelected = false);
-      return newState;
-    });
+    // updateStamps((old) => {
+    //   const newState = old.map(x => x);
+    //   newState.forEach(x => x.isSelected = false);
+    //   return newState;
+    // });
+    updateStamps(old => old.map(x => {return { ...x, isSelected : false }}));
     updateExecDownload(true);
   };
 
   const activateTarget = (index:number) => {
-    console.log('menu tappded');
-    updateStamps((old) => {
-      const newState = old.map(x => x)
-      newState.forEach((x, i) => x.isSelected = i === index);
-      return newState;
-    });
+    // console.log('menu tappded');
+    updateStamps(old => old.map((x,i) => {return { ...x, isSelected : i === index }}));
+
+    // updateStamps((old) => {
+    //   const newState = old.map(x => x)
+    //   newState.forEach((x, i) => x.isSelected = i === index);
+    //   return newState;
+    // });
   }
 
   const activateTextTarget = (index: number) => {
@@ -270,6 +268,7 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
   return (
     <Page>
       <Stage 
+        key={'stage'}
         className={'image-stage'}
         offsetX={stageSizeProps.x}
         offsetY={stageSizeProps.y}
