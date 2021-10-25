@@ -1,7 +1,7 @@
 import { MouseEventHandler } from "react"
 
 export type RoundButtonProps = {
-  text: string,
+  label: string,
   isSelected: boolean,
   onTapped: MouseEventHandler<HTMLDivElement>
 }
@@ -13,7 +13,7 @@ export const RoundButton = (props: RoundButtonProps) => {
         className={props.isSelected ? 'round-button selected' : 'round-button' }
         onClick={props.onTapped}
       >
-        {props.text}
+        {props.label}
       </div>
     // </li>
     

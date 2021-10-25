@@ -15,6 +15,7 @@ import { RedoButton } from './Components/RedoButton';
 import { CloseButton } from '../../Components/CloseButton';
 import { MarkerPositionX, MarkerPositionY } from './Constants';
 import { getCurrentTimestamp } from '../../Common/Functions/CurrentTimestamp'; 
+import { IStampButton, IHoldStamp, ITextStamp, isIHoldStamp, isITextStamp } from './StampType';
 
 export type SizeProps = {
   x: number,
@@ -29,7 +30,6 @@ export type SizeProps = {
 }
 
 const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, navigator: Navigator}) => {
-
   const sizeProps = {
     x: 0,
     y: 0,
@@ -42,27 +42,27 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
     imageRotation: 0
   };
 
+  const initialButton = [
+    { key:1, label: 'S・Gホールド', isSelected: true, onTapped: () => activateTarget(0), color: '#ff3838' },
+    { key:2, label: 'ホールド',     isSelected: false,  onTapped: () => activateTarget(1), color: '#ffff56' },
+    { key:3, label: 'スタート',     isSelected: false, onTapped: () => activateTextTarget(2), contentText: 'S' },
+    { key:4, label: 'ゴール',       isSelected: false, onTapped: () => activateTextTarget(3), contentText: 'G' },
+    { key:5, label: 'スタート右',   isSelected: false, onTapped: () => activateTextTarget(4), contentText: 'S右' },
+    { key:6, label: 'スタート左',   isSelected: false, onTapped: () => activateTextTarget(5), contentText: 'S左' },
+    { key:7, label: 'カンテ',       isSelected: false, onTapped: () => activateTextTarget(6), contentText: 'カンテ' },
+    { key:8, label: 'ハリボテ',     isSelected: false, onTapped: () => activateTextTarget(7), contentText: 'ボテあり' }
+  ];
+
   const [wallImage, setWallImage] = useState<CanvasImageSource | null>(null);
   const [stageSizeProps, setStageSizeProps] = useState<SizeProps>(sizeProps);
   const [imageSizeProps, setImageSizeProps] = useState<SizeProps>(sizeProps);
   const [isImageLoaded, updateIsImageLoaded] = useState<boolean>(false);
   const [execDownload, updateExecDownload] = useState<boolean>(false);
-  const [selectedButton, updateSelectedButton] = useState<boolean[]>([true, false, false, false, false, false, false, false]);
+  const [stamps, updateStamps] = useState<IStampButton[]>(initialButton);
   const [holdText, setHoldText] = useState<string>('S');
   const [isUndoEnabled, useIsUndoEnabled] = useState<boolean>(true);
   const [isRedoEnabled, useIsRedoEnabled] = useState<boolean>(true);
   const [resizeImage, updateResizeImage] = useState<boolean>(false);
-
-  const initialButton = [
-    { key:1, text: 'ホールド', isSelected: selectedButton[0], onTapped: () => activateHoldTarget(0) },
-    { key:2, text: 'S・Gホールド', isSelected: selectedButton[1], onTapped: () => activateHoldTarget(1) },
-    { key:3, text: 'スタート', isSelected: selectedButton[2], onTapped: () => activateTextTarget(2) },
-    { key:4, text: 'ゴール', isSelected: selectedButton[3], onTapped: () => activateTextTarget(3) },
-    { key:5, text: 'スタート右', isSelected: selectedButton[4], onTapped: () => activateTextTarget(4) },
-    { key:6, text: 'スタート右', isSelected: selectedButton[5], onTapped: () => activateTextTarget(5) },
-    { key:7, text: 'カンテ', isSelected: selectedButton[6], onTapped: () => activateTextTarget(6) },
-    { key:8, text: 'ハリボテ', isSelected: selectedButton[7], onTapped: () => activateTextTarget(7) }
-  ];
 
   const stage = useRef<any>(null);
   const resizableImage = useRef<any>(null);
@@ -124,13 +124,10 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
   const download = () => {
     if (!execDownload) return;
     
-    const maxSideLength = 800;
+    const maxSideLength = 750;
     const fixPixelRatio = imageSizeProps.width > maxSideLength || imageSizeProps.height > maxSideLength;
     const pixelRatio = resizeImage && fixPixelRatio ? maxSideLength / Math.max(imageSizeProps.width, imageSizeProps.height) : 1;
     const uri = stage.current.toDataURL({pixelRatio: pixelRatio});
-
-    const canvas = stage.current.toCanvas();
-    console.log(canvas);
 
     downloadURI(uri, getCurrentTimestamp() + '.png');
 
@@ -205,61 +202,41 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
     });
 
     updateResizeImage(resize);
-    updateSelectedButton(initialButton.map(x => false));
+    // updateStamps((old) => {
+    //   const newState = old.map(x => x);
+    //   newState.forEach(x => x.isSelected = false);
+    //   return newState;
+    // });
+    updateStamps(old => old.map(x => {return { ...x, isSelected : false }}));
     updateExecDownload(true);
   };
 
-  const activateHoldTarget = (index:number) => {
-    const selected = initialButton.map(x => false);
-    selected[index] = true;
-    updateSelectedButton(selected);
+  const activateTarget = (index:number) => {
+    // console.log('menu tappded');
+    updateStamps(old => old.map((x,i) => {return { ...x, isSelected : i === index }}));
+
+    // updateStamps((old) => {
+    //   const newState = old.map(x => x)
+    //   newState.forEach((x, i) => x.isSelected = i === index);
+    //   return newState;
+    // });
   }
 
-  const activateTextTarget = (index:number) => {
-    const selected = initialButton.map(x => false);
-    selected[index] = true;
-    updateSelectedButton(selected);
-    const text = getText(selected);
-    if (!text) return;
-    setHoldText(text);
-  }
-
-  const getHoldColor = (selected: boolean[]) => {
-    const index = selected.findIndex((val, i) => val);
-    if (index >= 2 || index < 0) return undefined;
-    return index === 0 ? '#ffff56' : '#ff3838';
-  }
-
-  const getText = (selected: boolean[]) => {
-    const index = selected.findIndex((val, i) => val);
-    if (index <= 1) return undefined;
-    if (index === 2) {
-      return 'S'
-    } else if (index === 3) {
-      return 'G';
-    } else if (index === 4) {
-      return 'S右';
-    } else if (index === 5) {
-      return 'S左';
-    } else if (index === 6) {
-      return 'カンテ';
-    } else if (index === 7) {
-      return 'ボテあり';
-    } else {
-      return undefined;
-    }
+  const activateTextTarget = (index: number) => {
+    activateTarget(index);
+    const selected = stamps[index];
+    if (!isITextStamp(selected)) return;
+    setHoldText((selected as ITextStamp).contentText);
   }
 
   const holdTargetTapped = (evt: KonvaEventObject<Event>) => {
-    const color = getHoldColor(selectedButton);
-    if (!color) return;
-    resizableImage.current.useHold(color)
+    const selected = stamps.find(x => x.isSelected);
+    if (!isIHoldStamp(selected)) return;
+    resizableImage.current.useHold((selected as IHoldStamp).color)
   }
 
   const textTargetTapped = (evt: KonvaEventObject<Event>) => {
-    const text = getText(selectedButton);
-    if (!text) return;
-    resizableImage.current.useHoldText(text)
+    resizableImage.current.useHoldText(holdText);
   }
 
   const undo = () => {
@@ -286,12 +263,12 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
     } else {
       navigator.popPage();
     }
-    
   }
 
   return (
     <Page>
       <Stage 
+        key={'stage'}
         className={'image-stage'}
         offsetX={stageSizeProps.x}
         offsetY={stageSizeProps.y}
@@ -322,7 +299,8 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
             key={'normalTarget'}
             x={MarkerPositionX - stageSizeProps.x}
             y={MarkerPositionY - stageSizeProps.y}
-            isVisible={selectedButton[0] || selectedButton[1]}
+            // isVisible={selectedButton[0] || selectedButton[1]}
+            isVisible={stamps.filter(x => isIHoldStamp(x) && x.isSelected).length > 0}
             onTapped={holdTargetTapped}
           />
           <TextTarget
@@ -330,13 +308,13 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
             x={MarkerPositionX - stageSizeProps.x}
             y={MarkerPositionY - stageSizeProps.y}
             character={holdText}
-            isVisible={selectedButton[2] || selectedButton[3] || selectedButton[4] || selectedButton[5] || selectedButton[6]|| selectedButton[7]}
+            isVisible={stamps.filter(x => isITextStamp(x) && x.isSelected).length > 0}
             onTapped={textTargetTapped}
           />
         </Layer>
       </Stage>
       <div className={'horizontal-container'}>
-        {initialButton.map((props, i) => <RoundButton {...props}/>)}
+        {stamps.map((props, i) => <RoundButton {...props}/>)}
       </div>
 
       <div className={isLefty ? 'undo-and-redo-container is-lefty' : 'undo-and-redo-container'}>

@@ -23,7 +23,6 @@ let HoldCircleBase = (props: HoldCircleProps, ref: any) => {
     scaleY={props.scale}
     ref={ref}
     fill="#00000000"
-    // fill="#000000"
     stroke={props.color}
     radius={HoldCircleRadius}
     strokeWidth={HoldCircleStrokeWidth}

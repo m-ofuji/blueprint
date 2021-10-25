@@ -1,5 +1,5 @@
 import HomePage from './HomePage/HomePage';
-import { Navigator, Page } from 'react-onsenui';
+import { Navigator } from 'react-onsenui';
 
 export const NaviPage = () => {
   const renderPage = (route:any, navigator: Navigator) => {
@@ -10,7 +10,7 @@ export const NaviPage = () => {
 
   return (
     <Navigator
-      key={'navi'}
+      key='navi'
       initialRoute={{comp: HomePage, key: 'HomePage'}}
       renderPage={renderPage}
     />
