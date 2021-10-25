@@ -202,24 +202,12 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
     });
 
     updateResizeImage(resize);
-    // updateStamps((old) => {
-    //   const newState = old.map(x => x);
-    //   newState.forEach(x => x.isSelected = false);
-    //   return newState;
-    // });
     updateStamps(old => old.map(x => {return { ...x, isSelected : false }}));
     updateExecDownload(true);
   };
 
   const activateTarget = (index:number) => {
-    // console.log('menu tappded');
     updateStamps(old => old.map((x,i) => {return { ...x, isSelected : i === index }}));
-
-    // updateStamps((old) => {
-    //   const newState = old.map(x => x)
-    //   newState.forEach((x, i) => x.isSelected = i === index);
-    //   return newState;
-    // });
   }
 
   const activateTextTarget = (index: number) => {
@@ -291,15 +279,14 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
               imageY={imageSizeProps.imageY}
               imageRotation={imageSizeProps.imageRotation}
               updateSizeProps={setImageSizeProps}
-              updateIsRedoEnabled={useIsRedoEnabled}
-              updateIsUndoEnabled={useIsUndoEnabled}
+              updateIsRedoDisabled={useIsRedoEnabled}
+              updateIsUndoDisabled={useIsUndoEnabled}
             />
           </Group>
           <NormalTarget
             key={'normalTarget'}
             x={MarkerPositionX - stageSizeProps.x}
             y={MarkerPositionY - stageSizeProps.y}
-            // isVisible={selectedButton[0] || selectedButton[1]}
             isVisible={stamps.filter(x => isIHoldStamp(x) && x.isSelected).length > 0}
             onTapped={holdTargetTapped}
           />

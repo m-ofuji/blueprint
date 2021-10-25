@@ -19,13 +19,12 @@ export type WallImageProps = {
   imageX?: number,
   imageY?: number,
   updateSizeProps: React.Dispatch<React.SetStateAction<SizeProps>>;
-  updateIsUndoEnabled: React.Dispatch<React.SetStateAction<boolean>>;
-  updateIsRedoEnabled: React.Dispatch<React.SetStateAction<boolean>>;
+  updateIsUndoDisabled: React.Dispatch<React.SetStateAction<boolean>>;
+  updateIsRedoDisabled: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 let WallImageBase = (props : WallImageProps, ref : any) => {
 
-  // ここを直す 
   const groupRef = React.useRef<any>();
   const [circleRefs, useCircleRefs] = useState<React.RefObject<any>[]>([]);
   const [textRefs, useTextRefs] = useState<React.RefObject<any>[]>([]);
@@ -52,9 +51,9 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
 
       const Undo = () => useHolds(old => old.filter(x => x !== normalHold ));
       useUndo(old => [...old, [normalHold, Undo]]);
-      props.updateIsUndoEnabled(false);
+      props.updateIsUndoDisabled(false);
       useRedo([]);
-      props.updateIsRedoEnabled(true);
+      props.updateIsRedoDisabled(true);
     },
     useHoldText: (text: string) => {
       textRefs.push(createRef<any>());
@@ -69,9 +68,9 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
       useHoldText(texts.concat([t]).filter(x => x));
       const Undo = () => useHoldText(old => old.filter(x => x !== t));
       useUndo(old => [...old, [t, Undo]]);
-      props.updateIsUndoEnabled(false);
+      props.updateIsUndoDisabled(false);
       useRedo([]);
-      props.updateIsRedoEnabled(true);
+      props.updateIsRedoDisabled(true);
     },
     Undo: () => {
       const last = undo[undo.length - 1];
@@ -92,7 +91,7 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
           old.push([lastItem, Redo]);
         }
         const newRedo = old;
-        props.updateIsRedoEnabled(newRedo.length <= 0);
+        props.updateIsRedoDisabled(newRedo.length <= 0);
         return newRedo;
       });
 
@@ -100,7 +99,7 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
         last[1]();
         undo.pop();
       }
-      props.updateIsUndoEnabled(undo.length <= 0);
+      props.updateIsUndoDisabled(undo.length <= 0);
       useUndo(undo);
     },
     Redo: () => {
@@ -123,7 +122,7 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
           old.push([lastItem, Undo]);
         }
         const newUndo = old;
-        props.updateIsUndoEnabled(newUndo.length <= 0);
+        props.updateIsUndoDisabled(newUndo.length <= 0);
         return newUndo;
       });
 
@@ -132,7 +131,7 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
         redo.pop();
       }
 
-      props.updateIsRedoEnabled(redo.length <= 0);
+      props.updateIsRedoDisabled(redo.length <= 0);
       useRedo(redo);
     }
   }));
@@ -213,7 +212,7 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
     return Math.sqrt(Math.pow(p2.clientX - p1.clientX, 2) + Math.pow(p2.clientY - p1.clientY, 2));
   }
 
-  function getCenter(p1:Touch, p2:Touch) {
+  const getCenter = (p1:Touch, p2:Touch) => {
     return {
       x: (p1.clientX + p2.clientX) / 2,
       y: (p1.clientY + p2.clientY) / 2,
