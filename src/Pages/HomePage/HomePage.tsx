@@ -42,8 +42,8 @@ const HomePage = ({route, navigator}: {route: any, navigator: Navigator}) => {
       <p className={'section-header'}>作成したトポ</p>
       <div className={'start-button-container'}>
         <h3>coming soon</h3>
-        <button onClick={getData}>データ取得</button>
-        {blobUrl.map((x, i) => <img key={i} src={x} width={100}/>)}
+        {/* <button onClick={getData}>データ取得</button>
+        {blobUrl.map((x, i) => <img key={i} src={x} width={100}/>)} */}
       </div>
 
     </Page>

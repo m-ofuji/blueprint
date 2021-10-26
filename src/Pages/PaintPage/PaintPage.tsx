@@ -145,29 +145,7 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
     });
   }
 
-  const download = () => {
-    if (!execDownload) return;
-    
-    const maxSideLength = 750;
-    const fixPixelRatio = imageSizeProps.width > maxSideLength || imageSizeProps.height > maxSideLength;
-    const pixelRatio = resizeImage && fixPixelRatio ? maxSideLength / Math.max(imageSizeProps.width, imageSizeProps.height) : 1;
-    const uri = stage.current.toDataURL({pixelRatio: pixelRatio});
 
-    downloadURI(uri, getCurrentTimestamp() + '.png');
-
-    // setStageSizeProps((old) => {
-    //   return {...old,
-    //     // x:0,
-    //     // y:0,
-    //     width: window.innerWidth,
-    //     height: window.innerHeight
-    //   };
-    // });
-
-    // updateExecDownload(false);
-
-    navigator.popPage();
-  };
 
   const onSaveTapped = () => {
     if (!stage) return;
@@ -197,7 +175,6 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
     updateExecDownload(true);
   }
 
-  useEffect(save);
 
   const onDownloadTapped = () => {
     ons.openActionSheet({
@@ -206,7 +183,6 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
       buttons: ['ダウンロード', '縮小版をダウンロード', 'キャンセル'],
       
     }).then((idx: any) => {
-      console.log(idx);
       if (idx === 0) {
         HandleExport(false);
       } else if (idx === 1) {
@@ -257,6 +233,36 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
     updateStamps(old => old.map(x => {return { ...x, isSelected : false }}));
     updateExecDownload(true);
   };
+
+  const download = () => {
+    if (!execDownload) return;
+    
+    const maxSideLength = 750;
+    const fixPixelRatio = imageSizeProps.width > maxSideLength || imageSizeProps.height > maxSideLength;
+    const pixelRatio = resizeImage && fixPixelRatio ? maxSideLength / Math.max(imageSizeProps.width, imageSizeProps.height) : 1;
+    const uri = stage.current.toDataURL({pixelRatio: pixelRatio});
+
+    downloadURI(uri, getCurrentTimestamp() + '.png');
+
+    updateStamps(old => old.map((x, i) => { return {...x, isSelected: i === 1}}));
+
+    setStageSizeProps((old) => {
+      return {...old,
+        x: 0,
+        y: 0,
+        scaleX: 1,
+        scaleY: 1,
+        width: window.innerWidth,
+        height: window.innerHeight
+      };
+    });
+
+    updateExecDownload(false);
+
+    // navigator.popPage();
+  };
+
+  useEffect(download);
 
   const activateTarget = (index:number) => {
     updateStamps(old => old.map((x,i) => {return { ...x, isSelected : i === index }}));
@@ -361,8 +367,8 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
         <RedoButton key={'redo'} disabled={isRedoEnabled} onTapped={redo}/>
       </div>
       <CloseButton className={isLefty ? 'close-button float-left-top': 'close-button float-right-top'} onTapped={onCloseTapped}></CloseButton>
-      {/* <DownloadButton className={isLefty ? 'download-button is-lefty' : 'download-button'} onTapped={onDownloadTapped}/> */}
-      <DownloadButton className={isLefty ? 'download-button is-lefty' : 'download-button'} onTapped={onSaveTapped}/>
+      <DownloadButton className={isLefty ? 'download-button is-lefty' : 'download-button'} onTapped={onDownloadTapped}/>
+      {/* <DownloadButton className={isLefty ? 'download-button is-lefty' : 'download-button'} onTapped={onSaveTapped}/> */}
       {/* <DownloadButton className={isLefty ? 'download-button' : 'download-button is-lefty'} onTapped={onSaveTapped}/> */}
       <input
         key={'file-uploader'}
