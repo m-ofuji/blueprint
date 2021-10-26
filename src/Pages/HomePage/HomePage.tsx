@@ -1,7 +1,12 @@
 import PaintPage from '../PaintPage/PaintPage';
 import { Navigator, Page } from 'react-onsenui';
+import { TopoDb } from '../../DB/NavBar';
+import { useState } from 'react';
+
 
 const HomePage = ({route, navigator}: {route: any, navigator: Navigator}) => {
+  const [blobUrl, updateBlobUrl] = useState<string[]>([]);
+
   const openRightPaintPage = () => {
     handlePaintPage(false);
   }
@@ -12,6 +17,16 @@ const HomePage = ({route, navigator}: {route: any, navigator: Navigator}) => {
   
   const handlePaintPage = (isLefty: boolean) => {
     navigator.pushPage({comp: PaintPage, props: {key: 'PaintPage', isLefty: isLefty, navigator: navigator}});
+  }
+
+  const getData = () => {
+    const db = new TopoDb();
+    db.TopoImages
+    .toArray()
+    .then((images) => {
+      console.log(images);
+      updateBlobUrl(old => { return [...old, ...images.map(x => window.URL.createObjectURL(x.data))]});
+    });
   }
 
   return (
@@ -27,7 +42,10 @@ const HomePage = ({route, navigator}: {route: any, navigator: Navigator}) => {
       <p className={'section-header'}>作成したトポ</p>
       <div className={'start-button-container'}>
         <h3>coming soon</h3>
+        <button onClick={getData}>データ取得</button>
+        {blobUrl.map((x, i) => <img key={i} src={x} width={100}/>)}
       </div>
+
     </Page>
   )
 }

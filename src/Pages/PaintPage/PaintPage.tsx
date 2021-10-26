@@ -16,6 +16,7 @@ import { CloseButton } from '../../Components/CloseButton';
 import { MarkerPositionX, MarkerPositionY } from './Constants';
 import { getCurrentTimestamp } from '../../Common/Functions/CurrentTimestamp'; 
 import { IStampButton, IHoldStamp, ITextStamp, isIHoldStamp, isITextStamp } from './StampType';
+import { TopoDb } from '../../DB/NavBar';
 
 export type SizeProps = {
   x: number,
@@ -58,6 +59,7 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
   const [imageSizeProps, setImageSizeProps] = useState<SizeProps>(sizeProps);
   const [isImageLoaded, updateIsImageLoaded] = useState<boolean>(false);
   const [execDownload, updateExecDownload] = useState<boolean>(false);
+  const [execSave, updateExecSave] = useState<boolean>(false);
   const [stamps, updateStamps] = useState<IStampButton[]>(initialButton);
   const [holdText, setHoldText] = useState<string>('S');
   const [isUndoEnabled, useIsUndoEnabled] = useState<boolean>(true);
@@ -121,6 +123,28 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
     updateIsImageLoaded(true);
   }
 
+  const save = () => {
+    if (!execDownload) return;
+    
+    const maxSideLength = 750;
+    const fixPixelRatio = imageSizeProps.width > maxSideLength || imageSizeProps.height > maxSideLength;
+    const pixelRatio = resizeImage && fixPixelRatio ? maxSideLength / Math.max(imageSizeProps.width, imageSizeProps.height) : 1;
+    // const uri = stage.current.toDataURL({pixelRatio: pixelRatio});
+
+    // downloadURI(uri, getCurrentTimestamp() + '.png');
+
+    const db = new TopoDb();
+
+    console.log('before insert', db.TopoImages);
+
+    console.log(stage.current);
+    stage.current.toCanvas({pixelRatio: pixelRatio}).toBlob((result: string) => {
+      db.TopoImages.put({data: result});
+      console.log('after insert', db.TopoImages);
+      navigator.popPage();
+    });
+  }
+
   const download = () => {
     if (!execDownload) return;
     
@@ -145,7 +169,35 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
     navigator.popPage();
   };
 
-  useEffect(download);
+  const onSaveTapped = () => {
+    if (!stage) return;
+    console.log('before', imageSizeProps);
+    // setImageSizeProps((old) => {
+    //   return {...old, 
+    //     imageX: 0,
+    //     imageY: 0,
+    //     imageRotation: 0,
+    //   };
+    // });
+
+    setStageSizeProps((old) => {
+      return {...old,
+        width: imageSizeProps.width,
+        height: imageSizeProps.height,
+        x: imageSizeProps.x,
+        y: imageSizeProps.y,
+        scaleX: imageSizeProps.scaleX,
+        scaleY: imageSizeProps.scaleY,
+        // imageRotation: 270
+      };
+    });
+
+    updateResizeImage(false);
+    updateStamps(old => old.map(x => {return { ...x, isSelected : false }}));
+    updateExecDownload(true);
+  }
+
+  useEffect(save);
 
   const onDownloadTapped = () => {
     ons.openActionSheet({
@@ -309,8 +361,9 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
         <RedoButton key={'redo'} disabled={isRedoEnabled} onTapped={redo}/>
       </div>
       <CloseButton className={isLefty ? 'close-button float-left-top': 'close-button float-right-top'} onTapped={onCloseTapped}></CloseButton>
-      <DownloadButton className={isLefty ? 'download-button is-lefty' : 'download-button'} onTapped={onDownloadTapped}/>
-
+      {/* <DownloadButton className={isLefty ? 'download-button is-lefty' : 'download-button'} onTapped={onDownloadTapped}/> */}
+      <DownloadButton className={isLefty ? 'download-button is-lefty' : 'download-button'} onTapped={onSaveTapped}/>
+      {/* <DownloadButton className={isLefty ? 'download-button' : 'download-button is-lefty'} onTapped={onSaveTapped}/> */}
       <input
         key={'file-uploader'}
         onChange={onChange}

@@ -34,7 +34,7 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
   const [lastDist, useLastDist] = useState(0);
   const [lastCenter, useLastCenter] = useState<{x: number, y: number} | null>(null);
   const [undo, useUndo] = useState<[any, () => void][]>([]);
-  const [redo, useRedo] = useState<[any, () => void][]>([]);
+  const [redo, UseRedo] = useState<[any, () => void][]>([]);
 
   useImperativeHandle(ref, () => ({
     useHold: (color: string) => {
@@ -51,9 +51,10 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
 
       const Undo = () => useHolds(old => old.filter(x => x !== normalHold ));
       useUndo(old => [...old, [normalHold, Undo]]);
-      props.updateIsUndoDisabled(false);
-      useRedo([]);
-      props.updateIsRedoDisabled(true);
+      // props.updateIsUndoDisabled(false);
+      // UseRedo([]);
+      // props.updateIsRedoDisabled(true);
+      resetRedoAndUndo();
     },
     useHoldText: (text: string) => {
       textRefs.push(createRef<any>());
@@ -68,9 +69,10 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
       useHoldText(texts.concat([t]).filter(x => x));
       const Undo = () => useHoldText(old => old.filter(x => x !== t));
       useUndo(old => [...old, [t, Undo]]);
-      props.updateIsUndoDisabled(false);
-      useRedo([]);
-      props.updateIsRedoDisabled(true);
+      // props.updateIsUndoDisabled(false);
+      // UseRedo([]);
+      // props.updateIsRedoDisabled(true);
+      resetRedoAndUndo();
     },
     Undo: () => {
       const last = undo[undo.length - 1];
@@ -86,7 +88,7 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
         }
       }
 
-      useRedo(old => {
+      UseRedo(old => {
         if (!isEmpty) {
           old.push([lastItem, Redo]);
         }
@@ -132,9 +134,15 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
       }
 
       props.updateIsRedoDisabled(redo.length <= 0);
-      useRedo(redo);
+      UseRedo(redo);
     }
   }));
+
+  const resetRedoAndUndo = () => {
+    props.updateIsUndoDisabled(false);
+    UseRedo([]);
+    props.updateIsRedoDisabled(true);
+  }
 
   const OnTouchMove = (e: KonvaEventObject<TouchEvent>) => {
     e.evt.preventDefault();
