@@ -51,9 +51,6 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
 
       const Undo = () => useHolds(old => old.filter(x => x !== normalHold ));
       useUndo(old => [...old, [normalHold, Undo]]);
-      // props.updateIsUndoDisabled(false);
-      // UseRedo([]);
-      // props.updateIsRedoDisabled(true);
       resetRedoAndUndo();
     },
     useHoldText: (text: string) => {
@@ -69,9 +66,6 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
       useHoldText(texts.concat([t]).filter(x => x));
       const Undo = () => useHoldText(old => old.filter(x => x !== t));
       useUndo(old => [...old, [t, Undo]]);
-      // props.updateIsUndoDisabled(false);
-      // UseRedo([]);
-      // props.updateIsRedoDisabled(true);
       resetRedoAndUndo();
     },
     Undo: () => {

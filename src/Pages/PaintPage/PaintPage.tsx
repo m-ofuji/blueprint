@@ -61,6 +61,7 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
   const [execDownload, updateExecDownload] = useState<boolean>(false);
   const [execSave, updateExecSave] = useState<boolean>(false);
   const [stamps, updateStamps] = useState<IStampButton[]>(initialButton);
+  const [outPutMethod, updateOutPutMethod] = useState<string>();
   const [holdText, setHoldText] = useState<string>('S');
   const [isUndoEnabled, useIsUndoEnabled] = useState<boolean>(true);
   const [isRedoEnabled, useIsRedoEnabled] = useState<boolean>(true);
@@ -149,7 +150,6 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
 
   const onSaveTapped = () => {
     if (!stage) return;
-    console.log('before', imageSizeProps);
     // setImageSizeProps((old) => {
     //   return {...old, 
     //     imageX: 0,
@@ -174,7 +174,6 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
     updateStamps(old => old.map(x => {return { ...x, isSelected : false }}));
     updateExecDownload(true);
   }
-
 
   const onDownloadTapped = () => {
     ons.openActionSheet({
@@ -208,7 +207,6 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
 
   const HandleExport = (resize: boolean) => {
     if (!stage) return;
-    console.log('before', imageSizeProps);
     // setImageSizeProps((old) => {
     //   return {...old, 
     //     imageX: 0,
@@ -216,7 +214,6 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
     //     imageRotation: 0,
     //   };
     // });
-
     setStageSizeProps((old) => {
       return {...old,
         width: imageSizeProps.width,
@@ -231,18 +228,36 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
 
     updateResizeImage(resize);
     updateStamps(old => old.map(x => {return { ...x, isSelected : false }}));
+    console.log( downloadURI);
+    updateOutPutMethod('download');
     updateExecDownload(true);
   };
 
   const download = () => {
-    if (!execDownload) return;
-    
+    console.log('methid', outPutMethod);
+
+    if (!execDownload || !outPutMethod) return;
+    // if (!execDownload) return;
+
     const maxSideLength = 750;
     const fixPixelRatio = imageSizeProps.width > maxSideLength || imageSizeProps.height > maxSideLength;
     const pixelRatio = resizeImage && fixPixelRatio ? maxSideLength / Math.max(imageSizeProps.width, imageSizeProps.height) : 1;
     const uri = stage.current.toDataURL({pixelRatio: pixelRatio});
 
-    downloadURI(uri, getCurrentTimestamp() + '.png');
+    if (outPutMethod === 'download') {
+      downloadURI(uri, getCurrentTimestamp() + '.png');
+    } else if (outPutMethod === 'save') {
+      const db = new TopoDb();
+
+      console.log('before insert', db.TopoImages);
+
+      console.log(stage.current);
+      stage.current.toCanvas({pixelRatio: pixelRatio}).toBlob((result: string) => {
+        db.TopoImages.put({data: result});
+        console.log('after insert', db.TopoImages);
+        navigator.popPage();
+      });
+    }
 
     updateStamps(old => old.map((x, i) => { return {...x, isSelected: i === 1}}));
 
