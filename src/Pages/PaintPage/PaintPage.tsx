@@ -44,8 +44,8 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
   };
 
   const initialButton = [
-    { key:1, label: 'S・Gホールド', isSelected: true, onTapped: () => activateTarget(0), color: '#ff3838' },
-    { key:2, label: 'ホールド',     isSelected: false,  onTapped: () => activateTarget(1), color: '#ffff56' },
+    { key:1, label: 'S・Gホールド', isSelected: true,  onTapped: () => activateTarget(0), color: '#ff3838' },
+    { key:2, label: 'ホールド',     isSelected: false, onTapped: () => activateTarget(1), color: '#ffff56' },
     { key:3, label: 'スタート',     isSelected: false, onTapped: () => activateTextTarget(2), contentText: 'S' },
     { key:4, label: 'ゴール',       isSelected: false, onTapped: () => activateTextTarget(3), contentText: 'G' },
     { key:5, label: 'スタート右',   isSelected: false, onTapped: () => activateTextTarget(4), contentText: 'S右' },
@@ -58,8 +58,7 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
   const [stageSizeProps, setStageSizeProps] = useState<SizeProps>(sizeProps);
   const [imageSizeProps, setImageSizeProps] = useState<SizeProps>(sizeProps);
   const [isImageLoaded, updateIsImageLoaded] = useState<boolean>(false);
-  const [execDownload, updateExecDownload] = useState<boolean>(false);
-  const [execSave, updateExecSave] = useState<boolean>(false);
+  const [execExport, updateExecExport] = useState<boolean>(false);
   const [stamps, updateStamps] = useState<IStampButton[]>(initialButton);
   const [outPutMethod, updateOutPutMethod] = useState<string>();
   const [holdText, setHoldText] = useState<string>('S');
@@ -124,55 +123,9 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
     updateIsImageLoaded(true);
   }
 
-  const save = () => {
-    if (!execDownload) return;
-    
-    const maxSideLength = 750;
-    const fixPixelRatio = imageSizeProps.width > maxSideLength || imageSizeProps.height > maxSideLength;
-    const pixelRatio = resizeImage && fixPixelRatio ? maxSideLength / Math.max(imageSizeProps.width, imageSizeProps.height) : 1;
-    // const uri = stage.current.toDataURL({pixelRatio: pixelRatio});
-
-    // downloadURI(uri, getCurrentTimestamp() + '.png');
-
-    const db = new TopoDb();
-
-    console.log('before insert', db.TopoImages);
-
-    console.log(stage.current);
-    stage.current.toCanvas({pixelRatio: pixelRatio}).toBlob((result: string) => {
-      db.TopoImages.put({data: result});
-      console.log('after insert', db.TopoImages);
-      navigator.popPage();
-    });
-  }
-
-
-
   const onSaveTapped = () => {
-    if (!stage) return;
-    // setImageSizeProps((old) => {
-    //   return {...old, 
-    //     imageX: 0,
-    //     imageY: 0,
-    //     imageRotation: 0,
-    //   };
-    // });
-
-    setStageSizeProps((old) => {
-      return {...old,
-        width: imageSizeProps.width,
-        height: imageSizeProps.height,
-        x: imageSizeProps.x,
-        y: imageSizeProps.y,
-        scaleX: imageSizeProps.scaleX,
-        scaleY: imageSizeProps.scaleY,
-        // imageRotation: 270
-      };
-    });
-
-    updateResizeImage(false);
-    updateStamps(old => old.map(x => {return { ...x, isSelected : false }}));
-    updateExecDownload(true);
+    updateOutPutMethod('save');
+    HandleExport(false);
   }
 
   const onDownloadTapped = () => {
@@ -180,16 +133,10 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
       cancelable: true,
       title: 'トポ画像をダウンロードしますか？',
       buttons: ['ダウンロード', '縮小版をダウンロード', 'キャンセル'],
-      
     }).then((idx: any) => {
-      if (idx === 0) {
-        HandleExport(false);
-      } else if (idx === 1) {
-        HandleExport(true);
-      }
-      // const isYes = ons.platform.isIOSSafari() ? idx === 1 : idx === 0;
-      // if (!isYes) return;
-      // handleExport();
+      const resize = idx === 1;
+      updateOutPutMethod('download');
+      HandleExport(resize);
     });
 
     // ons.notification.alert({
@@ -228,16 +175,12 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
 
     updateResizeImage(resize);
     updateStamps(old => old.map(x => {return { ...x, isSelected : false }}));
-    console.log( downloadURI);
-    updateOutPutMethod('download');
-    updateExecDownload(true);
+    // updateOutPutMethod('download');
+    updateExecExport(true);
   };
 
-  const download = () => {
-    console.log('methid', outPutMethod);
-
-    if (!execDownload || !outPutMethod) return;
-    // if (!execDownload) return;
+  const output = () => {
+    if (!execExport || !outPutMethod) return;
 
     const maxSideLength = 750;
     const fixPixelRatio = imageSizeProps.width > maxSideLength || imageSizeProps.height > maxSideLength;
@@ -248,14 +191,8 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
       downloadURI(uri, getCurrentTimestamp() + '.png');
     } else if (outPutMethod === 'save') {
       const db = new TopoDb();
-
-      console.log('before insert', db.TopoImages);
-
-      console.log(stage.current);
       stage.current.toCanvas({pixelRatio: pixelRatio}).toBlob((result: string) => {
         db.TopoImages.put({data: result});
-        console.log('after insert', db.TopoImages);
-        navigator.popPage();
       });
     }
 
@@ -272,12 +209,10 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
       };
     });
 
-    updateExecDownload(false);
-
-    // navigator.popPage();
+    updateExecExport(false);
   };
 
-  useEffect(download);
+  useEffect(output);
 
   const activateTarget = (index:number) => {
     updateStamps(old => old.map((x,i) => {return { ...x, isSelected : i === index }}));
@@ -383,8 +318,7 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
       </div>
       <CloseButton className={isLefty ? 'close-button float-left-top': 'close-button float-right-top'} onTapped={onCloseTapped}></CloseButton>
       <DownloadButton className={isLefty ? 'download-button is-lefty' : 'download-button'} onTapped={onDownloadTapped}/>
-      {/* <DownloadButton className={isLefty ? 'download-button is-lefty' : 'download-button'} onTapped={onSaveTapped}/> */}
-      {/* <DownloadButton className={isLefty ? 'download-button' : 'download-button is-lefty'} onTapped={onSaveTapped}/> */}
+      <DownloadButton className={isLefty ? 'download-button' : 'download-button is-lefty'} onTapped={onSaveTapped}/>
       <input
         key={'file-uploader'}
         onChange={onChange}
