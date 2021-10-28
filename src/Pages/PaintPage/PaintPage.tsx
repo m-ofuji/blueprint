@@ -71,40 +71,60 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
   
   const ref = createRef<HTMLInputElement>();
 
-  const selectPicture = () => {
+  const selectPicture = async () => {
     if (isImageLoaded) return;
-    // ons.notification.confirm({
-    //   title: '壁画像選択',
-    //   message: '壁の画像を選択してください。',
-    //   buttonLabels: ['OK'],
-    //   callback: () => {
-    //     if (ref.current) {
-    //       ref.current.click();
-    //     }
-    //   }
+    // alert('alert');
+    
+    console.log(ref.current);
+    // ons.createAlertDialog();
+    console.log('show');
+
+    // if (ref.current) {
+    //   ref.current.click();
+    // }
+
+    // const res =  await ons.openActionSheet({
+    //   cancelable: true,
+    //   title: 'トポ画像をダウンロードしますか？',
+    //   buttons: ['ダウンロード', '縮小版をダウンロード', 'キャンセル'],
     // });
 
-    if (ons.platform.isIOS()) {
-      if (ref.current) {
-        ref.current.click();
+    const res = await ons.notification.alert({
+      title: '壁画像選択',
+      message: '壁の画像を選択してください。',
+      buttonLabels: ['OK'],
+      callback: () => {
+        console.log('callback');
+        // if (ref.current) {
+        //   ref.current.click();
+        // }
       }
-    } else {
-      ons.notification.confirm({
-        title: '壁画像選択',
-        message: '壁の画像を選択してください。',
-        buttonLabels: ['OK'],
-        callback: () => {
-          if (ref.current) {
-            ref.current.click();
-          }
-        }
-      });
+    });
+    console.log(res);
+    console.log('close');
+    if (ref.current) {
+      ref.current.click();
     }
+
+    // if (ons.platform.isIOS()) {
+    //   if (ref.current) {
+    //     ref.current.click();
+    //   }
+    // } else {
+    //   ons.notification.confirm({
+    //     title: '壁画像選択',
+    //     message: '壁の画像を選択してください。',
+    //     buttonLabels: ['OK'],
+    //     callback: () => {
+    //       if (ref.current) {
+    //         ref.current.click();
+    //       }
+    //     }
+    //   });
+    // }
   };
 
-  useLayoutEffect(()=> {
-    selectPicture();
-  });
+  // useLayoutEffect(selectPicture);
 
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files === null) return;
