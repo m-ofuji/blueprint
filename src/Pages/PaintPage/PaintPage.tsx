@@ -57,14 +57,14 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
   const [wallImage, setWallImage] = useState<CanvasImageSource | null>(null);
   const [stageSizeProps, setStageSizeProps] = useState<SizeProps>(sizeProps);
   const [imageSizeProps, setImageSizeProps] = useState<SizeProps>(sizeProps);
-  const [isImageLoaded, updateIsImageLoaded] = useState<boolean>(false);
-  const [execExport, updateExecExport] = useState<boolean>(false);
-  const [stamps, updateStamps] = useState<IStampButton[]>(initialButton);
-  const [outPutMethod, updateOutPutMethod] = useState<string>();
+  // const [isImageLoaded, setIsImageLoaded] = useState<boolean>(false);
+  const [execExport, setExecExport] = useState<boolean>(false);
+  const [stamps, setStamps] = useState<IStampButton[]>(initialButton);
+  const [outPutMethod, setOutPutMethod] = useState<string>();
   const [holdText, setHoldText] = useState<string>('S');
-  const [isUndoEnabled, useIsUndoEnabled] = useState<boolean>(true);
-  const [isRedoEnabled, useIsRedoEnabled] = useState<boolean>(true);
-  const [resizeImage, updateResizeImage] = useState<boolean>(false);
+  const [isUndoEnabled, setIsUndoEnabled] = useState<boolean>(true);
+  const [isRedoEnabled, setIsRedoEnabled] = useState<boolean>(true);
+  const [resizeImage, setResizeImage] = useState<boolean>(false);
 
   const stage = useRef<any>(null);
   const resizableImage = useRef<any>(null);
@@ -72,8 +72,6 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
   const ref = createRef<HTMLInputElement>();
 
   const selectPicture = async () => {
-    if (isImageLoaded) return;
-    // alert('alert');
     
     console.log(ref.current);
     // ons.createAlertDialog();
@@ -124,7 +122,7 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
     // }
   };
 
-  // useLayoutEffect(selectPicture);
+  useLayoutEffect(() => { selectPicture() }, []);
 
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files === null) return;
@@ -151,11 +149,10 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
         } 
       });
     }
-    updateIsImageLoaded(true);
   }
 
   const onSaveTapped = () => {
-    updateOutPutMethod('save');
+    setOutPutMethod('save');
     HandleExport(false);
   }
 
@@ -167,7 +164,7 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
     }).then((idx: any) => {
       if (idx !== 1 && idx !== 0) return;
       const resize = idx === 1;
-      updateOutPutMethod('download');
+      setOutPutMethod('download');
       HandleExport(resize);
     });
 
@@ -205,10 +202,10 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
       };
     });
 
-    updateResizeImage(resize);
-    updateStamps(old => old.map(x => {return { ...x, isSelected : false }}));
-    // updateOutPutMethod('download');
-    updateExecExport(true);
+    setResizeImage(resize);
+    setStamps(old => old.map(x => {return { ...x, isSelected : false }}));
+    // setOutPutMethod('download');
+    setExecExport(true);
   };
 
   const output = () => {
@@ -228,7 +225,7 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
       });
     }
 
-    updateStamps(old => old.map((x, i) => { return {...x, isSelected: i === 1}}));
+    setStamps(old => old.map((x, i) => { return {...x, isSelected: i === 1}}));
 
     setStageSizeProps((old) => {
       return {...old,
@@ -241,13 +238,13 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
       };
     });
 
-    updateExecExport(false);
+    setExecExport(false);
   };
 
   useEffect(output);
 
   const activateTarget = (index:number) => {
-    updateStamps(old => old.map((x,i) => {return { ...x, isSelected : i === index }}));
+    setStamps(old => old.map((x,i) => {return { ...x, isSelected : i === index }}));
   }
 
   const activateTextTarget = (index: number) => {
@@ -276,7 +273,7 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
   }
 
   const onCloseTapped = () => {
-    if (isImageLoaded) {
+    if (wallImage) {
       ons.notification.confirm({
         title: 'トポ作成',
         message: '画面を閉じてもよろしいですか？\n現在編集中の内容は失われます。',
@@ -319,8 +316,8 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
               imageY={imageSizeProps.imageY}
               imageRotation={imageSizeProps.imageRotation}
               updateSizeProps={setImageSizeProps}
-              updateIsRedoDisabled={useIsRedoEnabled}
-              updateIsUndoDisabled={useIsUndoEnabled}
+              updateIsRedoDisabled={setIsRedoEnabled}
+              updateIsUndoDisabled={setIsUndoEnabled}
             />
           </Group>
           <NormalTarget
