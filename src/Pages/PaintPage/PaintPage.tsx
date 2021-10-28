@@ -73,6 +73,17 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
 
   const selectPicture = () => {
     if (isImageLoaded) return;
+    // ons.notification.confirm({
+    //   title: '壁画像選択',
+    //   message: '壁の画像を選択してください。',
+    //   buttonLabels: ['OK'],
+    //   callback: () => {
+    //     if (ref.current) {
+    //       ref.current.click();
+    //     }
+    //   }
+    // });
+
     if (ons.platform.isIOS()) {
       if (ref.current) {
         ref.current.click();
@@ -134,6 +145,7 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
       title: 'トポ画像をダウンロードしますか？',
       buttons: ['ダウンロード', '縮小版をダウンロード', 'キャンセル'],
     }).then((idx: any) => {
+      if (idx !== 1 && idx !== 0) return;
       const resize = idx === 1;
       updateOutPutMethod('download');
       HandleExport(resize);
@@ -146,7 +158,7 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
     //   callback: (idx: any) => {
     //     const isYes = ons.platform.isIOSSafari() ? idx === 1 : idx === 0;
     //     // const isYes = idx === 0;
-    //     if (!isYes) return; 
+    //     if (!isYes) return;
     //     handleExport();
     //   }
     // });
