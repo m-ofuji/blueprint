@@ -57,7 +57,6 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
   const [wallImage, setWallImage] = useState<CanvasImageSource | null>(null);
   const [stageSizeProps, setStageSizeProps] = useState<SizeProps>(sizeProps);
   const [imageSizeProps, setImageSizeProps] = useState<SizeProps>(sizeProps);
-  // const [isImageLoaded, setIsImageLoaded] = useState<boolean>(false);
   const [execExport, setExecExport] = useState<boolean>(false);
   const [stamps, setStamps] = useState<IStampButton[]>(initialButton);
   const [outPutMethod, setOutPutMethod] = useState<string>();
@@ -65,14 +64,17 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
   const [isUndoEnabled, setIsUndoEnabled] = useState<boolean>(true);
   const [isRedoEnabled, setIsRedoEnabled] = useState<boolean>(true);
   const [resizeImage, setResizeImage] = useState<boolean>(false);
+  const [initial, setInitial] = useState<string>('msg');
 
   const stage = useRef<any>(null);
   const resizableImage = useRef<any>(null);
   
   const ref = createRef<HTMLInputElement>();
 
-  const selectPicture = async () => {
-    
+  console.log('関数コンポーネント');
+
+  const selectPicture = () => {
+
     console.log(ref.current);
     // ons.createAlertDialog();
     console.log('show');
@@ -86,22 +88,26 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
     //   title: 'トポ画像をダウンロードしますか？',
     //   buttons: ['ダウンロード', '縮小版をダウンロード', 'キャンセル'],
     // });
+    if (wallImage) return;
 
-    const res = await ons.notification.alert({
-      title: '壁画像選択',
-      message: '壁の画像を選択してください。',
-      buttonLabels: ['OK'],
-      callback: () => {
-        console.log('callback');
-        // if (ref.current) {
-        //   ref.current.click();
-        // }
+    if (initial === 'msg') {
+      ons.notification.alert({
+        title: '壁画像選択',
+        message: '壁の画像を選択してください。',
+        buttonLabels: ['OK'],
+        callback: () => {
+          console.log('callback');
+          // if (ref.current) {
+          //   ref.current.click();
+          // }
+          setInitial('open');
+        }
+      });
+    } else if (initial === 'open') {
+      if (ref.current) {
+        console.log('open');
+        ref.current.click();
       }
-    });
-    console.log(res);
-    console.log('close');
-    if (ref.current) {
-      ref.current.click();
     }
 
     // if (ons.platform.isIOS()) {
@@ -122,7 +128,33 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
     // }
   };
 
-  useLayoutEffect(() => { selectPicture() }, []);
+  useLayoutEffect(() => { 
+    console.log(ref.current);
+    console.log('show');
+
+    if (wallImage) return;
+
+    if (initial === 'open') {
+      if (ref.current) {
+        console.log('open');
+        ref.current.click();
+      }
+    } else if (initial === 'msg') {
+      console.log('msg');
+      ons.notification.alert({
+        title: '壁画像選択',
+        message: '壁の画像を選択してください。',
+        buttonLabels: ['OK'],
+        callback: () => {
+          console.log('callback');
+          // if (ref.current) {
+          //   ref.current.click();
+          // }
+          setInitial('open');
+        }
+      });
+    }
+   });
 
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files === null) return;
