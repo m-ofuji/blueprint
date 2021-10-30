@@ -134,6 +134,11 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
 
     if (wallImage) return;
 
+    if (ons.platform.isIOSSafari() && ref.current) {
+      ref.current.click();
+      return;
+    }
+
     if (initial === 'open') {
       if (ref.current) {
         console.log('open');
@@ -252,8 +257,20 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
       downloadURI(uri, getCurrentTimestamp() + '.png');
     } else if (outPutMethod === 'save') {
       const db = new TopoDb();
-      stage.current.toCanvas({pixelRatio: pixelRatio}).toBlob((result: string) => {
-        db.TopoImages.put({data: result});
+      stage.current.toCanvas({pixelRatio: pixelRatio}).toBlob((data: any) => {
+        const fr = new FileReader()
+        fr.onload = eve => {
+          const res = fr.result;
+          console.log(fr.result);
+          // data.arrayBuffer().then((buffer: string) => {
+          if (!res) return;
+          db.TopoImages.put({data: res});
+          // });
+        }
+        fr.onerror = eve => {
+          console.error(fr.error);
+        }
+        fr.readAsArrayBuffer(data);
       });
     }
 

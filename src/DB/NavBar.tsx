@@ -70,5 +70,5 @@ export class TopoDb extends Dexie {
 // you get better type safety and code completion
 export interface ITopoImage {
   id?: number; // Primary key. Optional (autoincremented)
-  data: string; // First name
+  data: string | ArrayBuffer; // First name
 }

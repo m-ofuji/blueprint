@@ -25,7 +25,7 @@ const HomePage = ({route, navigator}: {route: any, navigator: Navigator}) => {
     .toArray()
     .then((images) => {
       console.log(images);
-      updateBlobUrl(old => { return [...old, ...images.map(x => window.URL.createObjectURL(x.data))]});
+      updateBlobUrl(old => { return [...old, ...images.map(x => window.URL.createObjectURL(new Blob([x.data], {type: 'image/png'})))]});
     });
   }
 
