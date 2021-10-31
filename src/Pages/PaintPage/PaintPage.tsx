@@ -256,22 +256,25 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
     if (outPutMethod === 'download') {
       downloadURI(uri, getCurrentTimestamp() + '.png');
     } else if (outPutMethod === 'save') {
-      const db = new TopoDb();
-      stage.current.toCanvas({pixelRatio: pixelRatio}).toBlob((data: any) => {
-        const fr = new FileReader()
-        fr.onload = eve => {
-          const res = fr.result;
-          console.log(fr.result);
-          // data.arrayBuffer().then((buffer: string) => {
-          if (!res) return;
-          db.TopoImages.put({data: res});
-          // });
-        }
-        fr.onerror = eve => {
-          console.error(fr.error);
-        }
-        fr.readAsArrayBuffer(data);
+      ons.notification.prompt({
+        message: '課題名を入力してください。',
+        buttonLabels: ['OK'],
+      }).then((name: HTMLElement) => {
+        saveTopo('aaa', stage, pixelRatio);
       });
+      // stage.current.toCanvas({pixelRatio: pixelRatio}).toBlob((data: any) => {
+      //   const fr = new FileReader()
+      //   fr.onload = eve => {
+      //     const res = fr.result;
+      //     if (!res) return;
+      //     const db = new TopoDb();
+      //     db.TopoImages.put({data: res});
+      //   }
+      //   fr.onerror = eve => {
+      //     console.error(fr.error);
+      //   }
+      //   fr.readAsArrayBuffer(data);
+      // });
     }
 
     setStamps(old => old.map((x, i) => { return {...x, isSelected: i === 1}}));
@@ -289,6 +292,27 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
 
     setExecExport(false);
   };
+
+  const saveTopo = (name:string, stage: any, pixelRatio: number) => {
+    stage.current.toCanvas({pixelRatio: pixelRatio}).toBlob((data: any) => {
+      const fr = new FileReader()
+      fr.onload = eve => {
+        const res = fr.result;
+        if (!res) return;
+        const db = new TopoDb();
+        db.save({
+          name: name,
+          grade: 1,
+          data: res,
+          createdAt: (new Date().getTime()) / 1000
+        });
+      }
+      fr.onerror = eve => {
+        alert('保存に失敗しました。');
+      }
+      fr.readAsArrayBuffer(data);
+    });
+  }
 
   useEffect(output);
 
