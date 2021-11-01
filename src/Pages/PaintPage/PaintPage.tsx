@@ -10,6 +10,7 @@ import { NormalTarget } from './Targets/NormalTarget';
 import { TextTarget } from './Targets/TextTarget';
 import { RoundButton } from '../../Components/RoundButton';
 import { DownloadButton } from './Components/DownloadButton';
+import { SaveButton } from './Components/SaveButton';
 import { UndoButton } from './Components/UndoButton';
 import { RedoButton } from './Components/RedoButton';
 import { CloseButton } from '../../Components/CloseButton';
@@ -71,63 +72,6 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
   
   const ref = createRef<HTMLInputElement>();
 
-  console.log('関数コンポーネント');
-
-  const selectPicture = () => {
-
-    console.log(ref.current);
-    // ons.createAlertDialog();
-    console.log('show');
-
-    // if (ref.current) {
-    //   ref.current.click();
-    // }
-
-    // const res =  await ons.openActionSheet({
-    //   cancelable: true,
-    //   title: 'トポ画像をダウンロードしますか？',
-    //   buttons: ['ダウンロード', '縮小版をダウンロード', 'キャンセル'],
-    // });
-    if (wallImage) return;
-
-    if (initial === 'msg') {
-      ons.notification.alert({
-        title: '壁画像選択',
-        message: '壁の画像を選択してください。',
-        buttonLabels: ['OK'],
-        callback: () => {
-          console.log('callback');
-          // if (ref.current) {
-          //   ref.current.click();
-          // }
-          setInitial('open');
-        }
-      });
-    } else if (initial === 'open') {
-      if (ref.current) {
-        console.log('open');
-        ref.current.click();
-      }
-    }
-
-    // if (ons.platform.isIOS()) {
-    //   if (ref.current) {
-    //     ref.current.click();
-    //   }
-    // } else {
-    //   ons.notification.confirm({
-    //     title: '壁画像選択',
-    //     message: '壁の画像を選択してください。',
-    //     buttonLabels: ['OK'],
-    //     callback: () => {
-    //       if (ref.current) {
-    //         ref.current.click();
-    //       }
-    //     }
-    //   });
-    // }
-  };
-
   useLayoutEffect(() => { 
     console.log(ref.current);
     console.log('show');
@@ -151,10 +95,6 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
         message: '壁の画像を選択してください。',
         buttonLabels: ['OK'],
         callback: () => {
-          console.log('callback');
-          // if (ref.current) {
-          //   ref.current.click();
-          // }
           setInitial('open');
         }
       });
@@ -420,7 +360,7 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
       </div>
       <CloseButton className={isLefty ? 'close-button float-left-top': 'close-button float-right-top'} onTapped={onCloseTapped}></CloseButton>
       <DownloadButton className={isLefty ? 'download-button is-lefty' : 'download-button'} onTapped={onDownloadTapped}/>
-      <DownloadButton className={isLefty ? 'download-button' : 'download-button is-lefty'} onTapped={onSaveTapped}/>
+      <SaveButton className={isLefty ? 'save-button is-lefty' : 'save-button'} onTapped={onSaveTapped}/>
       <input
         key={'file-uploader'}
         onChange={onChange}
