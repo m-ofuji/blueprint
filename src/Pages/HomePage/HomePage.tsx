@@ -1,7 +1,7 @@
 import PaintPage from '../PaintPage/PaintPage';
 import { Navigator, Page } from 'react-onsenui';
 import { TopoDb } from '../../DB/NavBar';
-import { useState } from 'react';
+import { useLayoutEffect, useState } from 'react';
 
 
 const HomePage = ({route, navigator}: {route: any, navigator: Navigator}) => {
@@ -25,9 +25,11 @@ const HomePage = ({route, navigator}: {route: any, navigator: Navigator}) => {
     .toArray()
     .then((images) => {
       console.log(images);
-      updateBlobUrl(old => { return [...old, ...images.map(x => window.URL.createObjectURL(new Blob([x.data], {type: 'image/png'})))]});
+      updateBlobUrl(images.map(x => window.URL.createObjectURL(new Blob([x.data], {type: 'image/png'}))));
     });
   }
+
+  useLayoutEffect(getData);
 
   return (
     <Page key={'root'}>
@@ -41,11 +43,8 @@ const HomePage = ({route, navigator}: {route: any, navigator: Navigator}) => {
       
       <p className={'section-header'}>作成したトポ</p>
       <div className={'start-button-container'}>
-        <h3>coming soon</h3>
-        <button onClick={getData}>データ取得</button>
         {blobUrl.map((x, i) => <img key={i} src={x} width={100}/>)}
       </div>
-
     </Page>
   )
 }
