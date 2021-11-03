@@ -73,9 +73,6 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
   const ref = createRef<HTMLInputElement>();
 
   useLayoutEffect(() => { 
-    console.log(ref.current);
-    console.log('show');
-
     if (wallImage) return;
 
     if (ons.platform.isIOSSafari() && ref.current) {
@@ -195,27 +192,20 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
 
     if (outPutMethod === 'download') {
       downloadURI(uri, getCurrentTimestamp() + '.png');
+      resetStage();
     } else if (outPutMethod === 'save') {
       ons.notification.prompt({
         message: '課題名を入力してください。',
         buttonLabels: ['OK'],
       }).then((name: HTMLElement) => {
-        saveTopo('aaa', stage, pixelRatio);
+        saveTopo(name.toString(), stage, pixelRatio);
+        resetStage();
       });
-      // stage.current.toCanvas({pixelRatio: pixelRatio}).toBlob((data: any) => {
-      //   const fr = new FileReader()
-      //   fr.onload = eve => {
-      //     const res = fr.result;
-      //     if (!res) return;
-      //     const db = new TopoDb();
-      //     db.TopoImages.put({data: res});
-      //   }
-      //   fr.onerror = eve => {
-      //     console.error(fr.error);
-      //   }
-      //   fr.readAsArrayBuffer(data);
-      // });
     }
+  };
+
+  const resetStage = () => {
+    setExecExport(false);
 
     setStamps(old => old.map((x, i) => { return {...x, isSelected: i === 1}}));
 
@@ -229,9 +219,7 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
         height: window.innerHeight
       };
     });
-
-    setExecExport(false);
-  };
+  }
 
   const saveTopo = (name:string, stage: any, pixelRatio: number) => {
     stage.current.toCanvas({pixelRatio: pixelRatio}).toBlob((data: any) => {

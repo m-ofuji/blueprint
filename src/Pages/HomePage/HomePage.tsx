@@ -3,7 +3,6 @@ import { Navigator, Page } from 'react-onsenui';
 import { TopoDb } from '../../DB/NavBar';
 import { useLayoutEffect, useState } from 'react';
 
-
 const HomePage = ({route, navigator}: {route: any, navigator: Navigator}) => {
   const [blobUrl, updateBlobUrl] = useState<string[]>([]);
 
@@ -29,7 +28,7 @@ const HomePage = ({route, navigator}: {route: any, navigator: Navigator}) => {
     });
   }
 
-  useLayoutEffect(getData);
+  useLayoutEffect(getData,[]);
 
   return (
     <Page key={'root'}>
