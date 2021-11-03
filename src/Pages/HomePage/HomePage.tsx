@@ -1,10 +1,11 @@
 import PaintPage from '../PaintPage/PaintPage';
 import { Navigator, Page } from 'react-onsenui';
-import { TopoDb } from '../../DB/NavBar';
+import { ITopo, TopoDb } from '../../DB/NavBar';
 import { useLayoutEffect, useState } from 'react';
+import { TopoCard } from '../../Components/TopoCard';
 
 const HomePage = ({route, navigator}: {route: any, navigator: Navigator}) => {
-  const [blobUrl, updateBlobUrl] = useState<string[]>([]);
+  const [topos, setTopos] = useState<ITopo[]>([]);
 
   const openRightPaintPage = () => {
     handlePaintPage(false);
@@ -22,9 +23,10 @@ const HomePage = ({route, navigator}: {route: any, navigator: Navigator}) => {
     const db = new TopoDb();
     db.TopoImages
     .toArray()
-    .then((images) => {
-      console.log(images);
-      updateBlobUrl(images.map(x => window.URL.createObjectURL(new Blob([x.data], {type: 'image/png'}))));
+    .then((topos) => {
+      setTopos(topos);
+      // console.log(images);
+      // updateBlobUrl(images.map(x => window.URL.createObjectURL(new Blob([x.data], {type: 'image/png'}))));
     });
   }
 
@@ -41,8 +43,8 @@ const HomePage = ({route, navigator}: {route: any, navigator: Navigator}) => {
       </div>
       
       <p className={'section-header'}>作成したトポ</p>
-      <div className={'start-button-container'}>
-        {blobUrl.map((x, i) => <img key={i} src={x} width={100}/>)}
+      <div>
+        {topos.map((x, i) => <TopoCard key={i} {...x} />)}
       </div>
     </Page>
   )
