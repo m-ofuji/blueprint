@@ -26,20 +26,20 @@ export type WallImageProps = {
 let WallImageBase = (props : WallImageProps, ref : any) => {
 
   const groupRef = React.useRef<any>();
-  const [circleRefs, useCircleRefs] = useState<React.RefObject<any>[]>([]);
-  const [textRefs, useTextRefs] = useState<React.RefObject<any>[]>([]);
-  const [holds, useHolds] = useState<HoldCircleProps[]>([]);
-  const [texts, useHoldText] = useState<HoldTextProps[]>([]);
-  const [scale, useScale] = useState(1);
-  const [lastDist, useLastDist] = useState(0);
-  const [lastCenter, useLastCenter] = useState<{x: number, y: number} | null>(null);
-  const [undo, useUndo] = useState<[any, () => void][]>([]);
-  const [redo, UseRedo] = useState<[any, () => void][]>([]);
+  const [circleRefs, setCircleRefs] = useState<React.RefObject<any>[]>([]);
+  const [textRefs, setTextRefs] = useState<React.RefObject<any>[]>([]);
+  const [holds, setHolds] = useState<HoldCircleProps[]>([]);
+  const [texts, setHoldText] = useState<HoldTextProps[]>([]);
+  const [scale, setScale] = useState(1);
+  const [lastDist, setLastDist] = useState(0);
+  const [lastCenter, setLastCenter] = useState<{x: number, y: number} | null>(null);
+  const [undo, setUndo] = useState<[any, () => void][]>([]);
+  const [redo, setRedo] = useState<[any, () => void][]>([]);
 
   useImperativeHandle(ref, () => ({
     useHold: (color: string) => {
       circleRefs.push(createRef<any>());
-      useCircleRefs(circleRefs);
+      setCircleRefs(circleRefs);
       const normalHold = {
         key: holds.length++,
         x: (MarkerPositionX - (groupRef.current.x())) * (1 / scale),
@@ -47,15 +47,15 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
         scale: 1 / scale,
         color:color
       }
-      useHolds(holds.concat([normalHold]).filter(x => x));
+      setHolds(holds.concat([normalHold]).filter(x => x));
 
-      const Undo = () => useHolds(old => old.filter(x => x !== normalHold ));
-      useUndo(old => [...old, [normalHold, Undo]]);
+      const Undo = () => setHolds(old => old.filter(x => x !== normalHold ));
+      setUndo(old => [...old, [normalHold, Undo]]);
       resetRedoAndUndo();
     },
-    useHoldText: (text: string) => {
+    setHoldText: (text: string) => {
       textRefs.push(createRef<any>());
-      useTextRefs(textRefs);
+      setTextRefs(textRefs);
       const t = {
         key: holds.length++,
         x: (MarkerPositionX - (groupRef.current.x())) * (1 / scale),
@@ -63,9 +63,9 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
         scale: 1 / scale,
         character:text
       }
-      useHoldText(texts.concat([t]).filter(x => x));
-      const Undo = () => useHoldText(old => old.filter(x => x !== t));
-      useUndo(old => [...old, [t, Undo]]);
+      setHoldText(texts.concat([t]).filter(x => x));
+      const Undo = () => setHoldText(old => old.filter(x => x !== t));
+      setUndo(old => [...old, [t, Undo]]);
       resetRedoAndUndo();
     },
     Undo: () => {
@@ -76,13 +76,13 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
       if (!isEmpty) {
         lastItem = last[0];
         if (isHoldCircleProps(lastItem)) {
-          Redo = () => useHolds(old => old.concat([lastItem]).filter(x => x));
+          Redo = () => setHolds(old => old.concat([lastItem]).filter(x => x));
         } else if (isHoldTextProps(lastItem)) {
-          Redo = () => useHoldText(old => old.concat([lastItem]).filter(x => x));
+          Redo = () => setHoldText(old => old.concat([lastItem]).filter(x => x));
         }
       }
 
-      UseRedo(old => {
+      setRedo(old => {
         if (!isEmpty) {
           old.push([lastItem, Redo]);
         }
@@ -96,7 +96,7 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
         undo.pop();
       }
       props.updateIsUndoDisabled(undo.length <= 0);
-      useUndo(undo);
+      setUndo(undo);
     },
     Redo: () => {
       const last = redo[redo.length - 1];
@@ -107,13 +107,13 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
       if (!isEmpty) {
         lastItem = last[0];
         if (isHoldCircleProps(lastItem)) {
-          Undo = () => useHolds(holds.filter(x => x !== lastItem ));
+          Undo = () => setHolds(holds.filter(x => x !== lastItem ));
         } else if (isHoldTextProps(lastItem)) {
-          Undo = () => useHoldText(texts.filter(x => x !== lastItem));
+          Undo = () => setHoldText(texts.filter(x => x !== lastItem));
         }
       }
       
-      useUndo(old => {
+      setUndo(old => {
         if (!isEmpty) {
           old.push([lastItem, Undo]);
         }
@@ -128,13 +128,13 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
       }
 
       props.updateIsRedoDisabled(redo.length <= 0);
-      UseRedo(redo);
+      setRedo(redo);
     }
   }));
 
   const resetRedoAndUndo = () => {
     props.updateIsUndoDisabled(false);
-    UseRedo([]);
+    setRedo([]);
     props.updateIsRedoDisabled(true);
   }
 
@@ -145,50 +145,43 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
 
     const isDoubleTouched = touch1 && touch2;
 
+    if (!isDoubleTouched) return;
+
     const stage = e.currentTarget;
-    if (isDoubleTouched && stage.isDragging()) {
+    if (stage.isDragging()) {
       stage.stopDrag();
     }
 
-    let newLastCenter = lastCenter;
-    let newDist = lastDist;
-    let newScale = scale;
-    let pointTo: {x:number, y:number} | null = null;
-
-    if (isDoubleTouched) {
-      if (!newLastCenter) {
-        newLastCenter = getCenter(touch1, touch2);
-      } else {
-        newLastCenter = getCenter(touch1, touch2);
-        newDist = getDistance(touch1, touch2);
-        pointTo = {
-          x: (newLastCenter.x - stage.x()) / stage.scaleX(),
-          y: (newLastCenter.y - stage.y()) / stage.scaleX(),
-        };
-
-        const dividing = !lastDist ? newDist : lastDist;
-
-        newScale = stage.scaleX() * (newDist / (dividing));
-        stage.scaleX(newScale);
-        stage.scaleY(newScale);
-      }
+    if (!lastCenter) {
+      setLastCenter(getCenter(touch1, touch2));
+      return;
     }
 
-    if (lastCenter !== null && newLastCenter !== null && pointTo !== null && isDoubleTouched) {
+    const newLastCenter = getCenter(touch1, touch2);
+    const newDist = getDistance(touch1, touch2);
+    const pointTo = {
+      x: (newLastCenter.x - stage.x()) / stage.scaleX(),
+      y: (newLastCenter.y - stage.y()) / stage.scaleX(),
+    };
 
-      const dx = newLastCenter.x - lastCenter.x;
-      const dy = newLastCenter.y - lastCenter.y;
-  
-      const newPos = {
-        x: newLastCenter.x - pointTo.x * stage.scaleX() + dx,
-        y: newLastCenter.y - pointTo.y * stage.scaleX() + dy,
-      };
-      stage.position(newPos);
-    }
+    const dividing = !lastDist ? newDist : lastDist;
 
-    useLastCenter(newLastCenter);
-    useLastDist(newDist);
-    useScale(newScale);
+    const newScale = stage.scaleX() * (newDist / (dividing));
+    stage.scaleX(newScale);
+    stage.scaleY(newScale);
+
+    const dx = newLastCenter.x - lastCenter.x;
+    const dy = newLastCenter.y - lastCenter.y;
+
+    const newPos = {
+      x: newLastCenter.x - pointTo.x * stage.scaleX() + dx,
+      y: newLastCenter.y - pointTo.y * stage.scaleX() + dy,
+    };
+    stage.position(newPos);
+
+    setLastCenter(newLastCenter);
+    setLastDist(newDist);
+    setScale(newScale);
 
     props.updateSizeProps((old) => {
       return {
@@ -202,8 +195,8 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
   }
 
   const OnTouchEnd = () => {
-    useLastDist(0);
-    useLastCenter(null);
+    setLastDist(0);
+    setLastCenter(null);
   }
 
   const OnDragEnd = () => {

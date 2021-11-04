@@ -262,7 +262,7 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
   }
 
   const textTargetTapped = (evt: KonvaEventObject<Event>) => {
-    resizableImage.current.useHoldText(holdText);
+    resizableImage.current.setHoldText(holdText);
   }
 
   const undo = () => {
