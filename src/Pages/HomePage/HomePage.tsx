@@ -1,6 +1,6 @@
 import PaintPage from '../PaintPage/PaintPage';
 import { Navigator, Page } from 'react-onsenui';
-import { ITopo, TopoDb } from '../../DB/NavBar';
+import { ITopo, TopoDB } from '../../DB/TopoDB';
 import { useLayoutEffect, useState } from 'react';
 import { TopoCard } from '../../Components/TopoCard';
 
@@ -20,7 +20,7 @@ const HomePage = ({route, navigator}: {route: any, navigator: Navigator}) => {
   }
 
   const getData = () => {
-    const db = new TopoDb();
+    const db = new TopoDB();
     db.TopoImages
     .toArray()
     .then((topos) => {
@@ -29,6 +29,8 @@ const HomePage = ({route, navigator}: {route: any, navigator: Navigator}) => {
       // updateBlobUrl(images.map(x => window.URL.createObjectURL(new Blob([x.data], {type: 'image/png'}))));
     });
   }
+
+  
 
   useLayoutEffect(getData,[]);
 
@@ -44,7 +46,7 @@ const HomePage = ({route, navigator}: {route: any, navigator: Navigator}) => {
       
       <p className={'section-header'}>作成したトポ</p>
       <div>
-        {topos.map((x, i) => <TopoCard key={i} {...x} />)}
+        {topos.map((x, i) => <TopoCard key={i} {...x} updateTopos={getData}/>)}
       </div>
     </Page>
   )

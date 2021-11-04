@@ -17,7 +17,7 @@ import { CloseButton } from '../../Components/CloseButton';
 import { MarkerPositionX, MarkerPositionY } from './Constants';
 import { getCurrentTimestamp } from '../../Common/Functions/CurrentTimestamp'; 
 import { IStampButton, IHoldStamp, ITextStamp, isIHoldStamp, isITextStamp } from './StampType';
-import { TopoDb } from '../../DB/NavBar';
+import { TopoDB } from '../../DB/TopoDB';
 
 export type SizeProps = {
   x: number,
@@ -141,18 +141,6 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
       setOutPutMethod('download');
       HandleExport(resize);
     });
-
-    // ons.notification.alert({
-    //   title: 'ダウンロード',
-    //   message: 'トポの作成を終了して、画像をダウンロードしますか？',
-    //   buttonLabels: ons.platform.isIOSSafari() ? ['いいえ', 'はい'] : ['ダウンロード', '縮小版をダウンロード' ,'いいえ'],
-    //   callback: (idx: any) => {
-    //     const isYes = ons.platform.isIOSSafari() ? idx === 1 : idx === 0;
-    //     // const isYes = idx === 0;
-    //     if (!isYes) return;
-    //     handleExport();
-    //   }
-    // });
   }
 
   const HandleExport = (resize: boolean) => {
@@ -227,7 +215,7 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
       fr.onload = eve => {
         const res = fr.result;
         if (!res) return;
-        const db = new TopoDb();
+        const db = new TopoDB();
         db.save({
           name: name,
           grade: 1,
