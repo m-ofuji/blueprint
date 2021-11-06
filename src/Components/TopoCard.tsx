@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import ons from "onsenui"
+import { Button } from "react-onsenui";
 import { downloadURI } from "../Common/Functions/DownloadUri";
 import { getCurrentTimestamp } from "../Common/Functions/CurrentTimestamp";
 import { ITopo, TopoDB } from "../DB/TopoDB";
@@ -43,12 +44,12 @@ export const TopoCard = (props: TopoCardProps) => {
       </div>
       <div className={'topo-card-divider'}/>
       <div className={'topo-card-action'}>
-        <div className={'topo-card-action-button'} onClick={deleteTopo} >
+        <Button modifier={'quiet'} className={'topo-card-action-button'} onClick={deleteTopo} >
           <i className={'fas fa-trash-alt fa-lg'}/>
-        </div>
-        <div className={'topo-card-action-button'} onClick={downLoad}>
+        </Button>
+        <Button modifier={'quiet'} className={'topo-card-action-button'} onClick={downLoad} >
           <i className={'fas fa-download fa-lg'}/>
-        </div>
+        </Button>
       </div>
     </div>
   )

@@ -31,7 +31,8 @@ export type SizeProps = {
   imageRotation?: number
 }
 
-const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, navigator: Navigator}) => {
+const PaintPage = ({isLefty, route, navigator, updateTopos}: 
+  {isLefty:boolean, route: any, navigator: Navigator, updateTopos: () => void}) => {
   const sizeProps = {
     x: 0,
     y: 0,
@@ -183,6 +184,7 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
       resetStage();
     } else if (outPutMethod === 'save') {
       ons.notification.prompt({
+        title: '保存',
         message: '課題名を入力してください。',
         buttonLabels: ['OK'],
       }).then((name: HTMLElement) => {
@@ -222,6 +224,7 @@ const PaintPage = ({isLefty, route, navigator}: {isLefty:boolean, route: any, na
           data: res,
           createdAt: (new Date().getTime()) / 1000
         });
+        updateTopos();
       }
       fr.onerror = eve => {
         alert('保存に失敗しました。');

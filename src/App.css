@@ -41,6 +41,32 @@
   box-shadow: 1px 2px 4px rgba(0,0,0,0.5);
 }
 
+.edit-button {
+  width: 120px;
+  border-radius: 15px;
+  padding: 5px;
+  vertical-align:auto;
+  color: whitesmoke;
+  background-color: #004898;
+  border: none;
+  outline: none;
+  font-size: 1em;
+  box-shadow: 1px 2px 4px rgba(0,0,0,0.5);
+  position: fixed;
+  bottom: 20px; 
+  right: 15px;
+  padding: 15px 10px;
+}
+
+.edit-button i {
+  margin-right: 10px;
+}
+
+.topo-list {
+  margin-top: 90px;
+  margin-bottom: 100px;
+}
+
 .float-left-top {
   position: absolute;
   right: 1em;
@@ -75,12 +101,53 @@
 
 /* 閉じるボタン　ここまで */
 
+/* 検索バー　ここから */
+.search-container{
+  box-sizing: border-box;
+  /* position: relative; */
+  /* border: 1px solid #999; */
+  padding: 3px 10px;
+  border-radius: 20px;
+  height: 2.3em;
+  width: 70%;
+  overflow: hidden;
+  background-color: white;
+  box-shadow: 1px 2px 3px rgba(0,0,0,0.2);
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+  position: fixed;
+  top: 15px;
+  right: 40px;
+  left: 40px;
+}
+.search-container input[type="text"]{
+  border: none;
+  height: 2.0em;
+}
+.search-container input[type="text"]:focus {
+  outline: 0;
+}
+.search-container button {
+  cursor: pointer;
+  font-family: FontAwesome;
+  font-size: 1.3em;
+  border: none;
+  background: none;
+  color: #004898;
+  position: absolute;
+  right: 0;
+  margin-right: 5px;
+  outline : none;
+}
+/* 検索バー　ここまで */
+
 /* トポカード　ここから */
 .topo-card {
   background-color: white;
-  margin: 10px;
+  margin: 20px 10px;
   border-radius: 5px;
-  box-shadow: 1px 2px 3px rgba(0,0,0,0.2);
+  box-shadow: 1px 1.5px 1px rgba(0,0,0,0.1);
 }
 
 .topo-card-data {
@@ -88,8 +155,8 @@
 }
 
 .topo-card-title {
-  font-size: 25px;
-  font-weight: 900;
+  font-size: 22px;
+  font-weight: 800;
 }
 
 .topo-card img{
@@ -105,14 +172,18 @@
 }
 
 .topo-card-action {
-  padding: 10px;
+  padding: 5px 10px;
   display: flex;
-  gap: 20px;
+  gap: 15px;
 }
 
 .topo-card-action-button {
   /* margin-left: auto; */
   padding: 5px;
+}
+
+.topo-card-action-button i:before {
+  color: black;
 }
 
 .topo-card-action-button:first-child {

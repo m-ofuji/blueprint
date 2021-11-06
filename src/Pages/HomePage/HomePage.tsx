@@ -1,5 +1,5 @@
 import PaintPage from '../PaintPage/PaintPage';
-import { Navigator, Page } from 'react-onsenui';
+import { Navigator, Page, Button } from 'react-onsenui';
 import { ITopo, TopoDB } from '../../DB/TopoDB';
 import { useLayoutEffect, useState } from 'react';
 import { TopoCard } from '../../Components/TopoCard';
@@ -16,38 +16,51 @@ const HomePage = ({route, navigator}: {route: any, navigator: Navigator}) => {
   }
   
   const handlePaintPage = (isLefty: boolean) => {
-    navigator.pushPage({comp: PaintPage, props: {key: 'PaintPage', isLefty: isLefty, navigator: navigator}});
+    navigator.pushPage(
+      {
+        comp: PaintPage,
+        props: {
+          key: 'PaintPage',
+          isLefty: isLefty,
+          navigator: navigator,
+          updateTopos: updateTopos
+        }
+      });
   }
 
-  const getData = () => {
+  const updateTopos = () => {
     const db = new TopoDB();
     db.TopoImages
     .toArray()
     .then((topos) => {
       setTopos(topos);
-      // console.log(images);
-      // updateBlobUrl(images.map(x => window.URL.createObjectURL(new Blob([x.data], {type: 'image/png'}))));
     });
   }
 
-  
-
-  useLayoutEffect(getData,[]);
+  useLayoutEffect(updateTopos,[]);
 
   return (
     <Page key={'root'}>
-      <div className={'section'}>
-        <p className={'section-header'}>トポを作る</p>
-        <div className={'start-button-container'}>
-          <button className={'start-button'} onClick={openLeftyPaintPage}>左利き<br/>向け</button>
-          <button className={'start-button'} onClick={openRightPaintPage}>右利き<br/>向け</button>
-        </div>
+      <div className="search-container">
+        <input type="text"　/>
+        <button>
+          <i className={'fas fa-search'}/>
+        </button>
       </div>
-      
-      <p className={'section-header'}>作成したトポ</p>
-      <div>
-        {topos.map((x, i) => <TopoCard key={i} {...x} updateTopos={getData}/>)}
+
+      {/* <p className={'section-header'}>作成したトポ</p> */}
+      <div className={'topo-list'}>
+        {topos.length > 0 ? 
+          topos
+            .sort((a, b) => a.createdAt > b.createdAt ? -1 : 1)
+            .map((x, i) => <TopoCard key={i} {...x} updateTopos={updateTopos}/>)
+          : <p> トポが作成されていません。 </p>
+        }
       </div>
+      <button className={'edit-button'} onClick={openRightPaintPage}>
+          <i className={'fas fa-pen'}/>
+          トポ作成
+      </button>
     </Page>
   )
 }
