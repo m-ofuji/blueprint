@@ -27,7 +27,7 @@
   margin-bottom: 10px;
 }
 
-.start-button {
+/* .start-button {
   margin: 20px 10px;
   width: 50%;
   border-radius: 30px;
@@ -39,7 +39,7 @@
   outline: none;
   font-size: 1.1em;
   box-shadow: 1px 2px 4px rgba(0,0,0,0.5);
-}
+} */
 
 .edit-button {
   width: 120px;
@@ -354,3 +354,31 @@
 }
 
 /* スタンプメニューここまで */
+
+/* 編集ページ　ここから */
+.edit-page {
+  background-color: white;
+}
+
+#edit-container {
+  margin: 70px 20px;
+}
+
+.edit-title {
+  margin-top: 40px;
+  margin-bottom: 5px;
+}
+
+h3.page-title i {
+  margin-right: 15px;
+}
+
+.edit-image {
+  width: 100%;
+}
+
+.edit-input {
+  width: 100%;
+  height: auto;
+}
+/* 編集ページ　ここまで */

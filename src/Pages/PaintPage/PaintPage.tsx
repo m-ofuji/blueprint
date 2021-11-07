@@ -1,4 +1,5 @@
 import ons from 'onsenui'
+import EditPage from '../EditPage/EditPage';
 import { Navigator } from 'react-onsenui';
 import { createRef, ChangeEvent, useState, useRef, useEffect, useLayoutEffect} from 'react';
 import { Page } from 'react-onsenui';
@@ -183,14 +184,16 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
       downloadURI(uri, getCurrentTimestamp() + '.png');
       resetStage();
     } else if (outPutMethod === 'save') {
-      ons.notification.prompt({
-        title: '保存',
-        message: '課題名を入力してください。',
-        buttonLabels: ['OK'],
-      }).then((name: HTMLElement) => {
-        saveTopo(name.toString(), stage, pixelRatio);
-        resetStage();
-      });
+      openEditPage();
+      resetStage();
+      // ons.notification.prompt({
+      //   title: '保存',
+      //   message: '課題名を入力してください。',
+      //   buttonLabels: ['OK'],
+      // }).then((name: HTMLElement) => {
+      //   saveTopo(name.toString(), stage, pixelRatio);
+      //   resetStage();
+      // });
     }
   };
 
@@ -211,27 +214,27 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
     });
   }
 
-  const saveTopo = (name:string, stage: any, pixelRatio: number) => {
-    stage.current.toCanvas({pixelRatio: pixelRatio}).toBlob((data: any) => {
-      const fr = new FileReader()
-      fr.onload = eve => {
-        const res = fr.result;
-        if (!res) return;
-        const db = new TopoDB();
-        db.save({
-          name: name,
-          grade: 1,
-          data: res,
-          createdAt: (new Date().getTime()) / 1000
-        });
-        updateTopos();
-      }
-      fr.onerror = eve => {
-        alert('保存に失敗しました。');
-      }
-      fr.readAsArrayBuffer(data);
-    });
-  }
+  // const saveTopo = (name:string, stage: any, pixelRatio: number) => {
+  //   stage.current.toCanvas({pixelRatio: pixelRatio}).toBlob((data: any) => {
+  //     const fr = new FileReader()
+  //     fr.onload = eve => {
+  //       const res = fr.result;
+  //       if (!res) return;
+  //       const db = new TopoDB();
+  //       db.save({
+  //         name: name,
+  //         grade: 1,
+  //         data: res,
+  //         createdAt: (new Date().getTime()) / 1000
+  //       });
+  //       updateTopos();
+  //     }
+  //     fr.onerror = eve => {
+  //       alert('保存に失敗しました。');
+  //     }
+  //     fr.readAsArrayBuffer(data);
+  //   });
+  // }
 
   useEffect(output);
 
@@ -280,6 +283,20 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
     } else {
       navigator.popPage();
     }
+  }
+
+  const openEditPage = () => {
+    stage.current.toCanvas().toBlob((data: any) => {
+      navigator.pushPage({
+        comp: EditPage,
+        props: {
+          key: 'EditPage',
+          navigator: navigator,
+          imgBlob: data,
+          updateTopos: updateTopos
+        }
+      });
+    });
   }
 
   return (

@@ -25,6 +25,7 @@ export class TopoDB extends Dexie {
 export interface ITopo {
   id?: number;
   name: string;
+  setter: string | undefined;
   grade: number;
   data: string | ArrayBuffer;
   createdAt: number;

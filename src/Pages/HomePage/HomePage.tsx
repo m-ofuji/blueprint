@@ -1,8 +1,9 @@
 import PaintPage from '../PaintPage/PaintPage';
-import { Navigator, Page, Button } from 'react-onsenui';
+import { Navigator, Page, Button, Modal } from 'react-onsenui';
 import { ITopo, TopoDB } from '../../DB/TopoDB';
 import { useLayoutEffect, useState } from 'react';
 import { TopoCard } from '../../Components/TopoCard';
+import EditPage from '../EditPage/EditPage';
 
 const HomePage = ({route, navigator}: {route: any, navigator: Navigator}) => {
   const [topos, setTopos] = useState<ITopo[]>([]);
@@ -16,16 +17,23 @@ const HomePage = ({route, navigator}: {route: any, navigator: Navigator}) => {
   }
   
   const handlePaintPage = (isLefty: boolean) => {
-    navigator.pushPage(
-      {
-        comp: PaintPage,
-        props: {
-          key: 'PaintPage',
-          isLefty: isLefty,
-          navigator: navigator,
-          updateTopos: updateTopos
-        }
-      });
+    navigator.pushPage({
+      comp: PaintPage,
+      props: {
+        key: 'PaintPage',
+        isLefty: isLefty,
+        navigator: navigator,
+        updateTopos: updateTopos
+      }
+    });
+
+    // navigator.pushPage({
+    //   comp: EditPage,
+    //   props: {
+    //     key: 'EditPage',
+    //     navigator: navigator,
+    //   }
+    // });
   }
 
   const updateTopos = () => {
@@ -58,8 +66,8 @@ const HomePage = ({route, navigator}: {route: any, navigator: Navigator}) => {
         }
       </div>
       <button className={'edit-button'} onClick={openRightPaintPage}>
-          <i className={'fas fa-pen'}/>
-          トポ作成
+        <i className={'fas fa-pen'}/>
+        トポ作成
       </button>
     </Page>
   )
