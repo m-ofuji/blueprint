@@ -35,9 +35,13 @@ export const TopoCard = (props: TopoCardProps) => {
     });
   }
 
+  const openImage = () => {
+    window.open(imageRef.current?.src);
+  }
+
   return (
     <div className={'topo-card'}>
-      <img ref={imageRef} src={window.URL.createObjectURL(new Blob([props.data], {type: 'image/png'}))}/>
+      <img ref={imageRef} src={window.URL.createObjectURL(new Blob([props.data], {type: 'image/png'}))} onClick={openImage}/>
       <div className={'topo-card-data'}>
         <div className={'topo-card-title'}>{props.name}</div>
         <div>{new Date(props.createdAt * 1000).toLocaleDateString()}</div>
