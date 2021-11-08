@@ -18,7 +18,6 @@ import { CloseButton } from '../../Components/CloseButton';
 import { MarkerPositionX, MarkerPositionY } from './Constants';
 import { getCurrentTimestamp } from '../../Common/Functions/CurrentTimestamp'; 
 import { IStampButton, IHoldStamp, ITextStamp, isIHoldStamp, isITextStamp } from './StampType';
-import { TopoDB } from '../../DB/TopoDB';
 
 export type SizeProps = {
   x: number,
@@ -71,21 +70,19 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
 
   const stage = useRef<any>(null);
   const resizableImage = useRef<any>(null);
-  
-  const ref = createRef<HTMLInputElement>();
+  const fileInputRef = createRef<HTMLInputElement>();
 
   useLayoutEffect(() => { 
     if (wallImage) return;
 
-    if (ons.platform.isIOSSafari() && ref.current) {
-      ref.current.click();
+    if (ons.platform.isIOSSafari() && fileInputRef.current) {
+      fileInputRef.current.click();
       return;
     }
 
     if (initial === 'open') {
-      if (ref.current) {
-        console.log('open');
-        ref.current.click();
+      if (fileInputRef.current) {
+        fileInputRef.current.click();
       }
     } else if (initial === 'msg') {
       console.log('msg');
@@ -186,14 +183,6 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
     } else if (outPutMethod === 'save') {
       openEditPage();
       resetStage();
-      // ons.notification.prompt({
-      //   title: '保存',
-      //   message: '課題名を入力してください。',
-      //   buttonLabels: ['OK'],
-      // }).then((name: HTMLElement) => {
-      //   saveTopo(name.toString(), stage, pixelRatio);
-      //   resetStage();
-      // });
     }
   };
 
@@ -213,28 +202,6 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
       };
     });
   }
-
-  // const saveTopo = (name:string, stage: any, pixelRatio: number) => {
-  //   stage.current.toCanvas({pixelRatio: pixelRatio}).toBlob((data: any) => {
-  //     const fr = new FileReader()
-  //     fr.onload = eve => {
-  //       const res = fr.result;
-  //       if (!res) return;
-  //       const db = new TopoDB();
-  //       db.save({
-  //         name: name,
-  //         grade: 1,
-  //         data: res,
-  //         createdAt: (new Date().getTime()) / 1000
-  //       });
-  //       updateTopos();
-  //     }
-  //     fr.onerror = eve => {
-  //       alert('保存に失敗しました。');
-  //     }
-  //     fr.readAsArrayBuffer(data);
-  //   });
-  // }
 
   useEffect(output);
 
@@ -360,7 +327,7 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
       <input
         key={'file-uploader'}
         onChange={onChange}
-        ref={ref}
+        ref={fileInputRef}
         style={{ display: 'none' }}
         type='file'
         accept='image/*'

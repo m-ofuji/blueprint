@@ -3,7 +3,6 @@ import { Navigator, Page, Button, Modal } from 'react-onsenui';
 import { ITopo, TopoDB } from '../../DB/TopoDB';
 import { useLayoutEffect, useState } from 'react';
 import { TopoCard } from '../../Components/TopoCard';
-import EditPage from '../EditPage/EditPage';
 
 const HomePage = ({route, navigator}: {route: any, navigator: Navigator}) => {
   const [topos, setTopos] = useState<ITopo[]>([]);
@@ -26,14 +25,6 @@ const HomePage = ({route, navigator}: {route: any, navigator: Navigator}) => {
         updateTopos: updateTopos
       }
     });
-
-    // navigator.pushPage({
-    //   comp: EditPage,
-    //   props: {
-    //     key: 'EditPage',
-    //     navigator: navigator,
-    //   }
-    // });
   }
 
   const updateTopos = () => {
@@ -56,7 +47,6 @@ const HomePage = ({route, navigator}: {route: any, navigator: Navigator}) => {
         </button>
       </div>
 
-      {/* <p className={'section-header'}>作成したトポ</p> */}
       <div className={'topo-list'}>
         {topos.length > 0 ? 
           topos
