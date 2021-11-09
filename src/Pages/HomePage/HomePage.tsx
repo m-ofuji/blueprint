@@ -32,8 +32,8 @@ const HomePage = ({route, navigator}: {route: any, navigator: Navigator}) => {
 
   return (
     <Page key={'root'}>
-      <div className="search-container">
-        <input type="text"　/>
+      <div className='search-container'>
+        <input type='text'/>
         <button>
           <i className={'fas fa-search'}/>
         </button>

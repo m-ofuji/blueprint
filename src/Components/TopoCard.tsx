@@ -4,6 +4,7 @@ import { Button } from "react-onsenui";
 import { downloadURI } from "../Common/Functions/DownloadUri";
 import { getCurrentTimestamp } from "../Common/Functions/CurrentTimestamp";
 import { ITopo, TopoDB } from "../DB/TopoDB";
+import { GRADES } from "../Constants/Grades";
 
 export interface TopoCardProps extends ITopo {
   updateTopos: () => void;
@@ -43,7 +44,10 @@ export const TopoCard = (props: TopoCardProps) => {
     <div className={'topo-card'}>
       <img ref={imageRef} src={window.URL.createObjectURL(new Blob([props.data], {type: 'image/png'}))} onClick={openImage}/>
       <div className={'topo-card-data'}>
-        <div className={'topo-card-title'}>{props.name}</div>
+        <div className={'topo-card-title-container'}>
+          <div className={'topo-card-title'}>{props.name}</div>
+          <div className={`topo-card-grade grade${GRADES.find(x => x.id === props.grade)?.id}`}>{GRADES.find(x => x.id === props.grade)?.name}</div>
+        </div>
         <div>{new Date(props.createdAt * 1000).toLocaleDateString()}</div>
       </div>
       <div className={'topo-card-divider'}/>

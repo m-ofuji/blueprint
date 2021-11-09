@@ -66,7 +66,7 @@ const EditPage = ({route, navigator, imgBlob, updateTopos}:
           <Input className='edit-input' onChange={onSetterChanged}/>
           <p className={'edit-title'}>グレード</p>
           <Select modifier={'material'} onChange={onGradeChanged}>
-            {GRADES.map(x => <option key={x.id} value={x.id}>{x.name}</option>)}
+            {GRADES.filter(x => x.id <= 10).map(x => <option key={x.id} value={x.id}>{x.name}</option>)}
           </Select>
         </form>
       </div>

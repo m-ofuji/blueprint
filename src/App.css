@@ -154,9 +154,86 @@
   padding: 2px 10px 10px 10px;
 }
 
+.topo-card-title-container {
+  display: flex;
+  justify-content: space-between;
+}
+
 .topo-card-title {
   font-size: 22px;
   font-weight: 800;
+}
+
+.topo-card-grade {
+  font-size: 20px;
+  /* background-color: red; */
+  border-radius: 7px;
+  padding: 3px 10px;
+}
+
+.grade1 {
+  background-color: #FF3399;
+  color: #ffffff;
+}
+
+.grade2 {
+  background-color: #db2828;
+  color: #ffffff;
+}
+
+.grade3 {
+  background-color: #fbbd08;
+  color: #ffffff;
+}
+
+.grade4 {
+  background-color: #2185d0;
+  color: #ffffff;
+}
+
+.grade5 {
+  background-color: #f2711c;
+  color: #ffffff;
+}
+
+.grade6 {
+  background-color: #6435c9;
+  color: #ffffff;
+}
+
+.grade7 {
+  background-color: #b5cc18;
+  color: #ffffff;
+}
+
+.grade8 {
+  background-color: #053999;
+  color: #ffffff;
+}
+
+.grade9 {
+  background-color: #2c733f;
+  color: #ffffff;
+}
+
+.grade10 {
+  background-color: #1b1c1d;
+  color: #ffffff;
+}
+
+.grade11 {
+  background-color: #FF3399;
+  color: #ffffff;
+}
+
+.grade12 {
+  background-color: #FF3399;
+  color: #ffffff;
+}
+
+.grade13 {
+  background-color: #FF3399;
+  color: #ffffff;
 }
 
 .topo-card img{
