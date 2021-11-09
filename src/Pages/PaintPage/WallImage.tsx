@@ -5,23 +5,8 @@ import { HoldTextProps, HoldText, isHoldTextProps } from './Holds/HoldText';
 import { useImperativeHandle, forwardRef } from 'react';
 import Konva from 'konva';
 import { KonvaEventObject } from 'konva/lib/Node';
-import { SizeProps } from './PaintPage';
+import { WallImageProps } from '../../Types/WallImageProps';
 import { MarkerPositionX, MarkerPositionY } from './Constants';
-
-export type WallImageProps = {
-  ref?: React.ForwardedRef<HTMLInputElement>;
-  centerX: number;
-  centerY: number;
-  x?: number;
-  y?: number;
-  src: CanvasImageSource | undefined;
-  imageRotation?: number,
-  imageX?: number,
-  imageY?: number,
-  updateSizeProps: React.Dispatch<React.SetStateAction<SizeProps>>;
-  updateIsUndoDisabled: React.Dispatch<React.SetStateAction<boolean>>;
-  updateIsRedoDisabled: React.Dispatch<React.SetStateAction<boolean>>;
-}
 
 let WallImageBase = (props : WallImageProps, ref : any) => {
 
@@ -68,64 +53,52 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
       setUndo(old => [...old, [t, Undo]]);
       resetRedoAndUndo();
     },
-    Undo: () => {
+    undo: () => {
       const last = undo[undo.length - 1];
-      const isEmpty = !last;
+
+      if (!last) return;
+
       let Redo: () => void;
       let lastItem: any;
-      if (!isEmpty) {
-        lastItem = last[0];
-        if (isHoldCircleProps(lastItem)) {
-          Redo = () => setHolds(old => old.concat([lastItem]).filter(x => x));
-        } else if (isHoldTextProps(lastItem)) {
-          Redo = () => setHoldText(old => old.concat([lastItem]).filter(x => x));
-        }
+      lastItem = last[0];
+      if (isHoldCircleProps(lastItem)) {
+        Redo = () => setHolds(old => old.concat([lastItem]).filter(x => x));
+      } else if (isHoldTextProps(lastItem)) {
+        Redo = () => setHoldText(old => old.concat([lastItem]).filter(x => x));
       }
 
       setRedo(old => {
-        if (!isEmpty) {
-          old.push([lastItem, Redo]);
-        }
-        const newRedo = old;
-        props.updateIsRedoDisabled(newRedo.length <= 0);
-        return newRedo;
+        old.push([lastItem, Redo]);
+        props.updateIsRedoDisabled(old.length <= 0);
+        return old;
       });
 
-      if (!isEmpty) {
-        last[1]();
-        undo.pop();
-      }
+      last[1]();
+      undo.pop();
       props.updateIsUndoDisabled(undo.length <= 0);
       setUndo(undo);
     },
-    Redo: () => {
+    redo: () => {
       const last = redo[redo.length - 1];
 
-      const isEmpty = !last;
-      let Undo: () => void;
-      let lastItem: any;
-      if (!isEmpty) {
-        lastItem = last[0];
-        if (isHoldCircleProps(lastItem)) {
-          Undo = () => setHolds(holds.filter(x => x !== lastItem ));
-        } else if (isHoldTextProps(lastItem)) {
-          Undo = () => setHoldText(texts.filter(x => x !== lastItem));
-        }
+      if (!last) return;
+
+      let undo: () => void;
+      let lastItem = last[0];
+      if (isHoldCircleProps(lastItem)) {
+        undo = () => setHolds(holds.filter(x => x !== lastItem ));
+      } else if (isHoldTextProps(lastItem)) {
+        undo = () => setHoldText(texts.filter(x => x !== lastItem));
       }
       
       setUndo(old => {
-        if (!isEmpty) {
-          old.push([lastItem, Undo]);
-        }
-        const newUndo = old;
-        props.updateIsUndoDisabled(newUndo.length <= 0);
-        return newUndo;
+        old.push([lastItem, undo]);
+        props.updateIsUndoDisabled(old.length <= 0);
+        return old;
       });
 
-      if (!isEmpty) {
-        last[1]();
-        redo.pop();
-      }
+      last[1]();
+      redo.pop();
 
       props.updateIsRedoDisabled(redo.length <= 0);
       setRedo(redo);
@@ -188,8 +161,8 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
         ...old,
         scaleX: 1 / newScale,
         scaleY: 1 / newScale,
-        x: groupRef.current.x(),
-        y: groupRef.current.y()
+        offsetX: groupRef.current.x(),
+        offsetY: groupRef.current.y()
       } 
     });
   }
@@ -200,7 +173,7 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
   }
 
   const OnDragEnd = () => {
-    props.updateSizeProps((old) => { return { ...old, x: groupRef.current.x(), y: groupRef.current.y() }});
+    props.updateSizeProps((old) => { return { ...old, offsetX: groupRef.current.x(), offsetY: groupRef.current.y() }});
   }
 
   const getDistance = (p1:Touch, p2:Touch) => {

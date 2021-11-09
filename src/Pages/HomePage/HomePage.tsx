@@ -1,5 +1,5 @@
 import PaintPage from '../PaintPage/PaintPage';
-import { Navigator, Page, Button, Modal } from 'react-onsenui';
+import { Navigator, Page } from 'react-onsenui';
 import { ITopo, TopoDB } from '../../DB/TopoDB';
 import { useLayoutEffect, useState } from 'react';
 import { TopoCard } from '../../Components/TopoCard';
@@ -11,10 +11,6 @@ const HomePage = ({route, navigator}: {route: any, navigator: Navigator}) => {
     handlePaintPage(false);
   }
 
-  const openLeftyPaintPage = () => {
-    handlePaintPage(true);
-  }
-  
   const handlePaintPage = (isLefty: boolean) => {
     navigator.pushPage({
       comp: PaintPage,
@@ -29,11 +25,7 @@ const HomePage = ({route, navigator}: {route: any, navigator: Navigator}) => {
 
   const updateTopos = () => {
     const db = new TopoDB();
-    db.TopoImages
-    .toArray()
-    .then((topos) => {
-      setTopos(topos);
-    });
+    db.TopoImages.toArray().then((topos) => { setTopos(topos); });
   }
 
   useLayoutEffect(updateTopos,[]);

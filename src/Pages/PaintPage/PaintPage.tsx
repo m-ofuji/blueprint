@@ -17,25 +17,14 @@ import { RedoButton } from './Components/RedoButton';
 import { CloseButton } from '../../Components/CloseButton';
 import { MarkerPositionX, MarkerPositionY } from './Constants';
 import { getCurrentTimestamp } from '../../Common/Functions/CurrentTimestamp'; 
-import { IStampButton, IHoldStamp, ITextStamp, isIHoldStamp, isITextStamp } from './StampType';
-
-export type SizeProps = {
-  x: number,
-  y: number,
-  scaleX: number,
-  scaleY: number,
-  width: number,
-  height: number,
-  imageX?: number,
-  imageY?: number,
-  imageRotation?: number
-}
+import { IStampButton, IHoldStamp, ITextStamp, isIHoldStamp, isITextStamp } from '../../Types/StampType';
+import { SizeProps } from '../../Types/SizeProps';
 
 const PaintPage = ({isLefty, route, navigator, updateTopos}: 
   {isLefty:boolean, route: any, navigator: Navigator, updateTopos: () => void}) => {
   const sizeProps = {
-    x: 0,
-    y: 0,
+    offsetX: 0,
+    offsetY: 0,
     scaleX: 1,
     scaleY: 1,
     width: window.innerWidth,
@@ -85,7 +74,6 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
         fileInputRef.current.click();
       }
     } else if (initial === 'msg') {
-      console.log('msg');
       ons.notification.alert({
         title: '壁画像選択',
         message: '壁の画像を選択してください。',
@@ -155,8 +143,8 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
       return {...old,
         width: imageSizeProps.width,
         height: imageSizeProps.height,
-        x: imageSizeProps.x,
-        y: imageSizeProps.y,
+        offsetX: imageSizeProps.offsetX,
+        offsetY: imageSizeProps.offsetY,
         scaleX: imageSizeProps.scaleX,
         scaleY: imageSizeProps.scaleY,
         // imageRotation: 270
@@ -165,7 +153,6 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
 
     setResizeImage(resize);
     setStamps(old => old.map(x => {return { ...x, isSelected : false }}));
-    // setOutPutMethod('download');
     setExecExport(true);
   };
 
@@ -193,8 +180,8 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
 
     setStageSizeProps((old) => {
       return {...old,
-        x: 0,
-        y: 0,
+        offsetX: 0,
+        offsetY: 0,
         scaleX: 1,
         scaleY: 1,
         width: window.innerWidth,
@@ -227,11 +214,11 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
   }
 
   const undo = () => {
-    resizableImage.current.Undo();
+    resizableImage.current.undo();
   }
 
   const redo = () => {
-    resizableImage.current.Redo();
+    resizableImage.current.redo();
   }
 
   const onCloseTapped = () => {
@@ -271,14 +258,8 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
       <Stage 
         key={'stage'}
         className={'image-stage'}
-        offsetX={stageSizeProps.x}
-        offsetY={stageSizeProps.y}
-        scaleX={stageSizeProps.scaleX}
-        scaleY={stageSizeProps.scaleY}
-        width={stageSizeProps.width} 
-        height={stageSizeProps.height}
+        {... stageSizeProps}
         ref={stage}
-        rotation={stageSizeProps.imageRotation}
       >
         <Layer>
           <Group draggable>
@@ -298,15 +279,15 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
           </Group>
           <NormalTarget
             key={'normalTarget'}
-            x={MarkerPositionX - stageSizeProps.x}
-            y={MarkerPositionY - stageSizeProps.y}
+            x={MarkerPositionX - stageSizeProps.offsetX}
+            y={MarkerPositionY - stageSizeProps.offsetY}
             isVisible={stamps.filter(x => isIHoldStamp(x) && x.isSelected).length > 0}
             onTapped={holdTargetTapped}
           />
           <TextTarget
             key={'textTarget'}
-            x={MarkerPositionX - stageSizeProps.x}
-            y={MarkerPositionY - stageSizeProps.y}
+            x={MarkerPositionX - stageSizeProps.offsetX}
+            y={MarkerPositionY - stageSizeProps.offsetY}
             character={holdText}
             isVisible={stamps.filter(x => isITextStamp(x) && x.isSelected).length > 0}
             onTapped={textTargetTapped}
