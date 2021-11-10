@@ -3,12 +3,16 @@ import { Navigator, Page } from 'react-onsenui';
 import { ITopo, TopoDB } from '../../DB/TopoDB';
 import { useLayoutEffect, useState } from 'react';
 import { TopoCard } from '../../Components/TopoCard';
+import { GRADES } from '../../Constants/Grades';
+import { RectangleButton, RectangleButtonProps } from '../../Components/RectangleButton';
 
 const HomePage = ({route, navigator}: {route: any, navigator: Navigator}) => {
   const [topos, setTopos] = useState<ITopo[]>([]);
   const [searchText, setSearchText] = useState<string>('');
+  const [searchGrades, setSearchGrades] = useState<number[]>([]);
 
-  const searchFunc = (x:ITopo) => x.name.indexOf(searchText) > -1;
+  const searchFunc = (x:ITopo) => 
+    x.name.indexOf(searchText) > -1 && (searchGrades.length <= 0 || searchGrades.includes(x.grade));
 
   const openRightPaintPage = () => {
     handlePaintPage(false);
@@ -41,16 +45,27 @@ const HomePage = ({route, navigator}: {route: any, navigator: Navigator}) => {
     setSearchText('');
   }
 
+  const onGradeClicked = (id: number) => {
+    return (e: React.MouseEvent<HTMLElement>) => {
+      
+    };
+  }
+
   return (
     <Page key={'root'}>
-      <div className='search-container'>
-        <div>
-          <i className={'fas fa-search'}/>
+      <div className={'search-wrapper'}>
+        <div className='search-container'>
+          <div>
+            <i className={'fas fa-search'}/>
+          </div>
+          <input type='text' value={searchText} onChange={onSearchTextChange}/>
+          <button className={searchText.length > 0 ? 'search-clear' : 'search-clear hidden'} onClick={onClrearClicked}>
+            <i className={'far fa-times-circle'}/>
+          </button>
         </div>
-        <input type='text' value={searchText} onChange={onSearchTextChange}/>
-        <button className={searchText.length > 0 ? 'search-clear' : 'search-clear hidden'} onClick={onClrearClicked}>
-          <i className={'far fa-times-circle'}/>
-        </button>
+        <div className={'grade-container'}>
+          {GRADES.map((x, i) => <RectangleButton key={x.id} label={x.name} isSelected={false} onTapped={onGradeClicked(x.id)}/>)}
+        </div>
       </div>
 
       <div className={'topo-list'}>

@@ -140,18 +140,6 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
     //   };
     // });
     setStageSizeProps((old) => {return {...old, ...imageSizeProps}});
-    // setStageSizeProps((old) => {
-    //   return {...old,
-    //     width: imageSizeProps.width,
-    //     height: imageSizeProps.height,
-    //     offsetX: imageSizeProps.offsetX,
-    //     offsetY: imageSizeProps.offsetY,
-    //     scaleX: imageSizeProps.scaleX,
-    //     scaleY: imageSizeProps.scaleY,
-    //     // imageRotation: 270
-    //   };
-    // });
-
     setResizeImage(resize);
     setStamps(old => old.map(x => {return { ...x, isSelected : false }}));
     setExecExport(true);
