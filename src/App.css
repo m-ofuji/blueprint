@@ -1,3 +1,7 @@
+.hidden {
+  display: none;
+}
+
 .hand-segment{
   position: absolute;
   bottom: 10px;
@@ -109,7 +113,7 @@
   padding: 3px 10px;
   border-radius: 20px;
   height: 2.3em;
-  width: 70%;
+  /* width: 70%; */
   overflow: hidden;
   background-color: white;
   box-shadow: 1px 2px 3px rgba(0,0,0,0.2);
@@ -120,14 +124,31 @@
   top: 15px;
   right: 40px;
   left: 40px;
+  z-index: 10;
 }
+
 .search-container input[type="text"]{
+  margin-left: 30px;
   border: none;
-  height: 2.0em;
+  /* height: 2.0em; */
+  font-size: 17px;
+  vertical-align: sub;
+  margin-top: 5px;
 }
+
 .search-container input[type="text"]:focus {
   outline: 0;
 }
+
+.search-container div {
+  font-size: 1.3em;
+  width: 28px;
+  border: none;
+  background: none;
+  position: absolute;
+  margin-top: 2px;
+}
+
 .search-container button {
   cursor: pointer;
   font-family: FontAwesome;
@@ -137,8 +158,16 @@
   color: #004898;
   position: absolute;
   right: 0;
-  margin-right: 5px;
+  /* margin-right: 5px; */
   outline : none;
+}
+
+.search-mark {
+  margin-right: 5px;
+}
+
+.search-clear {
+  margin-right: 5px;
 }
 /* 検索バー　ここまで */
 
