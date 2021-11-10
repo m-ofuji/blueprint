@@ -1,6 +1,7 @@
 import { MouseEventHandler } from "react"
 
 export type RectangleButtonProps = {
+  key: number,
   label: string,
   isSelected: boolean,
   onTapped: MouseEventHandler<HTMLDivElement>
