@@ -6,26 +6,31 @@ import { TopoCard } from '../../Components/TopoCard';
 import { GRADES } from '../../Constants/Grades';
 import { RectangleButton, RectangleButtonProps } from '../../Components/RectangleButton';
 
+console.log('top');
+
 const HomePage = ({route, navigator}: {route: any, navigator: Navigator}) => {
-  const onGradeClicked = (id: number) => {
-    return (e: React.MouseEvent<HTMLElement>) => {
-      setSearchGrades(old => {
-        const tapped = old.find(x => x.key === id);
-        if (tapped === undefined) return old;
-        tapped.isSelected = !tapped.isSelected;
-        old.filter(x => x.key === id).push(tapped)
-        return old.sort((a, b) => a.key > b.key ? 1 : -1);
-      });
-    };
+  const onGradeClicked = (id: number) => (e: React.MouseEvent<HTMLElement>) => {
+    setSearchGrades(old => {
+      const tapped = old.find(x => x.key === id);
+      if (tapped === undefined) return old;
+      tapped.isSelected = !tapped.isSelected;
+      const newGrades = old.filter(x => x.key !== id);
+      return [...newGrades, tapped].sort((a, b) => a.key > b.key ? 1 : -1);
+    });
   }
   
   const [topos, setTopos] = useState<ITopo[]>([]);
   const [searchText, setSearchText] = useState<string>('');
   const [searchGrades, setSearchGrades] 
-    = useState<RectangleButtonProps[]>(GRADES.map(x => {return { key: x.id, label: x.name, isSelected: false, onTapped: onGradeClicked(x.id) };}));
+    = useState<RectangleButtonProps[]>(
+      GRADES
+        .filter(x => x.id <= 10)
+        .map(x => {return { key: x.id, label: x.name, isSelected: false, onTapped: onGradeClicked(x.id) };})
+    );
 
-  const searchFunc = (x:ITopo) => 
-    x.name.indexOf(searchText) > -1 && (searchGrades.length <= 0 || searchGrades.filter(x => x.isSelected).map(x => x.key).includes(x.grade));
+  const searchFunc = (x: ITopo) => 
+    x.name.indexOf(searchText) > -1 
+    && (searchGrades.filter(x => x.isSelected).length <= 0 || searchGrades.filter(x => x.isSelected).map(x => x.key).includes(x.grade));
 
   const openRightPaintPage = () => {
     handlePaintPage(false);
@@ -71,7 +76,7 @@ const HomePage = ({route, navigator}: {route: any, navigator: Navigator}) => {
           </button>
         </div>
         <div className={'grade-container'}>
-          {GRADES.map((x, i) => <RectangleButton key={x.id} label={x.name} isSelected={false} onTapped={onGradeClicked(x.id)}/>)}
+          {searchGrades.map((x, i) => <RectangleButton {...x}/>)}
         </div>
       </div>
 
