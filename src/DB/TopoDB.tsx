@@ -27,6 +27,6 @@ export interface ITopo {
   name: string;
   setter: string | undefined;
   grade: number;
-  data: string | ArrayBuffer;
+  data: (string | ArrayBuffer)[];
   createdAt: number;
 }

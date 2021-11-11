@@ -33,12 +33,19 @@ const EditPage = ({route, navigator, imgBlob, updateTopos}:
         name: title,
         grade: Number(grade),
         setter: setter,
-        data: res,
+        data: [res],
         createdAt: (new Date().getTime()) / 1000
       });
-      await ons.notification.toast('トポを保存しました。', {timeout: 2000});
-      navigator.popPage();
+      // await ons.notification.toast('トポを保存しました。', {timeout: 2000});
       updateTopos();
+      ons.notification.alert({
+        title: '保存完了',
+        message: 'トポを保存しました。',
+        buttonLabels: ['OK'],
+        callback: () => {
+          navigator.popPage();
+        }
+      });
     }
     fr.onerror = eve => {
       alert('保存に失敗しました。');

@@ -15,7 +15,7 @@ export const TopoCard = (props: TopoCardProps) => {
 
   const downLoad = () => {
     if (!imageRef) return;
-    const uri = window.URL.createObjectURL(new Blob([props.data], {type: 'image/png'}));
+    const uri = window.URL.createObjectURL(new Blob([props.data[0]], {type: 'image/png'}));
     downloadURI(uri, getCurrentTimestamp() + '.png');
   }
 
@@ -42,7 +42,7 @@ export const TopoCard = (props: TopoCardProps) => {
 
   return (
     <div className={'topo-card'}>
-      <img ref={imageRef} src={window.URL.createObjectURL(new Blob([props.data], {type: 'image/png'}))} onClick={openImage}/>
+      <img ref={imageRef} src={window.URL.createObjectURL(new Blob([props.data[0]], {type: 'image/png'}))} onClick={openImage}/>
       <div className={'topo-card-data'}>
         <div className={'topo-card-title-container'}>
           <div className={'topo-card-title'}>{props.name}</div>
