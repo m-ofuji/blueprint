@@ -67,12 +67,6 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
         redoFunc = () => setHoldText(old => old.concat([lastItem]).filter(x => x));
       }
 
-      // setRedo(old => {
-      //   old.push([lastItem, Redo]);
-      //   props.updateIsRedoDisabled(old.length <= 0);
-      //   return old;
-      // });
-
       setRedo(old => [...old, [lastItem, redoFunc]]);
       props.updateIsRedoDisabled(redo.length <= 0);
 
