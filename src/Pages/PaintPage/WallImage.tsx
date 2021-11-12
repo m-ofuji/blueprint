@@ -58,22 +58,27 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
 
       if (!last) return;
 
-      let Redo: () => void;
+      let redoFunc: () => void;
       let lastItem: any;
       lastItem = last[0];
       if (isHoldCircleProps(lastItem)) {
-        Redo = () => setHolds(old => old.concat([lastItem]).filter(x => x));
+        redoFunc = () => setHolds(old => old.concat([lastItem]).filter(x => x));
       } else if (isHoldTextProps(lastItem)) {
-        Redo = () => setHoldText(old => old.concat([lastItem]).filter(x => x));
+        redoFunc = () => setHoldText(old => old.concat([lastItem]).filter(x => x));
       }
 
-      setRedo(old => {
-        old.push([lastItem, Redo]);
-        props.updateIsRedoDisabled(old.length <= 0);
-        return old;
-      });
+      // setRedo(old => {
+      //   old.push([lastItem, Redo]);
+      //   props.updateIsRedoDisabled(old.length <= 0);
+      //   return old;
+      // });
 
+      setRedo(old => [...old, [lastItem, redoFunc]]);
+      props.updateIsRedoDisabled(redo.length <= 0);
+
+      // 戻る処理
       last[1]();
+
       undo.pop();
       props.updateIsUndoDisabled(undo.length <= 0);
       setUndo(undo);
