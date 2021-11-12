@@ -38,7 +38,7 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
       setStampKeys(stampKeys + 1);
 
       const normalHold = {
-        key: holds.length++,
+        key: stampKeys,
         keyStr: stampKeys.toString(),
         x: (MarkerPositionX - (groupRef.current.x())) * (1 / scale),
         y: (MarkerPositionY - (groupRef.current.y())) * (1 / scale),
@@ -59,7 +59,7 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
       setStampKeys(stampKeys + 1);
 
       const t = {
-        key: holds.length++,
+        key: stampKeys,
         keyStr: stampKeys.toString(),
         x: (MarkerPositionX - (groupRef.current.x())) * (1 / scale),
         y: (MarkerPositionY - (groupRef.current.y())) * (1 / scale),
