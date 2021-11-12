@@ -1,6 +1,6 @@
 import { downloadURI } from "./DownloadUri";
 
-export const downloadCanvas = (canvas:HTMLCanvasElement, maxLength:number, scale: number, name:string) => {
+export const downloadCanvas = (canvas: HTMLCanvasElement, maxLength: number, scale: number, name: string) => {
   const tmp = document.createElement("canvas");
   tmp.width = canvas.width;
   tmp.height = canvas.height;

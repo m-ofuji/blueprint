@@ -114,7 +114,7 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
 
   // 保存
   const onSaveTapped = async () => {
-    // ここの挙動が謎 なぜawaitするとうまくリサイズされるのか
+    // todo なぜawaitするとうまくリサイズされるのか
     await resizeStageToImageSize();
 
     stage.current.toCanvas().toBlob((data: any) => {
@@ -147,6 +147,7 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
 
   const download = (resize: boolean) => {
     if (!stage) return;
+
     resizeStageToImageSize();
     const fixPixelRatio = imageSizeProps.width > MAX_SIDE_LENGTH || imageSizeProps.height > MAX_SIDE_LENGTH;
     const pixelRatio = resize && fixPixelRatio ? MAX_SIDE_LENGTH / Math.max(imageSizeProps.width, imageSizeProps.height) : 1;
@@ -188,11 +189,11 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
   const holdTargetTapped = (evt: KonvaEventObject<Event>) => {
     const selected = stamps.find(x => x.isSelected);
     if (!isIHoldStamp(selected)) return;
-    resizableImage.current.useHold((selected as IHoldStamp).color)
+    resizableImage.current.addCircle((selected as IHoldStamp).color)
   }
 
   const textTargetTapped = (evt: KonvaEventObject<Event>) => {
-    resizableImage.current.setHoldText(holdText);
+    resizableImage.current.addText(holdText);
   }
 
   const undo = () => {
@@ -266,14 +267,14 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
       <div className={'horizontal-container'}>
         {stamps.map((props, i) => <RoundButton {...props}/>)}
       </div>
-
-      <div className={isLefty ? 'undo-and-redo-container is-lefty' : 'undo-and-redo-container'}>
+      <CloseButton className={`close-button ${isLefty ? 'float-left-top': 'float-right-top' }`} onTapped={onCloseTapped}></CloseButton>
+      <DownloadButton className={`download-button${isLefty ? ' is-lefty' : ''}`} onTapped={onDownloadTapped}/>
+      <SaveButton className={`save-button${isLefty ? ' is-lefty' : ''}`} onTapped={onSaveTapped}/>
+      <div className={`undo-and-redo-container${isLefty ? ' is-lefty' : ''}`}>
         <UndoButton key={'undo'} disabled={isUndoEnabled} onTapped={undo}/>
         <RedoButton key={'redo'} disabled={isRedoEnabled} onTapped={redo}/>
       </div>
-      <CloseButton className={isLefty ? 'close-button float-left-top': 'close-button float-right-top'} onTapped={onCloseTapped}></CloseButton>
-      <DownloadButton className={isLefty ? 'download-button is-lefty' : 'download-button'} onTapped={onDownloadTapped}/>
-      <SaveButton className={isLefty ? 'save-button is-lefty' : 'save-button'} onTapped={onSaveTapped}/>
+      
       <input
         key={'file-uploader'}
         onChange={onChange}

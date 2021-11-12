@@ -22,7 +22,7 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
   const [redo, setRedo] = useState<[any, () => void][]>([]);
 
   useImperativeHandle(ref, () => ({
-    useHold: (color: string) => {
+    addCircle: (color: string) => {
       circleRefs.push(createRef<any>());
       setCircleRefs(circleRefs);
       const normalHold = {
@@ -34,11 +34,11 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
       }
       setHolds(holds.concat([normalHold]).filter(x => x));
 
-      const Undo = () => setHolds(old => old.filter(x => x !== normalHold ));
-      setUndo(old => [...old, [normalHold, Undo]]);
+      const undo = () => setHolds(old => old.filter(x => x !== normalHold ));
+      setUndo(old => [...old, [normalHold, undo]]);
       resetRedoAndUndo();
     },
-    setHoldText: (text: string) => {
+    addText: (text: string) => {
       textRefs.push(createRef<any>());
       setTextRefs(textRefs);
       const t = {
@@ -79,27 +79,25 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
       setUndo(undo);
     },
     redo: () => {
-      const last = redo[redo.length - 1];
+      const lastRedo = redo[redo.length - 1];
 
-      if (!last) return;
+      if (!lastRedo) return;
 
-      let undo: () => void;
-      let lastItem = last[0];
+      let undoFunc: () => void;
+      let lastItem = lastRedo[0];
       if (isHoldCircleProps(lastItem)) {
-        undo = () => setHolds(holds.filter(x => x !== lastItem ));
+        undoFunc = () => setHolds(holds.filter(x => x !== lastItem ));
       } else if (isHoldTextProps(lastItem)) {
-        undo = () => setHoldText(texts.filter(x => x !== lastItem));
+        undoFunc = () => setHoldText(texts.filter(x => x !== lastItem));
       }
-      
-      setUndo(old => {
-        old.push([lastItem, undo]);
-        props.updateIsUndoDisabled(old.length <= 0);
-        return old;
-      });
 
-      last[1]();
+      setUndo(old => [...old, [lastItem, undoFunc]]);
+      props.updateIsUndoDisabled(undo.length <= 0);
+
+      // 進む処理
+      lastRedo[1]();
+
       redo.pop();
-
       props.updateIsRedoDisabled(redo.length <= 0);
       setRedo(redo);
     }
@@ -111,6 +109,7 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
     props.updateIsRedoDisabled(true);
   }
 
+  // リサイズ処理
   const OnTouchMove = (e: KonvaEventObject<TouchEvent>) => {
     e.evt.preventDefault();
     const touch1 = e.evt.touches[0];
