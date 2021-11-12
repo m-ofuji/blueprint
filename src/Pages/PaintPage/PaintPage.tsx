@@ -105,8 +105,6 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
           centerY: window.innerHeight,
           width: i.width,
           height: i.height,
-          // imageRotation: 90,
-          // imageY: i.height 
         } 
       });
     }

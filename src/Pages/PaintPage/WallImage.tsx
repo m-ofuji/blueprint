@@ -20,17 +20,31 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
   const [lastCenter, setLastCenter] = useState<{x: number, y: number} | null>(null);
   const [undo, setUndo] = useState<[any, () => void][]>([]);
   const [redo, setRedo] = useState<[any, () => void][]>([]);
+  const [stampKeys, setStampKeys] = useState<number>(0);
+
+  const onCirleDoubleTapped = (keyStr: string) => {
+    setHolds(old => old.filter(x => x.keyStr !== keyStr ));
+  }
+
+  const onTextDoubleTapped = (keyStr: string) => {
+    setHoldText(old => old.filter(x => x.keyStr !== keyStr ));
+  }
 
   useImperativeHandle(ref, () => ({
     addCircle: (color: string) => {
       circleRefs.push(createRef<any>());
       setCircleRefs(circleRefs);
+
+      setStampKeys(stampKeys + 1);
+
       const normalHold = {
         key: holds.length++,
+        keyStr: stampKeys.toString(),
         x: (MarkerPositionX - (groupRef.current.x())) * (1 / scale),
         y: (MarkerPositionY - (groupRef.current.y())) * (1 / scale),
         scale: 1 / scale,
-        color:color
+        color:color,
+        onDoubleTapped: onCirleDoubleTapped
       }
       setHolds(holds.concat([normalHold]).filter(x => x));
 
@@ -41,12 +55,17 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
     addText: (text: string) => {
       textRefs.push(createRef<any>());
       setTextRefs(textRefs);
+
+      setStampKeys(stampKeys + 1);
+
       const t = {
         key: holds.length++,
+        keyStr: stampKeys.toString(),
         x: (MarkerPositionX - (groupRef.current.x())) * (1 / scale),
         y: (MarkerPositionY - (groupRef.current.y())) * (1 / scale),
         scale: 1 / scale,
-        character:text
+        character:text,
+        onDoubleTapped: onTextDoubleTapped
       }
       setHoldText(texts.concat([t]).filter(x => x));
       const Undo = () => setHoldText(old => old.filter(x => x !== t));

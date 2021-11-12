@@ -3,10 +3,13 @@ import { forwardRef } from 'react';
 import { StampTextSize } from '../Constants';
 
 export type HoldTextProps = {
+  key:number,
+  keyStr: string,
   x: number,
   y: number,
   character: string,
-  scale: number | undefined
+  scale: number | undefined,
+  onDoubleTapped?: ((ev: string) => void)
 }
 
 export const isHoldTextProps = (arg: unknown): arg is HoldTextProps =>
@@ -18,6 +21,11 @@ export const isHoldTextProps = (arg: unknown): arg is HoldTextProps =>
     typeof (arg as HoldTextProps).character === 'string';
 
 let HoldTextBase = (props: HoldTextProps, ref: any) => {
+  const onDoubleTapped = () => {
+    if (!props.onDoubleTapped) return;
+    props.onDoubleTapped(props.keyStr);
+  }
+
   return <Text
     scaleX={props.scale}
     scaleY={props.scale}
@@ -30,6 +38,7 @@ let HoldTextBase = (props: HoldTextProps, ref: any) => {
     x={props.x - ((StampTextSize * (props.scale ?? 1) * props.character.length) / 2)}
     y={props.y - StampTextSize * (props.scale ?? 1) / 2}
     draggable={false}
+    onDblTap={onDoubleTapped}
   />
 }
 
