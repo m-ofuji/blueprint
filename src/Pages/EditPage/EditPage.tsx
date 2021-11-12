@@ -36,7 +36,6 @@ const EditPage = ({route, navigator, imgBlob, updateTopos}:
         data: [res],
         createdAt: (new Date().getTime()) / 1000
       });
-      // await ons.notification.toast('トポを保存しました。', {timeout: 2000});
       updateTopos();
       ons.notification.alert({
         title: '保存完了',

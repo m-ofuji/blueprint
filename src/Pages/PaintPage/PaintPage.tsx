@@ -22,7 +22,10 @@ import { SizeProps } from '../../Types/SizeProps';
 
 const PaintPage = ({isLefty, route, navigator, updateTopos}: 
   {isLefty:boolean, route: any, navigator: Navigator, updateTopos: () => void}) => {
-  const sizeProps = {
+    
+    const MAX_SIDE_LENGTH = 750;
+  
+    const sizeProps = {
     offsetX: 0,
     offsetY: 0,
     scaleX: 1,
@@ -48,13 +51,10 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
   const [wallImage, setWallImage] = useState<CanvasImageSource | null>(null);
   const [stageSizeProps, setStageSizeProps] = useState<SizeProps>(sizeProps);
   const [imageSizeProps, setImageSizeProps] = useState<SizeProps>(sizeProps);
-  const [execExport, setExecExport] = useState<boolean>(false);
   const [stamps, setStamps] = useState<IStampButton[]>(initialButton);
-  const [outPutMethod, setOutPutMethod] = useState<string>();
   const [holdText, setHoldText] = useState<string>('S');
   const [isUndoEnabled, setIsUndoEnabled] = useState<boolean>(true);
   const [isRedoEnabled, setIsRedoEnabled] = useState<boolean>(true);
-  const [resizeImage, setResizeImage] = useState<boolean>(false);
   const [initial, setInitial] = useState<string>('msg');
 
   const stage = useRef<any>(null);
@@ -112,11 +112,27 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
     }
   }
 
-  const onSaveTapped = () => {
-    setOutPutMethod('save');
-    HandleExport(false);
+  // 保存
+  const onSaveTapped = async () => {
+    // ここの挙動が謎 なぜawaitするとうまくリサイズされるのか
+    await resizeStageToImageSize();
+
+    stage.current.toCanvas().toBlob((data: any) => {
+      navigator.pushPage({
+        comp: EditPage,
+        props: {
+          key: 'EditPage',
+          navigator: navigator,
+          imgBlob: data,
+          updateTopos: updateTopos
+        }
+      });
+    });
+
+    resetStage();
   }
 
+  // ダウンロード
   const onDownloadTapped = () => {
     ons.openActionSheet({
       cancelable: true,
@@ -125,48 +141,27 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
     }).then((idx: any) => {
       if (idx !== 1 && idx !== 0) return;
       const resize = idx === 1;
-      setOutPutMethod('download');
-      HandleExport(resize);
+      download(resize);
     });
   }
 
-  const HandleExport = (resize: boolean) => {
+  const download = (resize: boolean) => {
     if (!stage) return;
-    // setImageSizeProps((old) => {
-    //   return {...old, 
-    //     imageX: 0,
-    //     imageY: 0,
-    //     imageRotation: 0,
-    //   };
-    // });
-    setStageSizeProps((old) => {return {...old, ...imageSizeProps}});
-    setResizeImage(resize);
-    setStamps(old => old.map(x => {return { ...x, isSelected : false }}));
-    setExecExport(true);
-  };
-
-  const output = () => {
-    if (!execExport || !outPutMethod) return;
-
-    const maxSideLength = 750;
-    const fixPixelRatio = imageSizeProps.width > maxSideLength || imageSizeProps.height > maxSideLength;
-    const pixelRatio = resizeImage && fixPixelRatio ? maxSideLength / Math.max(imageSizeProps.width, imageSizeProps.height) : 1;
+    resizeStageToImageSize();
+    const fixPixelRatio = imageSizeProps.width > MAX_SIDE_LENGTH || imageSizeProps.height > MAX_SIDE_LENGTH;
+    const pixelRatio = resize && fixPixelRatio ? MAX_SIDE_LENGTH / Math.max(imageSizeProps.width, imageSizeProps.height) : 1;
     const uri = stage.current.toDataURL({pixelRatio: pixelRatio});
+    downloadURI(uri, getCurrentTimestamp() + '.png');
+    resetStage();
+  }
 
-    if (outPutMethod === 'download') {
-      downloadURI(uri, getCurrentTimestamp() + '.png');
-      resetStage();
-    } else if (outPutMethod === 'save') {
-      openEditPage();
-      resetStage();
-    }
-  };
+  const resizeStageToImageSize = () => {
+    setStageSizeProps(old => {return {...old, ...imageSizeProps}});
+    setStamps(old => old.map(x => {return { ...x, isSelected : false }}));
+  }
 
   const resetStage = () => {
-    setExecExport(false);
-
     setStamps(old => old.map((x, i) => { return {...x, isSelected: i === 1}}));
-
     setStageSizeProps((old) => {
       return {...old,
         offsetX: 0,
@@ -179,9 +174,7 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
     });
   }
 
-  useEffect(output);
-
-  const activateTarget = (index:number) => {
+  const activateTarget = (index: number) => {
     setStamps(old => old.map((x,i) => {return { ...x, isSelected : i === index }}));
   }
 
@@ -228,26 +221,13 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
     }
   }
 
-  const openEditPage = () => {
-    stage.current.toCanvas().toBlob((data: any) => {
-      navigator.pushPage({
-        comp: EditPage,
-        props: {
-          key: 'EditPage',
-          navigator: navigator,
-          imgBlob: data,
-          updateTopos: updateTopos
-        }
-      });
-    });
-  }
 
   return (
     <Page>
       <Stage 
         key={'stage'}
         className={'image-stage'}
-        {... stageSizeProps}
+        {...stageSizeProps}
         ref={stage}
       >
         <Layer>
