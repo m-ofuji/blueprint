@@ -19,6 +19,7 @@ export const isHoldCircleProps = (arg: unknown): arg is HoldCircleProps =>
 
 let HoldCircleBase = (props: HoldCircleProps, ref: any) => {
   return <Circle
+    onClick={() => console.log('aaa')}
     scaleX={props.scale}
     scaleY={props.scale}
     ref={ref}
