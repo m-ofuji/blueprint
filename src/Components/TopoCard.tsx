@@ -1,10 +1,12 @@
 import { useRef } from "react";
 import ons from "onsenui"
 import { Button } from "react-onsenui";
-import { downloadURI } from "../Common/Functions/DownloadUri";
-import { getCurrentTimestamp } from "../Common/Functions/CurrentTimestamp";
+import { downloadURI } from "../Functions/DownloadUri";
+import { downloadCanvas } from "../Functions/DownloadCanvas";
+import { getCurrentTimestamp } from "../Functions/CurrentTimestamp";
 import { ITopo, TopoDB } from "../DB/TopoDB";
 import { GRADES } from "../Constants/Grades";
+import { MAX_SIDE_LENGTH } from "../Constants/MaxSideLength";
 
 export interface TopoCardProps extends ITopo {
   updateTopos: () => void;
@@ -15,8 +17,33 @@ export const TopoCard = (props: TopoCardProps) => {
 
   const downLoad = () => {
     if (!imageRef) return;
-    const uri = window.URL.createObjectURL(new Blob([props.data[0]], {type: 'image/png'}));
-    downloadURI(uri, getCurrentTimestamp() + '.png');
+    ons.openActionSheet({
+      cancelable: true,
+      title: 'トポ画像をダウンロードしますか？',
+      buttons: ['ダウンロード', '縮小版をダウンロード', 'キャンセル'],
+    }).then((idx: any) => {
+      if (!imageRef.current?.src || idx !== 1 && idx !== 0) return;
+      const resize = idx === 1;
+
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+
+      if (!ctx) return;
+
+      
+      const img = new Image();
+      img.src = imageRef.current?.src;  // 画像のURLを指定
+      img.onload = () => {
+        const width = img.naturalWidth;
+        const height = img.naturalHeight;
+        const fixPixelRatio = width > MAX_SIDE_LENGTH || height > MAX_SIDE_LENGTH;
+        const pixelRatio = resize && fixPixelRatio ? MAX_SIDE_LENGTH / Math.max(width, height) : 1;
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+        ctx.drawImage(img, 0, 0);
+        downloadCanvas(canvas, resize ? props.name + '_min' : props.name, pixelRatio);
+      };
+    });
   }
 
   const deleteTopo = () => {

@@ -1,0 +1,1 @@
+export const MAX_SIDE_LENGTH = 750;

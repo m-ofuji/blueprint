@@ -1,5 +1,3 @@
-import { NumberLiteralType } from 'typescript';
-
 export const GRADES: IGrade[] = [
   { id: 1,  name:'8級' },
   { id: 2,  name:'7級' },

@@ -6,7 +6,6 @@ import { Page } from 'react-onsenui';
 import { KonvaEventObject } from 'konva/lib/Node';
 import { Stage, Layer, Group } from 'react-konva';
 import { WallImage } from './WallImage';
-import { downloadURI } from '../../Common/Functions/DownloadUri';
 import { NormalTarget } from './Targets/NormalTarget';
 import { TextTarget } from './Targets/TextTarget';
 import { RoundButton } from '../../Components/RoundButton';
@@ -16,15 +15,15 @@ import { UndoButton } from './Components/UndoButton';
 import { RedoButton } from './Components/RedoButton';
 import { CloseButton } from '../../Components/CloseButton';
 import { MarkerPositionX, MarkerPositionY } from './Constants';
-import { getCurrentTimestamp } from '../../Common/Functions/CurrentTimestamp'; 
+import { getCurrentTimestamp } from '../../Functions/CurrentTimestamp'; 
+import { downloadURI } from '../../Functions/DownloadUri';
 import { IStampButton, IHoldStamp, ITextStamp, isIHoldStamp, isITextStamp } from '../../Types/StampType';
 import { SizeProps } from '../../Types/SizeProps';
+import { MAX_SIDE_LENGTH } from '../../Constants/MaxSideLength';
 
 const PaintPage = ({isLefty, route, navigator, updateTopos}: 
   {isLefty:boolean, route: any, navigator: Navigator, updateTopos: () => void}) => {
     
-    const MAX_SIDE_LENGTH = 750;
-  
     const sizeProps = {
     offsetX: 0,
     offsetY: 0,
@@ -137,21 +136,15 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
       title: 'トポ画像をダウンロードしますか？',
       buttons: ['ダウンロード', '縮小版をダウンロード', 'キャンセル'],
     }).then((idx: any) => {
-      if (idx !== 1 && idx !== 0) return;
+      if (!stage || (idx !== 1 && idx !== 0)) return;
       const resize = idx === 1;
-      download(resize);
+      resizeStageToImageSize();
+      const fixPixelRatio = imageSizeProps.width > MAX_SIDE_LENGTH || imageSizeProps.height > MAX_SIDE_LENGTH;
+      const pixelRatio = resize && fixPixelRatio ? MAX_SIDE_LENGTH / Math.max(imageSizeProps.width, imageSizeProps.height) : 1;
+      const uri = stage.current.toDataURL({pixelRatio: pixelRatio});
+      downloadURI(uri, getCurrentTimestamp() + '.png');
+      resetStage();
     });
-  }
-
-  const download = (resize: boolean) => {
-    if (!stage) return;
-
-    resizeStageToImageSize();
-    const fixPixelRatio = imageSizeProps.width > MAX_SIDE_LENGTH || imageSizeProps.height > MAX_SIDE_LENGTH;
-    const pixelRatio = resize && fixPixelRatio ? MAX_SIDE_LENGTH / Math.max(imageSizeProps.width, imageSizeProps.height) : 1;
-    const uri = stage.current.toDataURL({pixelRatio: pixelRatio});
-    downloadURI(uri, getCurrentTimestamp() + '.png');
-    resetStage();
   }
 
   const resizeStageToImageSize = () => {
@@ -219,7 +212,6 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
       navigator.popPage();
     }
   }
-
 
   return (
     <Page>

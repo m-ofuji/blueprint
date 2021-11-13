@@ -6,8 +6,6 @@ import { TopoCard } from '../../Components/TopoCard';
 import { GRADES } from '../../Constants/Grades';
 import { RectangleButton, RectangleButtonProps } from '../../Components/RectangleButton';
 
-console.log('top');
-
 const HomePage = ({route, navigator}: {route: any, navigator: Navigator}) => {
   const onGradeClicked = (id: number) => (e: React.MouseEvent<HTMLElement>) => {
     setSearchGrades(old => {
@@ -18,7 +16,7 @@ const HomePage = ({route, navigator}: {route: any, navigator: Navigator}) => {
       return [...newGrades, tapped].sort((a, b) => a.key > b.key ? 1 : -1);
     });
   }
-  
+
   const [topos, setTopos] = useState<ITopo[]>([]);
   const [searchText, setSearchText] = useState<string>('');
   const [searchGrades, setSearchGrades] 
@@ -65,35 +63,38 @@ const HomePage = ({route, navigator}: {route: any, navigator: Navigator}) => {
 
   return (
     <Page key={'root'}>
-      <div className={'search-wrapper'}>
-        <div className='search-container'>
-          <div>
-            <i className={'fas fa-search'}/>
+      {/* <div className={'white-background'}/>
+      <div className={'content'}> */}
+        <div className={'search-wrapper'}>
+          <div className='search-container'>
+            <div>
+              <i className={'fas fa-search'}/>
+            </div>
+            <input type='text' value={searchText} onChange={onSearchTextChange}/>
+            <button className={searchText.length > 0 ? 'search-clear' : 'search-clear hidden'} onClick={onClrearClicked}>
+              <i className={'far fa-times-circle'}/>
+            </button>
           </div>
-          <input type='text' value={searchText} onChange={onSearchTextChange}/>
-          <button className={searchText.length > 0 ? 'search-clear' : 'search-clear hidden'} onClick={onClrearClicked}>
-            <i className={'far fa-times-circle'}/>
-          </button>
+          <div className={'grade-container'}>
+            {searchGrades.map((x, i) => <RectangleButton {...x}/>)}
+          </div>
         </div>
-        <div className={'grade-container'}>
-          {searchGrades.map((x, i) => <RectangleButton {...x}/>)}
-        </div>
-      </div>
 
-      <div className={'topo-list'}>
-        {
-          topos.filter(x => searchFunc(x)).length > 0 ?
-          topos
-            .filter(x => searchFunc(x))
-            .sort((a, b) => a.createdAt > b.createdAt ? -1 : 1)
-            .map((x, i) => <TopoCard key={i} {...x} updateTopos={updateTopos}/>)
-          : <p> トポが見つかりませんでした </p>
-        }
-      </div>
-      <button className={'edit-button'} onClick={openRightPaintPage}>
-        <i className={'fas fa-pen'}/>
-        トポ作成
-      </button>
+        <div className={'topo-list'}>
+          {
+            topos.filter(x => searchFunc(x)).length > 0 ?
+            topos
+              .filter(x => searchFunc(x))
+              .sort((a, b) => a.createdAt > b.createdAt ? -1 : 1)
+              .map((x, i) => <TopoCard key={i} {...x} updateTopos={updateTopos}/>)
+            : <p> トポが見つかりませんでした </p>
+          }
+        </div>
+        <button className={'edit-button'} onClick={openRightPaintPage}>
+          <i className={'fas fa-pen'}/>
+          トポ作成
+        </button>
+      {/* </div> */}
     </Page>
   )
 }

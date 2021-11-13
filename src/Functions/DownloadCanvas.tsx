@@ -1,6 +1,6 @@
 import { downloadURI } from "./DownloadUri";
 
-export const downloadCanvas = (canvas: HTMLCanvasElement, maxLength: number, scale: number, name: string) => {
+export const downloadCanvas = (canvas: HTMLCanvasElement, name: string, scale: number = 1 ) => {
   const tmp = document.createElement("canvas");
   tmp.width = canvas.width;
   tmp.height = canvas.height;
@@ -19,5 +19,5 @@ export const downloadCanvas = (canvas: HTMLCanvasElement, maxLength: number, sca
       tctx?.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, tmp.width, tmp.height);
   }
 
-  downloadURI(tmp.toDataURL('image/png'), 'canvas_' + name);
+  downloadURI(tmp.toDataURL('image/png'), name + '.png');
 }
