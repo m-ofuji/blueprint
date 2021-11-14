@@ -23,7 +23,6 @@ import { MAX_SIDE_LENGTH } from '../../Constants/MaxSideLength';
 
 const PaintPage = ({isLefty, route, navigator, updateTopos}: 
   {isLefty:boolean, route: any, navigator: Navigator, updateTopos: () => void}) => {
-    
     const sizeProps = {
     offsetX: 0,
     offsetY: 0,
@@ -264,7 +263,6 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
         <UndoButton key={'undo'} disabled={isUndoEnabled} onTapped={undo}/>
         <RedoButton key={'redo'} disabled={isRedoEnabled} onTapped={redo}/>
       </div>
-      
       <input
         key={'file-uploader'}
         onChange={onChange}

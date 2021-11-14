@@ -1,9 +1,7 @@
 import { useRef } from "react";
 import ons from "onsenui"
 import { Button } from "react-onsenui";
-import { downloadURI } from "../Functions/DownloadUri";
 import { downloadCanvas } from "../Functions/DownloadCanvas";
-import { getCurrentTimestamp } from "../Functions/CurrentTimestamp";
 import { ITopo, TopoDB } from "../DB/TopoDB";
 import { GRADES } from "../Constants/Grades";
 import { MAX_SIDE_LENGTH } from "../Constants/MaxSideLength";

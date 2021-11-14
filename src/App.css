@@ -76,6 +76,18 @@
   margin-bottom: 100px;
 }
 
+.topo-list p{
+  position: absolute;
+  text-align: center;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  height: 3.2rem;
+  padding: 20px;
+}
+
 .float-left-top {
   position: absolute;
   right: 1em;

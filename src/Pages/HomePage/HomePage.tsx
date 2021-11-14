@@ -82,6 +82,7 @@ const HomePage = ({route, navigator}: {route: any, navigator: Navigator}) => {
 
         <div className={'topo-list'}>
           {
+            topos.length <= 0 ? <p> トポが未作成です<br/>右下のボタンからトポを作成しましょう </p> :
             topos.filter(x => searchFunc(x)).length > 0 ?
             topos
               .filter(x => searchFunc(x))
