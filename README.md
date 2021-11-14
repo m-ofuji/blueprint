@@ -31,6 +31,8 @@ https://blueprint.razor.jp
 
 ・HTML、CSS、TypeScript、React、OnsenUI、Konva、Dixie.js
 
+・srcフォルダ内が実質的なソースコードになります。
+
 ### 〇目標
 指の太いクライマーでも楽々使えるコース作成アプリを作る
 
