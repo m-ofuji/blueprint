@@ -6,6 +6,7 @@
 〇URL：https://blueprint.razor.jp
 
 ※本アプリは、スマートフォンにのみ対応しております。ご確認いただける際は、お手数をおかけし、大変恐縮ですが、下記QRコードをスマートフォンから読み込んでいただけますと幸いです。
+
 ![blueprint_QR](https://user-images.githubusercontent.com/73210592/141669934-e7a549fa-42ae-4d8c-90e1-fd6f55319f69.png)
 
 〇動機
