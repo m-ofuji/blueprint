@@ -443,7 +443,7 @@
 
 .search-container input[type="text"]{
   width: fit-content;
-  margin-left: 20px;
+  margin-left: 25px;
   border: none;
   font-size: 17px;
   width: calc(100% - 50px);
@@ -459,6 +459,7 @@
   background: none;
   position: absolute;
   margin-top: 5px;
+  margin-left: 5px;
 }
 
 .search-container button {

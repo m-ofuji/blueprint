@@ -62,7 +62,7 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
   useLayoutEffect(() => { 
     if (wallImage) return;
 
-    if (ons.platform.isIOSSafari() && fileInputRef.current) {
+    if (ons.platform.isIOS() && fileInputRef.current) {
       fileInputRef.current.click();
       return;
     }
@@ -195,13 +195,14 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
   }
 
   const onCloseTapped = () => {
+    console.log(navigator);
     if (wallImage) {
       ons.notification.confirm({
         title: 'トポ作成',
         message: '画面を閉じてもよろしいですか？\n現在編集中の内容は失われます。',
-        buttonLabels: ons.platform.isIOSSafari() ? ['いいえ', 'はい'] : ['はい', 'いいえ'],
+        buttonLabels: ons.platform.isIOS() ? ['いいえ', 'はい'] : ['はい', 'いいえ'],
         callback: (idx: any) => {
-          const isYes = ons.platform.isIOSSafari() ? idx === 1 : idx === 0;
+          const isYes = ons.platform.isIOS() ? idx === 1 : idx === 0;
           if (isYes) {
             navigator.popPage();
           }

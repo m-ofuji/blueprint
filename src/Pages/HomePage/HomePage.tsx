@@ -1,10 +1,11 @@
 import PaintPage from '../PaintPage/PaintPage';
-import { Navigator, Page } from 'react-onsenui';
+import { Navigator, Page, Splitter, SplitterContent, SplitterSide } from 'react-onsenui';
 import { ITopo, TopoDB } from '../../DB/TopoDB';
 import { useLayoutEffect, useState } from 'react';
 import { TopoCard } from '../../Components/TopoCard';
 import { GRADES } from '../../Constants/Grades';
 import { RectangleButton, RectangleButtonProps } from '../../Components/RectangleButton';
+import SideMenu from './SideMenu'
 
 const HomePage = ({route, navigator}: {route: any, navigator: Navigator}) => {
   const onGradeClicked = (id: number) => (e: React.MouseEvent<HTMLElement>) => {
@@ -17,6 +18,7 @@ const HomePage = ({route, navigator}: {route: any, navigator: Navigator}) => {
     });
   }
 
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [topos, setTopos] = useState<ITopo[]>([]);
   const [searchText, setSearchText] = useState<string>('');
   const [searchGrades, setSearchGrades] 
@@ -44,6 +46,7 @@ const HomePage = ({route, navigator}: {route: any, navigator: Navigator}) => {
         updateTopos: updateTopos
       }
     });
+    console.log(navigator);
   }
 
   const updateTopos = () => {
@@ -61,41 +64,87 @@ const HomePage = ({route, navigator}: {route: any, navigator: Navigator}) => {
     setSearchText('');
   }
 
-  return (
-    <Page key={'root'}>
-      {/* <div className={'white-background'}/>
-      <div className={'content'}> */}
-        <div className={'search-wrapper'}>
-          <div className='search-container'>
-            <div>
-              <i className={'fas fa-search'}/>
-            </div>
-            <input type='text' value={searchText} onChange={onSearchTextChange}/>
-            <button className={searchText.length > 0 ? 'search-clear' : 'search-clear hidden'} onClick={onClrearClicked}>
-              <i className={'far fa-times-circle'}/>
-            </button>
-          </div>
-          <div className={'grade-container'}>
-            {searchGrades.map((x, i) => <RectangleButton {...x}/>)}
-          </div>
-        </div>
+  const togggleMenuOpen = () => {
+    setIsMenuOpen(!isMenuOpen);
+  }
 
-        <div className={'topo-list'}>
-          {
-            topos.length <= 0 ? <p> トポが未作成です<br/>右下のボタンからトポを作成しましょう </p> :
-            topos.filter(x => searchFunc(x)).length > 0 ?
-            topos
-              .filter(x => searchFunc(x))
-              .sort((a, b) => a.createdAt > b.createdAt ? -1 : 1)
-              .map((x, i) => <TopoCard key={i} {...x} updateTopos={updateTopos}/>)
-            : <p> トポが見つかりませんでした </p>
-          }
+  return (
+    // <Splitter>
+    //   <SplitterSide
+    //     side="left"
+    //     isOpen={isMenuOpen}
+    //     width={250}
+    //     collapse='portrait'>
+    //     <SideMenu/>
+    //   </SplitterSide>
+    //   <SplitterContent>
+    //     <Page key={'root'}>
+    //       <div className={'search-wrapper'}>
+    //         <div className='search-container'>
+    //           <div onClick={togggleMenuOpen}>
+    //             <i className={'fas fa-bars'}/>
+    //           </div>
+    //           <input placeholder={'課題名で検索'} type='text' value={searchText} onChange={onSearchTextChange}/>
+    //           <button className={searchText.length > 0 ? 'search-clear' : 'search-clear hidden'} onClick={onClrearClicked}>
+    //             <i className={'far fa-times-circle'}/>
+    //           </button>
+    //         </div>
+    //         <div className={'grade-container'}>
+    //           {searchGrades.map((x, i) => <RectangleButton {...x}/>)}
+    //         </div>
+    //       </div>
+
+    //       <div className={'topo-list'}>
+    //         {
+    //           topos.length <= 0 ? <p> トポが未作成です<br/>右下のボタンからトポを作成しましょう </p> :
+    //           topos.filter(x => searchFunc(x)).length > 0 ?
+    //           topos
+    //             .filter(x => searchFunc(x))
+    //             .sort((a, b) => a.createdAt > b.createdAt ? -1 : 1)
+    //             .map((x, i) => <TopoCard key={i} {...x} updateTopos={updateTopos}/>)
+    //           : <p> トポが見つかりませんでした </p>
+    //         }
+    //       </div>
+    //       <button className={'edit-button'} onClick={openRightPaintPage}>
+    //         <i className={'fas fa-pen'}/>
+    //         トポ作成
+    //       </button>
+    //     </Page>
+    //   </SplitterContent>
+    // </Splitter>
+
+
+    <Page key={'root'}>
+      <div className={'search-wrapper'}>
+        <div className='search-container'>
+          <div>
+            <i className={'fas fa-search'}/>
+          </div>
+          <input type='text' value={searchText} onChange={onSearchTextChange}/>
+          <button className={searchText.length > 0 ? 'search-clear' : 'search-clear hidden'} onClick={onClrearClicked}>
+            <i className={'far fa-times-circle'}/>
+          </button>
         </div>
-        <button className={'edit-button'} onClick={openRightPaintPage}>
-          <i className={'fas fa-pen'}/>
-          トポ作成
-        </button>
-      {/* </div> */}
+        <div className={'grade-container'}>
+          {searchGrades.map((x, i) => <RectangleButton {...x}/>)}
+        </div>
+      </div>
+
+      <div className={'topo-list'}>
+        {
+          topos.length <= 0 ? <p> トポが未作成です<br/>右下のボタンからトポを作成しましょう </p> :
+          topos.filter(x => searchFunc(x)).length > 0 ?
+          topos
+            .filter(x => searchFunc(x))
+            .sort((a, b) => a.createdAt > b.createdAt ? -1 : 1)
+            .map((x, i) => <TopoCard key={i} {...x} updateTopos={updateTopos}/>)
+          : <p> トポが見つかりませんでした </p>
+        }
+      </div>
+      <button className={'edit-button'} onClick={openRightPaintPage}>
+        <i className={'fas fa-pen'}/>
+        トポ作成
+      </button>
     </Page>
   )
 }
