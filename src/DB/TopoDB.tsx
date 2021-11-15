@@ -1,5 +1,5 @@
 import Dexie from 'dexie';
-// import {exportdb} from 
+import {importDB, exportDB, importInto, peakImportFile} from "dexie-export-import";
 
 export class TopoDB extends Dexie {
   Topos: Dexie.Table<ITopo, number>;
@@ -22,6 +22,9 @@ export class TopoDB extends Dexie {
     this.Topos.delete(id);
   }
 
+  exportTopos = async () => {
+    return await exportDB(this);
+  }
 }
 
 export interface ITopo {
