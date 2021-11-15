@@ -1,7 +1,7 @@
 import ons from 'onsenui'
 import EditPage from '../EditPage/EditPage';
 import { Navigator } from 'react-onsenui';
-import { createRef, ChangeEvent, useState, useRef, useEffect, useLayoutEffect} from 'react';
+import { createRef, ChangeEvent, useState, useRef, useLayoutEffect} from 'react';
 import { Page } from 'react-onsenui';
 import { KonvaEventObject } from 'konva/lib/Node';
 import { Stage, Layer, Group } from 'react-konva';
@@ -195,7 +195,7 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
   }
 
   const onCloseTapped = () => {
-    console.log(navigator);
+    // console.log(navigator);
     if (wallImage) {
       ons.notification.confirm({
         title: 'トポ作成',
@@ -204,11 +204,14 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
         callback: (idx: any) => {
           const isYes = ons.platform.isIOS() ? idx === 1 : idx === 0;
           if (isYes) {
+            console.log(navigator);
+
             navigator.popPage();
           }
         }
       });
     } else {
+      console.log(navigator);
       navigator.popPage();
     }
   }

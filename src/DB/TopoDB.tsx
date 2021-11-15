@@ -1,25 +1,27 @@
-import Dexie from "dexie";
+import Dexie from 'dexie';
+// import {exportdb} from 
 
 export class TopoDB extends Dexie {
-  TopoImages: Dexie.Table<ITopo, number>;
+  Topos: Dexie.Table<ITopo, number>;
   
   constructor() {  
     super('TopoDB');
 
     this.version(1).stores({
-      TopoImages: '++id, data',
+      Topos: '++id, data',
     });
 
-    this.TopoImages = this.table('TopoImages');
+    this.Topos = this.table('Topos');
   }
 
   save = (topo: ITopo) => {
-    this.TopoImages.put(topo);
+    this.Topos.put(topo);
   }
 
   deleteTopo = (id: number) => {
-    this.TopoImages.delete(id);
+    this.Topos.delete(id);
   }
+
 }
 
 export interface ITopo {

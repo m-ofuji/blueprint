@@ -20,7 +20,7 @@ export const TopoCard = (props: TopoCardProps) => {
       title: 'トポ画像をダウンロードしますか？',
       buttons: ['ダウンロード', '縮小版をダウンロード', 'キャンセル'],
     }).then((idx: any) => {
-      if (!imageRef.current?.src || idx !== 1 && idx !== 0) return;
+      if (!imageRef.current?.src || (idx !== 1 && idx !== 0)) return;
       const resize = idx === 1;
 
       const canvas = document.createElement('canvas');
@@ -67,7 +67,7 @@ export const TopoCard = (props: TopoCardProps) => {
 
   return (
     <div className={'topo-card'}>
-      <img ref={imageRef} src={window.URL.createObjectURL(new Blob([props.data[0]], {type: 'image/png'}))} onClick={openImage}/>
+      <img ref={imageRef} alt={'画像の読み込みに失敗しました'} src={window.URL.createObjectURL(new Blob([props.data[0]], {type: 'image/png'}))} onClick={openImage}/>
       <div className={'topo-card-data'}>
         <div className={'topo-card-title-container'}>
           <div className={'topo-card-title'}>{props.name}</div>

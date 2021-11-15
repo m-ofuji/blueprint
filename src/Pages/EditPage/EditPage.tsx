@@ -65,7 +65,7 @@ const EditPage = ({route, navigator, imgBlob, updateTopos}:
       <div id={'edit-container'}>
         <h3 className={'page-title'}><i className={'fas fa-pen'}/>課題作成</h3>
         <form id={'edit-form'}>
-          <img className={'edit-image'} src={window.URL.createObjectURL(imgBlob)} onClick={openImage}/>
+          <img className={'edit-image'} src={window.URL.createObjectURL(imgBlob)} alt={'画像の読み込みに失敗しました'} onClick={openImage}/>
           <p className={'edit-title'}>課題名</p>
           <Input className='edit-input' onChange={onTitleChanged}/>
           <p className={'edit-title'}>設定者</p>

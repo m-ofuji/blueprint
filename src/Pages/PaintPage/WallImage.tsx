@@ -1,6 +1,5 @@
 import React, { createRef, useState } from 'react';
 import { Image, Group } from 'react-konva';
-import ons from 'onsenui';
 import { HoldCircleProps, HoldCircle, isHoldCircleProps } from './Holds/HoldCircle';
 import { HoldTextProps, HoldText, isHoldTextProps } from './Holds/HoldText';
 import { useImperativeHandle, forwardRef } from 'react';
