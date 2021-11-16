@@ -120,7 +120,12 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
           key: 'EditPage',
           navigator: navigator,
           imgBlob: data,
-          updateTopos: updateTopos
+          updateTopos: updateTopos,
+          onSaved: async () => {
+            updateTopos();
+            await navigator.popPage({animation: 'none'});
+            await navigator.popPage({animation: 'none'});
+          }
         }
       });
     });
@@ -195,7 +200,6 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
   }
 
   const onCloseTapped = () => {
-    // console.log(navigator);
     if (wallImage) {
       ons.notification.confirm({
         title: 'トポ作成',
@@ -204,8 +208,6 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
         callback: (idx: any) => {
           const isYes = ons.platform.isIOS() ? idx === 1 : idx === 0;
           if (isYes) {
-            console.log(navigator);
-
             navigator.popPage();
           }
         }

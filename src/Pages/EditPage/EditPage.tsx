@@ -6,8 +6,8 @@ import { CloseButton } from '../../Components/CloseButton';
 import { TopoDB } from '../../DB/TopoDB';
 import { GRADES } from '../../Constants/Grades';
 
-const EditPage = ({route, navigator, imgBlob, updateTopos}:
-  {route: any, navigator: Navigator, imgBlob:Blob, updateTopos: () => void}) => {
+const EditPage = ({route, navigator, imgBlob, onSaved}:
+  {route: any, navigator: Navigator, imgBlob:Blob, onSaved?: () => void}) => {
 
   const [title, setTitle] = useState<string>();
   const [setter, setSetter] = useState<string>();
@@ -36,13 +36,14 @@ const EditPage = ({route, navigator, imgBlob, updateTopos}:
         data: [res],
         createdAt: (new Date().getTime()) / 1000
       });
-      updateTopos();
       ons.notification.alert({
         title: '保存完了',
         message: 'トポを保存しました。',
         buttonLabels: ['OK'],
-        callback: () => {
-          navigator.popPage();
+        callback: async () => {
+          if (onSaved) {
+            onSaved();
+          }   
         }
       });
     }

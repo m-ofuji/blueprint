@@ -1,3 +1,4 @@
+
 import PaintPage from '../PaintPage/PaintPage';
 import { Navigator, Page } from 'react-onsenui';
 import { ITopo, TopoDB } from '../../DB/TopoDB';
@@ -7,7 +8,6 @@ import { GRADES } from '../../Constants/Grades';
 import { RectangleButton, RectangleButtonProps } from '../../Components/RectangleButton';
 
 const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigator, openMenu:() => void}) => {
-  console.log(openMenu);
   const onGradeClicked = (id: number) => (e: React.MouseEvent<HTMLElement>) => {
     setSearchGrades(old => {
       const tapped = old.find(x => x.key === id);
