@@ -1,5 +1,5 @@
 import Dexie from 'dexie';
-import {importDB, exportDB, importInto, peakImportFile} from "dexie-export-import";
+import {exportDB} from "dexie-export-import";
 
 export class TopoDB extends Dexie {
   Topos: Dexie.Table<ITopo, number>;

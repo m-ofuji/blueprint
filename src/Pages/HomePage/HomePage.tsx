@@ -45,7 +45,6 @@ const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigato
         updateTopos: updateTopos
       }
     });
-    console.log(navigator);
   }
 
   const updateTopos = () => {
