@@ -62,6 +62,7 @@ function registerValidSW(swUrl: string, config?: Config) {
     .register(swUrl)
     .then((registration) => {
       if (registration.waiting && config && config.onUpdate) {
+        console.log('on update');
         config.onUpdate(registration);
       }
       registration.onupdatefound = () => {
