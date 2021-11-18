@@ -6,6 +6,7 @@ const SideMenu = () => {
   const exportTopo = async () => {
     const db = new TopoDB();
     const blob = await db.exportTopos();
+    alert(blob);
     downloadBlob(blob);
   }
 

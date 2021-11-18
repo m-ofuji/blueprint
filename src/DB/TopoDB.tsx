@@ -25,8 +25,9 @@ export class TopoDB extends Dexie {
   exportTopos = async () => {
     return await exportDB(this, {
       filter : (table, value) => { return table === 'Topos' },
-      progressCallback: (progress) => 
-      { 
+      progressCallback: (progress) => {
+        console.log(progress.completedRows);
+        console.log(progress.totalRows);
         if (progress?.totalRows) {
           console.log((progress.completedRows / progress.totalRows) * 100);
         }
