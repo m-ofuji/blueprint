@@ -5,6 +5,7 @@ import { downloadCanvas } from "../Functions/DownloadCanvas";
 import { ITopo, TopoDB } from "../DB/TopoDB";
 import { GRADES } from "../Constants/Grades";
 import { MAX_SIDE_LENGTH } from "../Constants/MaxSideLength";
+import { resizeCanvas } from "../Functions/ResizeCanvas";
 
 export interface TopoCardProps extends ITopo {
   updateTopos: () => void;
@@ -75,9 +76,9 @@ export const TopoCard = (props: TopoCardProps) => {
     ons.notification.confirm({
       title: 'トポ削除',
       message: '削除したトポは復元できません。\nトポを削除してよろしいですか。',
-      buttonLabels: ons.platform.isIOSSafari() ? ['いいえ', 'はい'] : ['はい', 'いいえ'],
+      buttonLabels: ons.platform.isIOS() ? ['いいえ', 'はい'] : ['はい', 'いいえ'],
       callback: (idx: any) => {
-        const isYes = ons.platform.isIOSSafari() ? idx === 1 : idx === 0;
+        const isYes = ons.platform.isIOS() ? idx === 1 : idx === 0;
         if (isYes && props.id !== undefined) {
           const db = new TopoDB();
           db.deleteTopo(props.id);
