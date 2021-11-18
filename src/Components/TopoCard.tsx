@@ -20,6 +20,7 @@ export const TopoCard = (props: TopoCardProps) => {
       title: 'どの画像をダウンロードしますか？',
       buttons: ['元のサイズ', '元のサイズ（課題名・作成日・グレードあり）', '縮小版',　'縮小版（課題名・作成日・グレードあり）', 'キャンセル'],
     }).then((idx: any) => {
+      if (idx < 0) return;
       if (!imageRef.current?.src) return;
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
