@@ -1,5 +1,5 @@
 import Dexie from 'dexie';
-import {exportDB} from "dexie-export-import";
+import {exportDB} from 'dexie-export-import';
 
 export class TopoDB extends Dexie {
   Topos: Dexie.Table<ITopo, number>;
@@ -23,7 +23,16 @@ export class TopoDB extends Dexie {
   }
 
   exportTopos = async () => {
-    return await exportDB(this);
+    return await exportDB(this, {
+      filter : (table, value) => { return table === 'Topos' },
+      progressCallback: (progress) => 
+      { 
+        if (progress?.totalRows) {
+          console.log((progress.completedRows / progress.totalRows) * 100);
+        }
+        return true; 
+      }
+    });
   }
 }
 
