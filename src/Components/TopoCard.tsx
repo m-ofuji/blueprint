@@ -17,28 +17,54 @@ export const TopoCard = (props: TopoCardProps) => {
     if (!imageRef) return;
     ons.openActionSheet({
       cancelable: true,
-      title: 'トポ画像をダウンロードしますか？',
-      buttons: ['ダウンロード', '縮小版をダウンロード', 'キャンセル'],
+      title: 'どの画像をダウンロードしますか？',
+      buttons: ['元のサイズ', '元のサイズ（課題名・作成日・グレードあり）', '縮小版',　'縮小版（課題名・作成日・グレードあり）', 'キャンセル'],
     }).then((idx: any) => {
-      if (!imageRef.current?.src || (idx !== 1 && idx !== 0)) return;
-      const resize = idx === 1;
-
+      if (!imageRef.current?.src) return;
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
 
       if (!ctx) return;
 
-      
       const img = new Image();
       img.src = imageRef.current?.src;  // 画像のURLを指定
       img.onload = () => {
-        const width = img.naturalWidth;
-        const height = img.naturalHeight;
-        const fixPixelRatio = width > MAX_SIDE_LENGTH || height > MAX_SIDE_LENGTH;
-        const pixelRatio = resize && fixPixelRatio ? MAX_SIDE_LENGTH / Math.max(width, height) : 1;
-        canvas.width = img.naturalWidth;
-        canvas.height = img.naturalHeight;
+
+        const resize = idx === 2 || idx === 3;
+        const printInfo = idx === 1 || idx === 3;  
+
+        const imgWidth = img.naturalWidth;
+        const imgHeight = img.naturalHeight;
+        const fixPixelRatio = imgWidth > MAX_SIDE_LENGTH || imgHeight > MAX_SIDE_LENGTH;
+        const pixelRatio = resize && fixPixelRatio ? MAX_SIDE_LENGTH / Math.max(imgWidth, imgHeight) : 1;
+
+        const fontSize = 32;
+        const padding = 8;
+
+        const canvasWidth = imgWidth;
+        const canvasHeight = printInfo ? imgHeight + (fontSize * 2) + (padding * 3) : imgHeight;
+
+        canvas.width = canvasWidth;
+        canvas.height = canvasHeight;
+
+        if (printInfo) {
+          // 背景色
+          ctx.fillStyle = '#004898';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+          // トポ情報
+          ctx.font = fontSize.toString() + 'px sans-serif';
+          ctx.fillStyle = '#fafafa';
+          ctx.textBaseline = 'top';
+          ctx.textAlign = 'left';
+          ctx.fillText(props.name, padding, imgHeight + padding);
+          ctx.fillText(new Date(props.createdAt * 1000).toLocaleDateString(), padding, imgHeight + fontSize + (padding * 2));
+          ctx.fillText(GRADES.find(x => x.id === props.grade)?.name ?? '', imgWidth - fontSize * 2, imgHeight + (fontSize / 2) + (padding * 2));
+        }
+
+        // 背景画像
         ctx.drawImage(img, 0, 0);
+
         downloadCanvas(canvas, resize ? props.name + '_min' : props.name, pixelRatio);
       };
     });
