@@ -67,7 +67,10 @@ export const TopoCard = (props: TopoCardProps) => {
         // 背景画像
         ctx.drawImage(img, 0, 0);
 
-        downloadCanvas(canvas, resize ? props.name + '_min' : props.name, pixelRatio);
+        const minSuf = resize ? '_min' : '';
+        const infoSuf = printInfo ? '_info' : '';
+
+        downloadCanvas(canvas, props.name + minSuf + infoSuf, pixelRatio);
       };
     });
   }

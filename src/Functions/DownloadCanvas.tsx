@@ -14,9 +14,9 @@ export const downloadCanvas = (canvas: HTMLCanvasElement, name: string, scale: n
   const diffHeight = (canvas.height - (canvas.height * scale)) / resizeCount;
 
   for (let i = 0; i < resizeCount; i++) {
-      tmp.width = canvas.width - diffWidth * (i + 1);
-      tmp.height = canvas.height - diffHeight * (i + 1);
-      tctx?.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, tmp.width, tmp.height);
+    tmp.width = canvas.width - diffWidth * (i + 1);
+    tmp.height = canvas.height - diffHeight * (i + 1);
+    tctx?.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, tmp.width, tmp.height);
   }
 
   downloadURI(tmp.toDataURL('image/png'), name + '.png');
