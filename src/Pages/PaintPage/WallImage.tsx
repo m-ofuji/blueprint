@@ -18,8 +18,6 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
   const [scale, setScale] = useState(1);
   const [lastDist, setLastDist] = useState(0);
   const [lastCenter, setLastCenter] = useState<{x: number, y: number} | null>(null);
-  const [undo, setUndo] = useState<[any, () => void][]>([]);
-  const [redo, setRedo] = useState<[any, () => void][]>([]);
   const [stampKeys, setStampKeys] = useState<number>(0);
 
   const onCirleDoubleTapped = (keyStr: string) => {
@@ -47,10 +45,6 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
         onDoubleTapped: onCirleDoubleTapped
       }
       setHolds(holds.concat([normalHold]).filter(x => x));
-
-      const undo = () => setHolds(old => old.filter(x => x !== normalHold ));
-      setUndo(old => [...old, [normalHold, undo]]);
-      resetRedoAndUndo();
     },
     addText: (text: string) => {
       textRefs.push(createRef<any>());
@@ -68,59 +62,8 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
         onDoubleTapped: onTextDoubleTapped
       }
       setHoldText(texts.concat([t]).filter(x => x));
-      const Undo = () => setHoldText(old => old.filter(x => x !== t));
-      setUndo(old => [...old, [t, Undo]]);
-      resetRedoAndUndo();
-    },
-    undo: () => {
-      const lastUndo = undo[undo.length - 1];
-
-      if (!lastUndo) return;
-
-      const lastItem = lastUndo[0];
-      if (isHoldCircleProps(lastItem)) {
-        setRedo(old => [...old, [lastItem, () => setHolds(old => old.concat([lastItem]).filter(x => x))]]);
-      } else if (isHoldTextProps(lastItem)) {
-        setRedo(old => [...old, [lastItem, () => setHoldText(old => old.concat([lastItem]).filter(x => x))]]);
-      }
-
-      props.updateIsRedoDisabled(redo.length <= 0);
-
-      // 戻る処理
-      lastUndo[1]();
-
-      undo.pop();
-      props.updateIsUndoDisabled(undo.length <= 0);
-      setUndo(undo);
-    },
-    redo: () => {
-      const lastRedo = redo[redo.length - 1];
-
-      if (!lastRedo) return;
-
-      const lastItem = lastRedo[0];
-      if (isHoldCircleProps(lastItem)) {
-        setUndo(old => [...old, [lastItem, () => setHolds(holds.filter(x => x !== lastItem ))]]);
-      } else if (isHoldTextProps(lastItem)) {
-        setUndo(old => [...old, [lastItem, () => setHoldText(texts.filter(x => x !== lastItem))]]);
-      }
-
-      props.updateIsUndoDisabled(undo.length <= 0);
-
-      // 進む処理
-      lastRedo[1]();
-
-      redo.pop();
-      props.updateIsRedoDisabled(redo.length <= 0);
-      setRedo(redo);
     }
   }));
-
-  const resetRedoAndUndo = () => {
-    props.updateIsUndoDisabled(false);
-    setRedo([]);
-    props.updateIsRedoDisabled(true);
-  }
 
   // リサイズ処理
   const OnTouchMove = (e: KonvaEventObject<TouchEvent>) => {

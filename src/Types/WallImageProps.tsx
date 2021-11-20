@@ -11,6 +11,4 @@ export type WallImageProps = {
   imageX?: number,
   imageY?: number,
   updateSizeProps: React.Dispatch<React.SetStateAction<SizeProps>>;
-  updateIsUndoDisabled: React.Dispatch<React.SetStateAction<boolean>>;
-  updateIsRedoDisabled: React.Dispatch<React.SetStateAction<boolean>>;
 }

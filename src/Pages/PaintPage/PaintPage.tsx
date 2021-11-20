@@ -11,8 +11,6 @@ import { TextTarget } from './Targets/TextTarget';
 import { RoundButton } from '../../Components/RoundButton';
 import { DownloadButton } from './Components/DownloadButton';
 import { SaveButton } from './Components/SaveButton';
-import { UndoButton } from './Components/UndoButton';
-import { RedoButton } from './Components/RedoButton';
 import { CloseButton } from '../../Components/CloseButton';
 import { MarkerPositionX, MarkerPositionY } from './Constants';
 import { getCurrentTimestamp } from '../../Functions/CurrentTimestamp'; 
@@ -51,8 +49,6 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
   const [imageSizeProps, setImageSizeProps] = useState<SizeProps>(sizeProps);
   const [stamps, setStamps] = useState<IStampButton[]>(initialButton);
   const [holdText, setHoldText] = useState<string>('S');
-  const [isUndoEnabled, setIsUndoEnabled] = useState<boolean>(true);
-  const [isRedoEnabled, setIsRedoEnabled] = useState<boolean>(true);
   const [initial, setInitial] = useState<string>('msg');
 
   const stage = useRef<any>(null);
@@ -191,14 +187,6 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
     resizableImage.current.addText(holdText);
   }
 
-  const undo = () => {
-    resizableImage.current.undo();
-  }
-
-  const redo = () => {
-    resizableImage.current.redo();
-  }
-
   const onCloseTapped = () => {
     if (wallImage) {
       ons.notification.confirm({
@@ -238,8 +226,6 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
               imageY={imageSizeProps.imageY}
               imageRotation={imageSizeProps.imageRotation}
               updateSizeProps={setImageSizeProps}
-              updateIsRedoDisabled={setIsRedoEnabled}
-              updateIsUndoDisabled={setIsUndoEnabled}
             />
           </Group>
           <NormalTarget
@@ -265,10 +251,6 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
       <CloseButton className={`close-button ${isLefty ? 'float-left-top': 'float-right-top' }`} onTapped={onCloseTapped}></CloseButton>
       <DownloadButton className={`download-button${isLefty ? ' is-lefty' : ''}`} onTapped={onDownloadTapped}/>
       <SaveButton className={`save-button${isLefty ? ' is-lefty' : ''}`} onTapped={onSaveTapped}/>
-      <div className={`undo-and-redo-container${isLefty ? ' is-lefty' : ''}`}>
-        <UndoButton key={'undo'} disabled={isUndoEnabled} onTapped={undo}/>
-        <RedoButton key={'redo'} disabled={isRedoEnabled} onTapped={redo}/>
-      </div>
       <input
         key={'file-uploader'}
         onChange={onChange}
