@@ -6,6 +6,7 @@ import { useLayoutEffect, useState } from 'react';
 import { TopoCard } from '../../Components/TopoCard';
 import { GRADES } from '../../Constants/Grades';
 import { RectangleButton, RectangleButtonProps } from '../../Components/RectangleButton';
+import EditPage from '../EditPage/EditPage';
 
 const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigator, openMenu:() => void}) => {
   const onGradeClicked = (id: number) => (e: React.MouseEvent<HTMLElement>) => {
@@ -17,6 +18,31 @@ const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigato
       return [...newGrades, tapped].sort((a, b) => a.key > b.key ? 1 : -1);
     });
   }
+
+  // history イベントの監視
+  window.addEventListener('popstate', function (e) {
+    // if (isHistoryPush) {
+      alert('navipage ブラウザでの戻るボタンは禁止されております。');
+      window.history.pushState(null, '');
+    // }
+  }, false);
+
+  // ons.ready(() => {
+  //   ons.disableDeviceBackButtonHandler();
+  //   document.addEventListener("backbutton", function(){
+  //     console.log('back button');
+  //   }, false);
+  // });
+  // ons.ready(() => {
+  //   ons.enableDeviceBackButtonHandler();
+  //   console.log('set back button homepage');
+  //   ons.setDefaultDeviceBackButtonListener(() => {
+  //     console.log('back button pressed');
+  //     if (navigator?.pages.length > 0) {
+  //       navigator.popPage();
+  //     }
+  //   });
+  // });
 
   const [topos, setTopos] = useState<ITopo[]>([]);
   const [searchText, setSearchText] = useState<string>('');
@@ -62,6 +88,21 @@ const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigato
     setSearchText('');
   }
 
+  const openEditPage = (topo: ITopo) => () => {
+    navigator.pushPage({
+      comp: EditPage,
+      props: {
+        key: 'EditPage',
+        navigator: navigator,
+        ...topo,
+        onSaved: async () => {
+          updateTopos();
+          await navigator.popPage({animation: 'none'});
+        }
+      }
+    });
+  }
+
   return (
     <Page key={'root'}>
       <div className={'search-wrapper'}>
@@ -86,7 +127,7 @@ const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigato
           topos
             .filter(x => searchFunc(x))
             .sort((a, b) => a.createdAt > b.createdAt ? -1 : 1)
-            .map((x, i) => <TopoCard key={i} {...x} updateTopos={updateTopos}/>)
+            .map((x, i) => <TopoCard key={i} {...x} updateTopos={updateTopos} onEditTapped={openEditPage(x)}/>)
           : <p> トポが見つかりませんでした </p>
         }
       </div>

@@ -1,10 +1,10 @@
-import { downloadURI } from "./DownloadUri";
+import { downloadURI } from './DownloadUri';
 
 export const downloadCanvas = (canvas: HTMLCanvasElement, name: string, scale: number = 1 ) => {
   const tmp = document.createElement("canvas");
   tmp.width = canvas.width;
   tmp.height = canvas.height;
-  const tctx = tmp.getContext("2d");
+  const tctx = tmp.getContext('2d');
   tctx?.drawImage(canvas, 0, 0);
 
   // 何回に分けてリサイズするか

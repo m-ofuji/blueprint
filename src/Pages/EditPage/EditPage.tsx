@@ -1,64 +1,80 @@
 import ons from 'onsenui';
 import { Navigator } from 'react-onsenui';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useRef, useState } from 'react';
 import { Page, Input, Select } from 'react-onsenui';
 import { CloseButton } from '../../Components/CloseButton';
 import { TopoDB } from '../../DB/TopoDB';
 import { GRADES } from '../../Constants/Grades';
+import { arrayBufferToUrl } from '../../Functions/ArraybufferToUrl';
 
-const EditPage = ({route, navigator, imgBlob, onSaved}:
-  {route: any, navigator: Navigator, imgBlob:Blob, onSaved?: () => void}) => {
+export interface EditPageProps {
+  route: any,
+  navigator: Navigator,
+  id?: number;
+  name?: string;
+  setter?: string | undefined;
+  grade?: number;
+  data?: ArrayBuffer[];
+  createdAt?: number;
+  onSaved?: () => void
+}
 
-  const [title, setTitle] = useState<string>();
-  const [setter, setSetter] = useState<string>();
-  const [grade, setGrade] = useState<number>(1);
+const EditPage = (props: EditPageProps) => {
 
-  const saveTopo = () => {
+  const [title, setTitle] = useState<string>(props.name ?? '');
+  const [setter, setSetter] = useState<string>(props.setter ?? '');
+  const [grade, setGrade] = useState<number>(props.grade ?? 1);
+
+  const validate = () => {
     if (!title) {
       alert('課題名は必須項目です。');
-      return;
+      return false;
     }
 
-    if (!grade) {
+    if (!setter) {
       alert('グレードは必須項目です。');
-      return;
+      return false;
     }
 
-    const fr = new FileReader()
-    fr.onload = async eve => {
-      const res = fr.result;
-      if (!res) return;
-      const db = new TopoDB();
-      db.save({
-        name: title,
-        grade: Number(grade),
-        setter: setter,
-        data: [res],
-        createdAt: (new Date().getTime()) / 1000
-      });
-      ons.notification.alert({
-        title: '保存完了',
-        message: 'トポを保存しました。',
-        buttonLabels: ['OK'],
-        callback: async () => {
-          if (onSaved) {
-            onSaved();
-          }   
-        }
-      });
+    if (!props.data || props.data.length < 0) {
+      alert('課題画像は必須項目です。');
+      return false;
     }
-    fr.onerror = eve => {
-      alert('保存に失敗しました。');
-    }
-    fr.readAsArrayBuffer(imgBlob);
+
+    return true;
   }
 
-  const onCloseTapped = () => navigator.popPage();
+  const saveTopo = () => {
+    if (!validate()) return;
+
+    const db = new TopoDB();
+
+    db.save({
+      id:props.id,
+      name: title,
+      grade: Number(grade),
+      setter: setter,
+      data: props.data ?? [],
+      createdAt: (new Date().getTime()) / 1000
+    });
+    ons.notification.alert({
+      title: '保存完了',
+      message: 'トポを保存しました。',
+      buttonLabels: ['OK'],
+      callback: async () => {
+        if (props.onSaved) {
+          props.onSaved();
+        }
+      }
+    });
+  }
+
+  const onCloseTapped = () => props.navigator.popPage();
 
   const onTitleChanged = (e: ChangeEvent<any>) => setTitle(e.target.value);
   const onSetterChanged = (e: ChangeEvent<any>) => setSetter(e.target.value);
   const onGradeChanged = (e: ChangeEvent<any>) => setGrade(e.target.value);
-  const openImage = () => window.open(window.URL.createObjectURL(imgBlob));
+  const openImage = (url: string) => () => window.open(url);
 
   return (
     <Page className={'edit-page'}>
@@ -66,13 +82,18 @@ const EditPage = ({route, navigator, imgBlob, onSaved}:
       <div id={'edit-container'}>
         <h3 className={'page-title'}><i className={'fas fa-pen'}/>課題作成</h3>
         <form id={'edit-form'}>
-          <img className={'edit-image'} src={window.URL.createObjectURL(imgBlob)} alt={'画像の読み込みに失敗しました'} onClick={openImage}/>
+          {
+            props.data?.map((x, idx) => {
+              const imgUrl = arrayBufferToUrl(x);
+              return <img key={idx} className={'edit-image'} src={imgUrl} alt={'画像の読み込みに失敗しました'} onClick={openImage(imgUrl)}/>;
+            })
+          }
           <p className={'edit-title'}>課題名</p>
-          <Input className='edit-input' onChange={onTitleChanged}/>
+          <Input className='edit-input' value={title} onChange={onTitleChanged}/>
           <p className={'edit-title'}>設定者</p>
-          <Input className='edit-input' onChange={onSetterChanged}/>
+          <Input className='edit-input' value={setter} onChange={onSetterChanged}/>
           <p className={'edit-title'}>グレード</p>
-          <Select modifier={'material'} onChange={onGradeChanged}>
+          <Select modifier={'material'} value={grade.toString()} onChange={onGradeChanged}>
             {GRADES.filter(x => x.id <= 10).map(x => <option key={x.id} value={x.id}>{x.name}</option>)}
           </Select>
         </form>

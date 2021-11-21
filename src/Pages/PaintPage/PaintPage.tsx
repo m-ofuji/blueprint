@@ -18,6 +18,7 @@ import { downloadURI } from '../../Functions/DownloadUri';
 import { IStampButton, IHoldStamp, ITextStamp, isIHoldStamp, isITextStamp } from '../../Types/StampType';
 import { SizeProps } from '../../Types/SizeProps';
 import { MAX_SIDE_LENGTH } from '../../Constants/MaxSideLength';
+import { BlobToArrayBuffer } from '../../Functions/BlobToArrayBuffer';
 
 const PaintPage = ({isLefty, route, navigator, updateTopos}: 
   {isLefty:boolean, route: any, navigator: Navigator, updateTopos: () => void}) => {
@@ -32,6 +33,30 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
     imageY: 0,
     imageRotation: 0
   };
+
+  // history イベントの監視
+  window.addEventListener('popstate', function (e) {
+    // if (isHistoryPush) {
+      alert('navipage ブラウザでの戻るボタンは禁止されております。');
+      window.history.pushState(null, '');
+    // }
+  }, false);
+
+  // ons.ready(() => {
+  //   ons.disableDeviceBackButtonHandler();
+  //   document.addEventListener("backbutton", function(){
+  //     console.log('back button');
+  //   }, false);
+  // });
+
+  // ons.enableDeviceBackButtonHandler();
+  // console.log('set back button paintpage');
+  // ons.setDefaultDeviceBackButtonListener(() => {
+  //   console.log('back button pressed');
+  //   if (navigator.pages.length > 0) {
+  //     navigator.popPage();
+  //   }
+  // });
 
   const initialButton = [
     { key:1, label: 'S・Gホールド', isSelected: true,  onTapped: () => activateTarget(0), color: '#ff3838' },
@@ -109,20 +134,56 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
     // todo なぜawaitするとうまくリサイズされるのか
     await resizeStageToImageSize();
 
+    // const canvas = stage.current.toCanvas() as HTMLCanvasElement;
+    // const ctx = canvas?.getContext('2d');
+    // var imageData = ctx?.getImageData(0, 0, imageSizeProps.width, imageSizeProps.height);
+    // var buffer = imageData?.data.buffer;  // ArrayBuffer
+
+    // if (!buffer) return;
+
+    // console.log('canvas', canvas);
+    // console.log('ctx', ctx);
+    // console.log('imageData', imageData);
+    // console.log('buffer', buffer);
+
+    // navigator.pushPage({
+    //   comp: EditPage,
+    //   props: {
+    //     key: 'EditPage',
+    //     navigator: navigator,
+    //     data: [buffer],
+    //     updateTopos: updateTopos,
+    //     onSaved: async () => {
+    //       updateTopos();
+    //       await navigator.popPage({animation: 'none'});
+    //       await navigator.popPage({animation: 'none'});
+    //     }
+    //   }
+    // });
     stage.current.toCanvas().toBlob((data: any) => {
-      navigator.pushPage({
-        comp: EditPage,
-        props: {
-          key: 'EditPage',
-          navigator: navigator,
-          imgBlob: data,
-          updateTopos: updateTopos,
-          onSaved: async () => {
-            updateTopos();
-            await navigator.popPage({animation: 'none'});
-            await navigator.popPage({animation: 'none'});
+      if (!data) {
+        alert('ページの表示に失敗しました。');
+        return;
+      }
+  
+      BlobToArrayBuffer(data, (res, e) => {
+        navigator.pushPage({
+          comp: EditPage,
+          props: {
+            key: 'EditPage',
+            navigator: navigator,
+            data: [res],
+            updateTopos: updateTopos,
+            onSaved: async () => {
+              updateTopos();
+              await navigator.popPage({animation: 'none'});
+              await navigator.popPage({animation: 'none'});
+            }
           }
-        }
+        });
+      },
+      (res, e) => {
+        
       });
     });
 
@@ -201,7 +262,6 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
         }
       });
     } else {
-      console.log(navigator);
       navigator.popPage();
     }
   }

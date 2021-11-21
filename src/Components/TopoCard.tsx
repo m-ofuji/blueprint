@@ -6,9 +6,11 @@ import { ITopo, TopoDB } from "../DB/TopoDB";
 import { GRADES } from "../Constants/Grades";
 import { MAX_SIDE_LENGTH } from "../Constants/MaxSideLength";
 import { resizeCanvas } from "../Functions/ResizeCanvas";
+import { arrayBufferToUrl } from "../Functions/ArraybufferToUrl";
 
 export interface TopoCardProps extends ITopo {
-  updateTopos: () => void;
+  updateTopos: () => void,
+  onEditTapped?: () => void;
 }
 
 export const TopoCard = (props: TopoCardProps) => {
@@ -98,7 +100,12 @@ export const TopoCard = (props: TopoCardProps) => {
 
   return (
     <div className={'topo-card'}>
-      <img ref={imageRef} alt={'画像の読み込みに失敗しました'} src={window.URL.createObjectURL(new Blob([props.data[0]], {type: 'image/png'}))} onClick={openImage}/>
+      {/* {
+        props.data.map(x => {
+          <img ref={imageRef} src={arrayBufferToUrl(x)} alt={'画像の読み込みに失敗しました'} onClick={openImage}/>
+        })
+      } */}
+      <img ref={imageRef} src={arrayBufferToUrl(props.data[0])} alt={'画像の読み込みに失敗しました'} onClick={openImage}/>
       <div className={'topo-card-data'}>
         <div className={'topo-card-title-container'}>
           <div className={'topo-card-title'}>{props.name}</div>
@@ -113,6 +120,9 @@ export const TopoCard = (props: TopoCardProps) => {
         </Button>
         <Button modifier={'quiet'} className={'topo-card-action-button'} onClick={downLoad} >
           <i className={'fas fa-download fa-lg'}/>
+        </Button>
+        <Button modifier={'quiet'} className={'topo-card-action-button'} onClick={props.onEditTapped} >
+          <i className={'fas fa-edit fa-lg'}/>
         </Button>
       </div>
     </div>
