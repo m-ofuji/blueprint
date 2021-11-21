@@ -31,7 +31,7 @@ const EditPage = (props: EditPageProps) => {
       return false;
     }
 
-    if (!setter) {
+    if (!grade) {
       alert('グレードは必須項目です。');
       return false;
     }
