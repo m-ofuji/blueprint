@@ -6,11 +6,12 @@ export interface IStampButton {
 }
 
 export interface IHoldStamp extends IStampButton {
-  color: string
+  holdColor: string
 }
 
 export interface ITextStamp extends IStampButton {
-  contentText: string
+  contentText: string,
+  textColor: string
 }
 
 export const isIHoldStamp = (arg: unknown): arg is IHoldStamp =>
@@ -19,7 +20,7 @@ export const isIHoldStamp = (arg: unknown): arg is IHoldStamp =>
     typeof (arg as IHoldStamp).key === 'number' &&
     typeof (arg as IHoldStamp).label === 'string' &&
     typeof (arg as IHoldStamp).isSelected === 'boolean' &&
-    typeof (arg as IHoldStamp).color === 'string';
+    typeof (arg as IHoldStamp).holdColor === 'string';
 
 export const isITextStamp = (arg: unknown): arg is ITextStamp =>
     typeof arg === "object" &&
@@ -27,4 +28,5 @@ export const isITextStamp = (arg: unknown): arg is ITextStamp =>
     typeof (arg as ITextStamp).key === 'number' &&
     typeof (arg as ITextStamp).label === 'string' &&
     typeof (arg as ITextStamp).isSelected === 'boolean' &&
-    typeof (arg as ITextStamp).contentText === 'string';
+    typeof (arg as ITextStamp).contentText === 'string' &&
+    typeof (arg as ITextStamp).textColor === 'string';

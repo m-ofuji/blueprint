@@ -52,7 +52,7 @@
   padding: 5px;
   vertical-align:auto;
   color: whitesmoke;
-  background-color: #1d50a2;
+  background-color: #0058bf;
   border: none;
   outline: none;
   font-size: 1em;
@@ -163,7 +163,7 @@
 }
 
 .grade4 {
-  background-color: #2185d0;
+  background-color: #219ed0;
   color: #ffffff;
 }
 
@@ -246,64 +246,6 @@
 /* トポカード　ここまで */
 
 
-/* 戻る・進むボタン　ここまで*/
-.undo-and-redo-container {
-  position: absolute;
-  top: 2%;
-  right: 17%;
-  width: 65px;
-}
-
-.undo-and-redo-container.is-lefty {
-  position: absolute;
-  top: 2%;
-  left: 1em;
-  width: 65px;
-}
-
-.redo-button {
-  position: absolute;
-  left: 100%;
-  width: 50px;
-  height: 50px;
-  border-radius: 30px;
-  padding: 15px;
-  vertical-align:auto;
-  color: whitesmoke;
-  background-color: #1d50a2;
-  border: none;
-  outline: none;
-  box-shadow: 1px 2px 4px rgba(0,0,0,0.5);
-}
-
-.undo-button {
-  position: absolute;
-  left: 0%;
-  width: 50px;
-  height: 50px;
-  border-radius: 30px; 
-  padding: 15px;
-  vertical-align:auto;
-  color: whitesmoke;
-  background-color: #1d50a2;
-  border: none;
-  outline: none;
-  box-shadow: 1px 2px 4px rgba(0,0,0,0.5);
-}
-
-.undo-button.disabled,
-.redo-button.disabled{
-  background-color: whitesmoke;
-  color: black;
-}
-
-.undo-button i,
-.redo-button i {
-  font-size: 1.5em;
-}
-/* 戻る・進むボタン　ここまで*/
-
-
 /* ダウンロードボタン　ここから*/
 
 .download-button {
@@ -316,7 +258,7 @@
   padding: 15px;
   vertical-align:auto;
   color: whitesmoke;
-  background-color: #1d50a2;
+  background-color: #0058bf;
   box-shadow: 1px 2px 4px rgba(0,0,0,0.5);
 }
 
@@ -343,7 +285,7 @@
   padding: 15px;
   vertical-align:auto;
   color: whitesmoke;
-  background-color: #1d50a2;
+  background-color: #0058bf;
   box-shadow: 1px 2px 4px rgba(0,0,0,0.5);
 }
 
@@ -387,7 +329,7 @@
 
 .round-button.selected {
   color: whitesmoke;
-  background-color: #1d50a2;
+  background-color: #0058bf;
 }
 
 .button-li::marker {
@@ -466,7 +408,7 @@
   font-size: 1.3em;
   border: none;
   background: none;
-  color: #1d50a2;
+  color: #0058bf;
   position: absolute;
   right: 0;
   outline : none;
@@ -514,7 +456,7 @@
 
 .rectangle-button.selected {
   color: whitesmoke;
-  background-color: #1d50a2;
+  background-color: #0058bf;
 }
 
 /* ホーム画面検索　ここまで */

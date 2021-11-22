@@ -8,6 +8,7 @@ export type HoldTextProps = {
   x: number,
   y: number,
   character: string,
+  color: string,
   scale: number | undefined,
   onDoubleTapped?: ((ev: string) => void)
 }
@@ -33,7 +34,7 @@ let HoldTextBase = (props: HoldTextProps, ref: any) => {
     fontSize={StampTextSize}
     strokeWidth={1}
     stroke='white'
-    fill={'#ff0d0d'}
+    fill={props.color}
     text={props.character}
     x={props.x - ((StampTextSize * (props.scale ?? 1) * props.character.length) / 2)}
     y={props.y - StampTextSize * (props.scale ?? 1) / 2}

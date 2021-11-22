@@ -46,7 +46,7 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
       }
       setHolds(holds.concat([normalHold]).filter(x => x));
     },
-    addText: (text: string) => {
+    addText: (text: string, color: string) => {
       textRefs.push(createRef<any>());
       setTextRefs(textRefs);
 
@@ -59,6 +59,7 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
         y: (MarkerPositionY - (groupRef.current.y())) * (1 / scale),
         scale: 1 / scale,
         character:text,
+        color: color,
         onDoubleTapped: onTextDoubleTapped
       }
       setHoldText(texts.concat([t]).filter(x => x));

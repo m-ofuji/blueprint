@@ -27,19 +27,36 @@ let HoldCircleBase = (props: HoldCircleProps, ref: any) => {
     props.onDoubleTapped(props.keyStr);
   }
 
-  return <Circle
-    onDblTap={doubleTapped}
-    scaleX={props.scale}
-    scaleY={props.scale}
-    ref={ref}
-    fill="#00000000"
-    stroke={props.color}
-    radius={HoldCircleRadius}
-    strokeWidth={HoldCircleStrokeWidth}
-    x={props.x}
-    y={props.y}
-    draggable={false}
-  />
+  return (
+    <>
+      <Circle
+        onDblTap={doubleTapped}
+        scaleX={props.scale}
+        scaleY={props.scale}
+        ref={ref}
+        fill='#00000000'
+        stroke={'#ffffff'}
+        radius={HoldCircleRadius}
+        strokeWidth={HoldCircleStrokeWidth + 5}
+        x={props.x}
+        y={props.y}
+        draggable={false}
+      />
+      <Circle
+        onDblTap={doubleTapped}
+        scaleX={props.scale}
+        scaleY={props.scale}
+        ref={ref}
+        fill="#00000000"
+        stroke={props.color}
+        radius={HoldCircleRadius}
+        strokeWidth={HoldCircleStrokeWidth}
+        x={props.x}
+        y={props.y}
+        draggable={false}
+      />
+    </>
+  )
 }
 
 export const HoldCircle = forwardRef(HoldCircleBase)

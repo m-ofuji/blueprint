@@ -1,6 +1,7 @@
 import { Text } from 'react-konva';
 import { KonvaEventObject } from 'konva/lib/Node';
 import { StampTextSize } from '../Constants';
+import { MAIN_COLOR } from '../../../Constants/Colors';
 
 export type TextTargetProps = {
   x: number,
@@ -16,7 +17,7 @@ export const TextTarget = (props: TextTargetProps) => {
       text={props.character}
       strokeWidth={1}
       stroke='white'
-      fill='#0f47ff'
+      fill={MAIN_COLOR}
       fontSize={StampTextSize}
       visible={props.isVisible}
       x={props.x - (StampTextSize * props.character.length) / 2}

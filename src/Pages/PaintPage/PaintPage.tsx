@@ -19,6 +19,7 @@ import { IStampButton, IHoldStamp, ITextStamp, isIHoldStamp, isITextStamp } from
 import { SizeProps } from '../../Types/SizeProps';
 import { MAX_SIDE_LENGTH } from '../../Constants/MaxSideLength';
 import { BlobToArrayBuffer } from '../../Functions/BlobToArrayBuffer';
+import { MAIN_COLOR, HOLD_COLOR, SG_HOLD_COLOR } from '../../Constants/Colors';
 
 const PaintPage = ({isLefty, route, navigator, updateTopos}: 
   {isLefty:boolean, route: any, navigator: Navigator, updateTopos: () => void}) => {
@@ -59,21 +60,21 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
   // });
 
   const initialButton = [
-    { key:1, label: 'S・Gホールド', isSelected: true,  onTapped: () => activateTarget(0), color: '#ff3838' },
-    { key:2, label: 'ホールド',     isSelected: false, onTapped: () => activateTarget(1), color: '#ffff56' },
-    { key:3, label: 'スタート',     isSelected: false, onTapped: () => activateTextTarget(2), contentText: 'S' },
-    { key:4, label: 'ゴール',       isSelected: false, onTapped: () => activateTextTarget(3), contentText: 'G' },
-    { key:5, label: 'スタート右',   isSelected: false, onTapped: () => activateTextTarget(4), contentText: 'S右' },
-    { key:6, label: 'スタート左',   isSelected: false, onTapped: () => activateTextTarget(5), contentText: 'S左' },
-    { key:7, label: 'カンテ',       isSelected: false, onTapped: () => activateTextTarget(6), contentText: 'カンテ' },
-    { key:8, label: 'ハリボテ',     isSelected: false, onTapped: () => activateTextTarget(7), contentText: 'ボテあり' }
+    { key:1, label: 'S・Gホールド', isSelected: true,  onTapped: () => activateTarget(0), holdColor: SG_HOLD_COLOR },
+    { key:2, label: 'ホールド',     isSelected: false, onTapped: () => activateTarget(1), holdColor: HOLD_COLOR },
+    { key:3, label: 'スタート',     isSelected: false, onTapped: () => activateTarget(2), contentText: 'S', textColor: SG_HOLD_COLOR },
+    { key:4, label: 'ゴール',       isSelected: false, onTapped: () => activateTarget(3), contentText: 'G', textColor: SG_HOLD_COLOR },
+    { key:5, label: 'スタート右',   isSelected: false, onTapped: () => activateTarget(4), contentText: 'S右', textColor: SG_HOLD_COLOR },
+    { key:6, label: 'スタート左',   isSelected: false, onTapped: () => activateTarget(5), contentText: 'S左', textColor: SG_HOLD_COLOR },
+    { key:7, label: 'カンテ',       isSelected: false, onTapped: () => activateTarget(6), contentText: 'カンテ', textColor: SG_HOLD_COLOR },
+    { key:8, label: 'ハリボテ',     isSelected: false, onTapped: () => activateTarget(7), contentText: 'ボテあり', textColor: SG_HOLD_COLOR },
+    { key:9, label: '足自由',　     isSelected: false, onTapped: () => activateTarget(8), contentText: '足自由', textColor: SG_HOLD_COLOR }
   ];
 
   const [wallImage, setWallImage] = useState<CanvasImageSource | null>(null);
   const [stageSizeProps, setStageSizeProps] = useState<SizeProps>(sizeProps);
   const [imageSizeProps, setImageSizeProps] = useState<SizeProps>(sizeProps);
   const [stamps, setStamps] = useState<IStampButton[]>(initialButton);
-  const [holdText, setHoldText] = useState<string>('S');
   const [initial, setInitial] = useState<string>('msg');
 
   const stage = useRef<any>(null);
@@ -231,21 +232,17 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
     setStamps(old => old.map((x,i) => {return { ...x, isSelected : i === index }}));
   }
 
-  const activateTextTarget = (index: number) => {
-    activateTarget(index);
-    const selected = stamps[index];
-    if (!isITextStamp(selected)) return;
-    setHoldText((selected as ITextStamp).contentText);
-  }
-
   const holdTargetTapped = (evt: KonvaEventObject<Event>) => {
     const selected = stamps.find(x => x.isSelected);
     if (!isIHoldStamp(selected)) return;
-    resizableImage.current.addCircle((selected as IHoldStamp).color)
+    resizableImage.current.addCircle((selected as IHoldStamp).holdColor)
   }
 
   const textTargetTapped = (evt: KonvaEventObject<Event>) => {
-    resizableImage.current.addText(holdText);
+    const selected = stamps.find(x => x.isSelected);
+    if (!isITextStamp(selected)) return;
+    const selectedText = selected as ITextStamp;
+    resizableImage.current.addText(selectedText.contentText, selectedText.textColor);
   }
 
   const onCloseTapped = () => {
@@ -293,15 +290,15 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
             key={'normalTarget'}
             x={MarkerPositionX - stageSizeProps.offsetX}
             y={MarkerPositionY - stageSizeProps.offsetY}
-            isVisible={stamps.filter(x => isIHoldStamp(x) && x.isSelected).length > 0}
+            isVisible={isIHoldStamp(stamps.find(x => x.isSelected))}
             onTapped={holdTargetTapped}
           />
           <TextTarget
             key={'textTarget'}
             x={MarkerPositionX - stageSizeProps.offsetX}
             y={MarkerPositionY - stageSizeProps.offsetY}
-            character={holdText}
-            isVisible={stamps.filter(x => isITextStamp(x) && x.isSelected).length > 0}
+            character={(stamps.find(x => x.isSelected) as ITextStamp)?.contentText ?? ''}
+            isVisible={isITextStamp(stamps.find(x => x.isSelected))}
             onTapped={textTargetTapped}
           />
         </Layer>

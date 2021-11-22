@@ -1,6 +1,7 @@
 import { Circle } from 'react-konva';
 import { KonvaEventObject } from 'konva/lib/Node';
 import { HoldCircleRadius, HoldCircleStrokeWidth } from '../Constants';
+import { MAIN_COLOR } from '../../../Constants/Colors';
 
 export type NormalTargetProps = {
   x: number,
@@ -11,17 +12,31 @@ export type NormalTargetProps = {
 
 export const NormalTarget = (props: NormalTargetProps) => {
   return (
-    <Circle
-      fill="#00000000"
-      stroke="#0f47ff"
-      radius={HoldCircleRadius}
-      strokeWidth={HoldCircleStrokeWidth}
-      visible={props.isVisible}
-      x={props.x}
-      y={props.y}
-      draggable={false}
-      onTap={props.onTapped}
-      onClick={props.onTapped}
-    />
+    <>
+      <Circle
+        fill="#00000000"
+        stroke="#ffffff"
+        radius={HoldCircleRadius}
+        strokeWidth={HoldCircleStrokeWidth + 5}
+        visible={props.isVisible}
+        x={props.x}
+        y={props.y}
+        draggable={false}
+        onTap={props.onTapped}
+        onClick={props.onTapped}
+      />
+      <Circle
+        fill="#00000000"
+        stroke={MAIN_COLOR}
+        radius={HoldCircleRadius}
+        strokeWidth={HoldCircleStrokeWidth}
+        visible={props.isVisible}
+        x={props.x}
+        y={props.y}
+        draggable={false}
+        onTap={props.onTapped}
+        onClick={props.onTapped}
+      />
+    </>
   )
 }
