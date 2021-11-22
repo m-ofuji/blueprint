@@ -78,29 +78,31 @@ const EditPage = (props: EditPageProps) => {
 
   return (
     <Page className={'edit-page'}>
-      <CloseButton className={'close-button float-right-top'} onTapped={onCloseTapped}></CloseButton>
-      <div id={'edit-container'}>
-        <h3 className={'page-title'}><i className={'fas fa-pen'}/>課題作成</h3>
-        <form id={'edit-form'}>
-          {
-            props.data?.map((x, idx) => {
-              const imgUrl = arrayBufferToUrl(x);
-              return <img key={idx} className={'edit-image'} src={imgUrl} alt={'画像の読み込みに失敗しました'} onClick={openImage(imgUrl)}/>;
-            })
-          }
-          <p className={'edit-title'}>課題名</p>
-          <Input className='edit-input' value={title} onChange={onTitleChanged}/>
-          <p className={'edit-title'}>設定者</p>
-          <Input className='edit-input' value={setter} onChange={onSetterChanged}/>
-          <p className={'edit-title'}>グレード</p>
-          <Select modifier={'material'} value={grade.toString()} onChange={onGradeChanged}>
-            {GRADES.filter(x => x.id <= 10).map(x => <option key={x.id} value={x.id}>{x.name}</option>)}
-          </Select>
-        </form>
+      <div className={'page-content edit-page-content'}>
+        <CloseButton className={'close-button float-right-top'} onTapped={onCloseTapped}></CloseButton>
+        <div id={'edit-container'}>
+          <h3 className={'page-title'}><i className={'fas fa-pen'}/>課題作成</h3>
+          <form id={'edit-form'}>
+            {
+              props.data?.map((x, idx) => {
+                const imgUrl = arrayBufferToUrl(x);
+                return <img key={idx} className={'edit-image'} src={imgUrl} alt={'画像の読み込みに失敗しました'} onClick={openImage(imgUrl)}/>;
+              })
+            }
+            <p className={'edit-title'}>課題名</p>
+            <Input className='edit-input' value={title} onChange={onTitleChanged}/>
+            <p className={'edit-title'}>設定者</p>
+            <Input className='edit-input' value={setter} onChange={onSetterChanged}/>
+            <p className={'edit-title'}>グレード</p>
+            <Select modifier={'material'} value={grade.toString()} onChange={onGradeChanged}>
+              {GRADES.filter(x => x.id <= 10).map(x => <option key={x.id} value={x.id}>{x.name}</option>)}
+            </Select>
+          </form>
+        </div>
+        <button className={'edit-button'} onClick={saveTopo}>
+          <i className={'fas fa-save'}/>保存
+        </button>
       </div>
-      <button className={'edit-button'} onClick={saveTopo}>
-        <i className={'fas fa-save'}/>保存
-      </button>
     </Page>
   )
 }

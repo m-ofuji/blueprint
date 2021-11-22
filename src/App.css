@@ -2,9 +2,15 @@
   margin-right: 7px;
 }
 
-.white-background {
+.page-content {
+  position: absolute;
+  width: 100%;
   height: 100%;
-  background-color: #fafafa!important;
+  background-color: #fafafa;
+}
+
+.edit-page-content {
+  height: fit-content;
 }
 
 .hidden {
@@ -40,27 +46,13 @@
   margin-bottom: 10px;
 }
 
-/* .start-button {
-  margin: 20px 10px;
-  width: 50%;
-  border-radius: 30px;
-  padding: 15px;
-  vertical-align:auto;
-  color: whitesmoke;
-  background-color: #004898;
-  border: none;
-  outline: none;
-  font-size: 1.1em;
-  box-shadow: 1px 2px 4px rgba(0,0,0,0.5);
-} */
-
 .edit-button {
   width: 120px;
   border-radius: 15px;
   padding: 5px;
   vertical-align:auto;
   color: whitesmoke;
-  background-color: #004898;
+  background-color: #1d50a2;
   border: none;
   outline: none;
   font-size: 1em;
@@ -77,7 +69,8 @@
 
 .topo-list {
   margin-top: 120px;
-  margin-bottom: 100px;
+  padding-bottom: 100px;
+  background-color: #fafafa;
 }
 
 .topo-list p{
@@ -277,7 +270,7 @@
   padding: 15px;
   vertical-align:auto;
   color: whitesmoke;
-  background-color: #004898;
+  background-color: #1d50a2;
   border: none;
   outline: none;
   box-shadow: 1px 2px 4px rgba(0,0,0,0.5);
@@ -292,7 +285,7 @@
   padding: 15px;
   vertical-align:auto;
   color: whitesmoke;
-  background-color: #004898;
+  background-color: #1d50a2;
   border: none;
   outline: none;
   box-shadow: 1px 2px 4px rgba(0,0,0,0.5);
@@ -323,7 +316,7 @@
   padding: 15px;
   vertical-align:auto;
   color: whitesmoke;
-  background-color: #004898;
+  background-color: #1d50a2;
   box-shadow: 1px 2px 4px rgba(0,0,0,0.5);
 }
 
@@ -350,7 +343,7 @@
   padding: 15px;
   vertical-align:auto;
   color: whitesmoke;
-  background-color: #004898;
+  background-color: #1d50a2;
   box-shadow: 1px 2px 4px rgba(0,0,0,0.5);
 }
 
@@ -394,7 +387,7 @@
 
 .round-button.selected {
   color: whitesmoke;
-  background-color: #004898;
+  background-color: #1d50a2;
 }
 
 .button-li::marker {
@@ -473,7 +466,7 @@
   font-size: 1.3em;
   border: none;
   background: none;
-  color: #004898;
+  color: #1d50a2;
   position: absolute;
   right: 0;
   outline : none;
@@ -521,7 +514,7 @@
 
 .rectangle-button.selected {
   color: whitesmoke;
-  background-color: #004898;
+  background-color: #1d50a2;
 }
 
 /* ホーム画面検索　ここまで */

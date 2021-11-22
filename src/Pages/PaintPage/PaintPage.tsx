@@ -268,6 +268,7 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
 
   return (
     <Page>
+      <div className={'page-content'}>
       <Stage 
         key={'stage'}
         className={'image-stage'}
@@ -319,6 +320,7 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
         type='file'
         accept='image/*'
       />
+      </div>
     </Page>
   )
 }

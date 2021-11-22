@@ -104,37 +104,39 @@ const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigato
   }
 
   return (
-    <Page key={'root'}>
-      <div className={'search-wrapper'}>
-        <div className='search-container'>
-          <div onClick={openMenu}>
-            <i className={'fas fa-bars'}/>
+    <Page  key={'root'}>
+      <div className={'page-content'}>
+        <div className={'search-wrapper'}>
+          <div className='search-container'>
+            <div onClick={openMenu}>
+              <i className={'fas fa-bars'}/>
+            </div>
+            <input placeholder={'課題名で検索'} type='text' value={searchText} onChange={onSearchTextChange}/>
+            <button className={searchText.length > 0 ? 'search-clear' : 'search-clear hidden'} onClick={onClrearClicked}>
+              <i className={'far fa-times-circle'}/>
+            </button>
           </div>
-          <input placeholder={'課題名で検索'} type='text' value={searchText} onChange={onSearchTextChange}/>
-          <button className={searchText.length > 0 ? 'search-clear' : 'search-clear hidden'} onClick={onClrearClicked}>
-            <i className={'far fa-times-circle'}/>
-          </button>
+          <div className={'grade-container'}>
+            {searchGrades.map((x, i) => <RectangleButton {...x}/>)}
+          </div>
         </div>
-        <div className={'grade-container'}>
-          {searchGrades.map((x, i) => <RectangleButton {...x}/>)}
-        </div>
-      </div>
 
-      <div className={'topo-list'}>
-        {
-          topos.length <= 0 ? <p> トポが未作成です<br/>右下のボタンからトポを作成しましょう </p> :
-          topos.filter(x => searchFunc(x)).length > 0 ?
-          topos
-            .filter(x => searchFunc(x))
-            .sort((a, b) => a.createdAt > b.createdAt ? -1 : 1)
-            .map((x, i) => <TopoCard key={i} {...x} updateTopos={updateTopos} onEditTapped={openEditPage(x)}/>)
-          : <p> トポが見つかりませんでした </p>
-        }
+        <div className={'topo-list'}>
+          {
+            topos.length <= 0 ? <p> トポが未作成です<br/>右下のボタンからトポを作成しましょう </p> :
+            topos.filter(x => searchFunc(x)).length > 0 ?
+            topos
+              .filter(x => searchFunc(x))
+              .sort((a, b) => a.createdAt > b.createdAt ? -1 : 1)
+              .map((x, i) => <TopoCard key={i} {...x} updateTopos={updateTopos} onEditTapped={openEditPage(x)}/>)
+            : <p> トポが見つかりませんでした </p>
+          }
+        </div>
+        <button className={'edit-button'} onClick={openRightPaintPage}>
+          <i className={'fas fa-pen'}/>
+          トポ作成
+        </button>
       </div>
-      <button className={'edit-button'} onClick={openRightPaintPage}>
-        <i className={'fas fa-pen'}/>
-        トポ作成
-      </button>
     </Page>
   )
 }
