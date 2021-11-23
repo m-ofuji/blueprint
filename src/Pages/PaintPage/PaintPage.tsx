@@ -89,10 +89,8 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
       return;
     }
 
-    if (initial === 'open') {
-      if (fileInputRef.current) {
-        fileInputRef.current.click();
-      }
+    if (initial === 'open' && fileInputRef.current) {
+      fileInputRef.current.click();
     } else if (initial === 'msg') {
       ons.notification.alert({
         title: '壁画像選択',

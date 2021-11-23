@@ -22,14 +22,11 @@ export const TopoCard = (props: TopoCardProps) => {
     ons.openActionSheet({
       cancelable: true,
       title: 'どの画像をダウンロードしますか？',
-      buttons: ['元のサイズ', '元のサイズ（課題名・作成日・グレードあり）', '縮小版',　'縮小版（課題名・作成日・グレードあり）', 'キャンセル'],
+      buttons: ['元のサイズ', '元のサイズ（課題情報つき）', '縮小版',　'縮小版（課題情報つき）', 'キャンセル'],
     }).then((idx: any) => {
       if (idx < 0) return;
       if (!imageRef.current?.src) return;
       const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-
-      if (!ctx) return;
 
       const img = new Image();
       img.src = imageRef.current?.src;  // 画像のURLを指定
@@ -43,37 +40,57 @@ export const TopoCard = (props: TopoCardProps) => {
         const fixPixelRatio = imgWidth > MAX_SIDE_LENGTH || imgHeight > MAX_SIDE_LENGTH;
         const pixelRatio = resize && fixPixelRatio ? MAX_SIDE_LENGTH / Math.max(imgWidth, imgHeight) : 1;
 
-        const fontSize = 32;
-        const padding = 8;
+        canvas.width = imgWidth;
+        canvas.height = imgHeight;
 
-        const canvasWidth = imgWidth;
-        const canvasHeight = printInfo ? imgHeight + (fontSize * 2) + (padding * 3) : imgHeight;
-
-        canvas.width = canvasWidth;
-        canvas.height = canvasHeight;
-
-        if (printInfo) {
-          // 背景色
-          ctx.fillStyle = MAIN_COLOR;
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-          // トポ情報
-          ctx.font = fontSize.toString() + 'px sans-serif';
-          ctx.fillStyle = '#fafafa';
-          ctx.textBaseline = 'top';
-          ctx.textAlign = 'left';
-          ctx.fillText(props.name, padding, imgHeight + padding);
-          ctx.fillText(new Date(props.createdAt * 1000).toLocaleDateString(), padding, imgHeight + fontSize + (padding * 2));
-          ctx.fillText(GRADES.find(x => x.id === props.grade)?.name ?? '', imgWidth - fontSize * 2, imgHeight + (fontSize / 2) + (padding * 2));
-        }
-
-        // 背景画像
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+        // トポ画像描画
         ctx.drawImage(img, 0, 0);
+
+        const resizedCanvas = resizeCanvas(canvas, pixelRatio);
 
         const minSuf = resize ? '_min' : '';
         const infoSuf = printInfo ? '_info' : '';
 
-        downloadCanvas(canvas, props.name + minSuf + infoSuf, pixelRatio);
+        if (!printInfo) {
+          downloadCanvas(resizedCanvas, props.name + minSuf + infoSuf, 1);
+        } else {
+          const infoCanvas = document.createElement('canvas');
+
+          const fontSize = resizedCanvas.height * 0.05;
+          const padding = fontSize / 4;
+
+          const infoWidth = resizedCanvas.width;
+          const infoHeight = resizedCanvas.height + (fontSize * 2) + (padding * 3);
+
+          infoCanvas.width = infoWidth;
+          infoCanvas.height = infoHeight;
+
+          const infoCtx = infoCanvas.getContext('2d');
+          if (!infoCtx) return;
+
+          // 背景色設定
+          infoCtx.fillStyle = MAIN_COLOR;
+          infoCtx.fillRect(0, 0, infoCanvas.width, infoCanvas.height);
+
+          // トポ情報描画
+          infoCtx.font = fontSize.toString() + 'px sans-serif';
+          infoCtx.fillStyle = '#fafafa';
+          infoCtx.textBaseline = 'top';
+          infoCtx.textAlign = 'left';
+          const resizedHeigt = resizedCanvas.height;
+          infoCtx.fillText(props.name, padding, resizedHeigt + padding);
+          infoCtx.fillText(new Date(props.createdAt * 1000).toLocaleDateString(), padding, resizedHeigt + fontSize + (padding * 2));
+          infoCtx.fillText(GRADES.find(x => x.id === props.grade)?.name ?? '', infoWidth - fontSize * 2 - padding, resizedHeigt + (fontSize / 2) + (padding * 2));
+
+          // トポ画像コピー
+          const copied = resizedCanvas.getContext('2d')?.getImageData(0, 0, resizedCanvas.width, resizedCanvas.height);
+          if (!copied) return;
+          infoCtx.putImageData(copied, 0, 0);
+
+          downloadCanvas(infoCanvas, props.name + minSuf + infoSuf, 1);
+        }
       };
     });
   }
