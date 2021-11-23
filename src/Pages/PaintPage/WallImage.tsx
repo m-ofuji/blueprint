@@ -1,7 +1,7 @@
 import React, { createRef, useState } from 'react';
 import { Image, Group } from 'react-konva';
-import { HoldCircleProps, HoldCircle, isHoldCircleProps } from './Holds/HoldCircle';
-import { HoldTextProps, HoldText, isHoldTextProps } from './Holds/HoldText';
+import { HoldCircleProps, HoldCircle } from './Holds/HoldCircle';
+import { HoldTextProps, HoldText } from './Holds/HoldText';
 import { useImperativeHandle, forwardRef } from 'react';
 import Konva from 'konva';
 import { KonvaEventObject } from 'konva/lib/Node';

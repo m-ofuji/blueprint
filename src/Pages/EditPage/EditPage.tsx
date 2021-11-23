@@ -1,6 +1,6 @@
 import ons from 'onsenui';
 import { Navigator } from 'react-onsenui';
-import { ChangeEvent, useRef, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { Page, Input, Select } from 'react-onsenui';
 import { CloseButton } from '../../Components/CloseButton';
 import { TopoDB } from '../../DB/TopoDB';

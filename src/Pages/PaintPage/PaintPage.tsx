@@ -19,7 +19,7 @@ import { IStampButton, IHoldStamp, ITextStamp, isIHoldStamp, isITextStamp } from
 import { SizeProps } from '../../Types/SizeProps';
 import { MAX_SIDE_LENGTH } from '../../Constants/MaxSideLength';
 import { BlobToArrayBuffer } from '../../Functions/BlobToArrayBuffer';
-import { MAIN_COLOR, HOLD_COLOR, SG_HOLD_COLOR } from '../../Constants/Colors';
+import { HOLD_COLOR, SG_HOLD_COLOR } from '../../Constants/Colors';
 
 const PaintPage = ({isLefty, route, navigator, updateTopos}: 
   {isLefty:boolean, route: any, navigator: Navigator, updateTopos: () => void}) => {
