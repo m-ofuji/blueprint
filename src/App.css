@@ -1,3 +1,11 @@
+/* html {
+  font-size: 10px;
+}
+
+body {
+  font-size: 1.6rem;
+} */
+
 .menu-item i {
   margin-right: 7px;
 }
@@ -398,14 +406,15 @@
   border: none;
   background: none;
   position: absolute;
-  margin-top: 10px;
+  /* margin-top: 10px; */
+  margin-top: 0.75rem;
   margin-left: 5px;
 }
 
 .search-container button {
   cursor: pointer;
   font-family: FontAwesome;
-  font-size: 1.3em;
+  font-size: 1.3rem;
   border: none;
   background: none;
   color: #0058bf;

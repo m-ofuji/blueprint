@@ -7,6 +7,7 @@ import { GRADES } from "../Constants/Grades";
 import { MAX_SIDE_LENGTH } from "../Constants/MaxSideLength";
 import { resizeCanvas } from "../Functions/ResizeCanvas";
 import { arrayBufferToUrl } from "../Functions/ArraybufferToUrl";
+import { MAIN_COLOR } from "../Constants/Colors";
 
 export interface TopoCardProps extends ITopo {
   updateTopos: () => void,
@@ -53,7 +54,7 @@ export const TopoCard = (props: TopoCardProps) => {
 
         if (printInfo) {
           // 背景色
-          ctx.fillStyle = '#004898';
+          ctx.fillStyle = MAIN_COLOR;
           ctx.fillRect(0, 0, canvas.width, canvas.height);
 
           // トポ情報
