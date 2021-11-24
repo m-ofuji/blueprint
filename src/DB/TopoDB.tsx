@@ -18,6 +18,16 @@ export class TopoDB extends Dexie {
     this.Topos.put(topo);
   }
 
+  saveRows = (topos: ITopo[]) => {
+    // console.log(topos);
+    // this.Topos.bulkPut(topos);
+    // console.log('completed');
+    for (const t of topos) {
+    console.log(t);
+      this.save(t);
+    }
+  }
+
   deleteTopo = (id: number) => {
     this.Topos.delete(id);
   }

@@ -41,7 +41,7 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
         x: (MarkerPositionX - (groupRef.current.x())) * (1 / scale),
         y: (MarkerPositionY - (groupRef.current.y())) * (1 / scale),
         scale: 1 / scale,
-        color:color,
+        color: color,
         onDoubleTapped: onCirleDoubleTapped
       }
       setHolds(holds.concat([normalHold]).filter(x => x));

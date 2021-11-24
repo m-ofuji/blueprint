@@ -116,6 +116,8 @@ export const TopoCard = (props: TopoCardProps) => {
     window.open(imageRef.current?.src);
   }
 
+  // console.log(new Blob([props.data[0]], {type: 'image/png'}));
+
   return (
     <div className={'topo-card'}>
       {/* {

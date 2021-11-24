@@ -2,9 +2,9 @@ import { useState } from 'react';
 import HomePage from './HomePage/HomePage';
 import { Navigator, SplitterContent, SplitterSide, Splitter } from 'react-onsenui';
 import SideMenu from './HomePage/SideMenu';
-import ons from 'onsenui';
 
 export const NaviPage = () => {
+  // const [homePage, setHomePage] = useState();
   // document. = function() { return false; }
 
   // window.addEventListener('popstate', e => {
@@ -37,7 +37,12 @@ export const NaviPage = () => {
 
   const renderPage = (route:any, navigator: Navigator) => {
     return (
-      <route.comp key={route.key} navigator={navigator} openMenu={openMenu} {...route.props}/>
+      <route.comp 
+        key={route.key} 
+        navigator={navigator}
+        openMenu={openMenu}
+        {...route.props}
+      />
     );
   }
 
@@ -48,6 +53,8 @@ export const NaviPage = () => {
   const openMenu = () => {
     setIsMenuOpen(true);
   }
+
+  // const homePage = HomePage;
 
   return (
     <Splitter>

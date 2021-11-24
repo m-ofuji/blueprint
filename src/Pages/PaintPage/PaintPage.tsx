@@ -133,32 +133,6 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
     // todo なぜawaitするとうまくリサイズされるのか
     await resizeStageToImageSize();
 
-    // const canvas = stage.current.toCanvas() as HTMLCanvasElement;
-    // const ctx = canvas?.getContext('2d');
-    // var imageData = ctx?.getImageData(0, 0, imageSizeProps.width, imageSizeProps.height);
-    // var buffer = imageData?.data.buffer;  // ArrayBuffer
-
-    // if (!buffer) return;
-
-    // console.log('canvas', canvas);
-    // console.log('ctx', ctx);
-    // console.log('imageData', imageData);
-    // console.log('buffer', buffer);
-
-    // navigator.pushPage({
-    //   comp: EditPage,
-    //   props: {
-    //     key: 'EditPage',
-    //     navigator: navigator,
-    //     data: [buffer],
-    //     updateTopos: updateTopos,
-    //     onSaved: async () => {
-    //       updateTopos();
-    //       await navigator.popPage({animation: 'none'});
-    //       await navigator.popPage({animation: 'none'});
-    //     }
-    //   }
-    // });
     stage.current.toCanvas().toBlob((data: any) => {
       if (!data) {
         alert('ページの表示に失敗しました。');

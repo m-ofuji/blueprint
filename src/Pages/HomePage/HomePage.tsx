@@ -2,7 +2,7 @@
 import PaintPage from '../PaintPage/PaintPage';
 import { Navigator, Page } from 'react-onsenui';
 import { ITopo, TopoDB } from '../../DB/TopoDB';
-import { useLayoutEffect, useState } from 'react';
+import { useLayoutEffect, useState, forwardRef } from 'react';
 import { TopoCard } from '../../Components/TopoCard';
 import { GRADES } from '../../Constants/Grades';
 import { RectangleButton, RectangleButtonProps } from '../../Components/RectangleButton';
@@ -73,6 +73,8 @@ const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigato
     });
   }
 
+  console.log(topos);
+
   const updateTopos = () => {
     const db = new TopoDB();
     db.Topos.toArray().then((topos) => { setTopos(topos); });
@@ -104,7 +106,7 @@ const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigato
   }
 
   return (
-    <Page  key={'root'}>
+    <Page key={'root'}>
       <div className={'page-content'}>
         <div className={'search-wrapper'}>
           <div className='search-container'>
