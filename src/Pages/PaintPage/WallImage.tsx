@@ -1,4 +1,4 @@
-import React, { createRef, useState } from 'react';
+import React, { useState } from 'react';
 import { Image, Group } from 'react-konva';
 import { HoldCircleProps, HoldCircle } from './Holds/HoldCircle';
 import { HoldTextProps, HoldText } from './Holds/HoldText';
@@ -11,8 +11,6 @@ import { MarkerPositionX, MarkerPositionY } from './Constants';
 let WallImageBase = (props : WallImageProps, ref : any) => {
 
   const groupRef = React.useRef<any>();
-  const [circleRefs, setCircleRefs] = useState<React.RefObject<any>[]>([]);
-  const [textRefs, setTextRefs] = useState<React.RefObject<any>[]>([]);
   const [holds, setHolds] = useState<HoldCircleProps[]>([]);
   const [texts, setHoldText] = useState<HoldTextProps[]>([]);
   const [scale, setScale] = useState(1);
@@ -30,8 +28,6 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
 
   useImperativeHandle(ref, () => ({
     addCircle: (color: string) => {
-      circleRefs.push(createRef<any>());
-      setCircleRefs(circleRefs);
 
       setStampKeys(stampKeys + 1);
 
@@ -47,8 +43,6 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
       setHolds(holds.concat([normalHold]).filter(x => x));
     },
     addText: (text: string, color: string) => {
-      textRefs.push(createRef<any>());
-      setTextRefs(textRefs);
 
       setStampKeys(stampKeys + 1);
 
@@ -159,8 +153,8 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
         rotation={props.imageRotation}
         image={props.src}
       />
-      {holds.map((props, i) => <HoldCircle ref={circleRefs[i]} {...props}/>)}
-      {texts.map((props, i) => <HoldText ref={textRefs[i]} {...props}/>)}
+      {holds.map((props, i) => <HoldCircle {...props}/>)}
+      {texts.map((props, i) => <HoldText {...props}/>)}
     </Group>
   );
 };

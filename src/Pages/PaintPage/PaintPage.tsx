@@ -21,8 +21,8 @@ import { MAX_SIDE_LENGTH } from '../../Constants/MaxSideLength';
 import { BlobToArrayBuffer } from '../../Functions/BlobToArrayBuffer';
 import { HOLD_COLOR, SG_HOLD_COLOR } from '../../Constants/Colors';
 
-const PaintPage = ({isLefty, route, navigator, updateTopos}: 
-  {isLefty:boolean, route: any, navigator: Navigator, updateTopos: () => void}) => {
+const PaintPage = ({route, navigator, updateTopos}: 
+  {route: any, navigator: Navigator, updateTopos: () => void}) => {
     const sizeProps = {
     offsetX: 0,
     offsetY: 0,
@@ -278,9 +278,9 @@ const PaintPage = ({isLefty, route, navigator, updateTopos}:
       <div className={'horizontal-container'}>
         {stamps.map((props, i) => <RoundButton {...props}/>)}
       </div>
-      <CloseButton className={`close-button ${isLefty ? 'float-left-top': 'float-right-top' }`} onTapped={onCloseTapped}></CloseButton>
-      <DownloadButton className={`download-button${isLefty ? ' is-lefty' : ''}`} onTapped={onDownloadTapped}/>
-      <SaveButton className={`save-button${isLefty ? ' is-lefty' : ''}`} onTapped={onSaveTapped}/>
+      <CloseButton className={'close-button float-right-top'} onTapped={onCloseTapped}></CloseButton>
+      <DownloadButton className={'download-button'} onTapped={onDownloadTapped}/>
+      <SaveButton className={'save-button'} onTapped={onSaveTapped}/>
       <input
         key={'file-uploader'}
         onChange={onChange}

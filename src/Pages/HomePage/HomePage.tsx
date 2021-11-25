@@ -57,30 +57,24 @@ const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigato
     x.name.indexOf(searchText) > -1 
     && (searchGrades.filter(x => x.isSelected).length <= 0 || searchGrades.filter(x => x.isSelected).map(x => x.key).includes(x.grade));
 
-  const openRightPaintPage = () => {
-    handlePaintPage(false);
-  }
-
-  const handlePaintPage = (isLefty: boolean) => {
+  const handlePaintPage = () => {
     navigator.pushPage({
       comp: PaintPage,
       props: {
         key: 'PaintPage',
-        isLefty: isLefty,
+        isLefty: false,
         navigator: navigator,
         updateTopos: updateTopos
       }
     });
   }
 
-  console.log(topos);
-
   const updateTopos = () => {
     const db = new TopoDB();
     db.Topos.toArray().then((topos) => { setTopos(topos); });
   }
 
-  useLayoutEffect(updateTopos,[]);
+  useLayoutEffect(updateTopos, []);
 
   const onSearchTextChange = (e: React.FormEvent<HTMLInputElement>) => {
     setSearchText(e.currentTarget.value);
@@ -134,7 +128,7 @@ const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigato
             : <p> トポが見つかりませんでした </p>
           }
         </div>
-        <button className={'edit-button'} onClick={openRightPaintPage}>
+        <button className={'edit-button'} onClick={handlePaintPage}>
           <i className={'fas fa-pen'}/>
           トポ作成
         </button>
