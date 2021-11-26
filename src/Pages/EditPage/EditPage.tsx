@@ -48,6 +48,8 @@ const EditPage = (props: EditPageProps) => {
     if (!validate()) return;
 
     const db = new TopoDB();
+    
+    console.log(props.data ? new Uint8Array(props.data[0]) : 0);
 
     db.save({
       id:props.id,

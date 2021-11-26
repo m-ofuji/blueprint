@@ -99,6 +99,8 @@ const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigato
     });
   }
 
+  console.log(topos);
+
   return (
     <Page key={'root'}>
       <div className={'page-content'}>
