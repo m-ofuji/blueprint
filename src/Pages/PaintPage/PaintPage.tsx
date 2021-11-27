@@ -60,15 +60,16 @@ const PaintPage = ({route, navigator, updateTopos}:
   // });
 
   const initialButton = [
-    { key:1, label: 'S・Gホールド', isSelected: true,  onTapped: () => activateTarget(0), holdColor: SG_HOLD_COLOR },
-    { key:2, label: 'ホールド',     isSelected: false, onTapped: () => activateTarget(1), holdColor: HOLD_COLOR },
-    { key:3, label: 'スタート',     isSelected: false, onTapped: () => activateTarget(2), contentText: 'S', textColor: SG_HOLD_COLOR },
-    { key:4, label: 'ゴール',       isSelected: false, onTapped: () => activateTarget(3), contentText: 'G', textColor: SG_HOLD_COLOR },
-    { key:5, label: 'スタート右',   isSelected: false, onTapped: () => activateTarget(4), contentText: 'S右', textColor: SG_HOLD_COLOR },
-    { key:6, label: 'スタート左',   isSelected: false, onTapped: () => activateTarget(5), contentText: 'S左', textColor: SG_HOLD_COLOR },
-    { key:7, label: 'カンテ',       isSelected: false, onTapped: () => activateTarget(6), contentText: 'カンテ', textColor: SG_HOLD_COLOR },
-    { key:8, label: 'ハリボテ',     isSelected: false, onTapped: () => activateTarget(7), contentText: 'ボテあり', textColor: SG_HOLD_COLOR },
-    { key:9, label: '足自由',　     isSelected: false, onTapped: () => activateTarget(8), contentText: '足自由', textColor: SG_HOLD_COLOR }
+    { key:1,  label: 'S・Gホールド',   isSelected: true,  onTapped: () => activateTarget(0), holdColor: SG_HOLD_COLOR },
+    { key:2,  label: 'ホールド',       isSelected: false, onTapped: () => activateTarget(1), holdColor: HOLD_COLOR },
+    { key:3,  label: 'スタート',       isSelected: false, onTapped: () => activateTarget(2), contentText: 'S', textColor: SG_HOLD_COLOR },
+    { key:4,  label: 'ゴール',         isSelected: false, onTapped: () => activateTarget(3), contentText: 'G', textColor: SG_HOLD_COLOR },
+    { key:5,  label: 'スタート右',     isSelected: false, onTapped: () => activateTarget(4), contentText: 'S右', textColor: SG_HOLD_COLOR },
+    { key:6,  label: 'スタート左',     isSelected: false, onTapped: () => activateTarget(5), contentText: 'S左', textColor: SG_HOLD_COLOR },
+    { key:7,  label: 'カンテ',         isSelected: false, onTapped: () => activateTarget(6), contentText: 'カンテ', textColor: SG_HOLD_COLOR },
+    { key:8,  label: 'ハリボテ',       isSelected: false, onTapped: () => activateTarget(7), contentText: 'ボテあり', textColor: SG_HOLD_COLOR },
+    { key:9,  label: '足自由',　       isSelected: false, onTapped: () => activateTarget(8), contentText: '足自由', textColor: SG_HOLD_COLOR },
+    { key:10, label: 'フリーテキスト', isSelected: false, onTapped: () => activateFreeText(9), contentText: '', textColor: SG_HOLD_COLOR }
   ];
 
   const [wallImage, setWallImage] = useState<CanvasImageSource | null>(null);
@@ -76,6 +77,7 @@ const PaintPage = ({route, navigator, updateTopos}:
   const [imageSizeProps, setImageSizeProps] = useState<SizeProps>(sizeProps);
   const [stamps, setStamps] = useState<IStampButton[]>(initialButton);
   const [initial, setInitial] = useState<string>('msg');
+  const [freeText, setFreeText] = useState<string>('');
 
   const stage = useRef<any>(null);
   const resizableImage = useRef<any>(null);
@@ -197,6 +199,29 @@ const PaintPage = ({route, navigator, updateTopos}:
         width: window.innerWidth,
         height: window.innerHeight
       };
+    });
+  }
+
+  const activateFreeText = (index: number) => {
+    ons.notification.prompt({
+      title: 'フリーテキスト',
+      message: '画像に追加したい文言を入力してください。',
+      buttonLabels: ['OK'],
+      callback: (txt: string) => {
+        if (!txt) return;
+
+        setStamps(old => old.map((x, i) => {
+          return isITextStamp(x) ? { ...x, contentText: x.label === 'フリーテキスト' ? txt : x.contentText } : x;
+        }));
+        activateTarget(index);
+      }
+      // callback: (txt: string) => {
+      //   setStamps(old => old.map((x, i) => {
+      //     console.log(freeText);
+      //     return isITextStamp(x) ? { ...x, contentText: x.label === 'フリーテキスト' ? txt : x.contentText } : x;
+      //   }));
+      //   activateTarget(index);
+      // }
     });
   }
 
