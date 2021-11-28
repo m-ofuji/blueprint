@@ -2,7 +2,7 @@
 import PaintPage from '../PaintPage/PaintPage';
 import { Navigator, Page } from 'react-onsenui';
 import { ITopo, TopoDB } from '../../DB/TopoDB';
-import { useLayoutEffect, useState, forwardRef } from 'react';
+import { useLayoutEffect, useState } from 'react';
 import { TopoCard } from '../../Components/TopoCard';
 import { GRADES } from '../../Constants/Grades';
 import { RectangleButton, RectangleButtonProps } from '../../Components/RectangleButton';
@@ -98,8 +98,6 @@ const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigato
       }
     });
   }
-
-  console.log(topos);
 
   return (
     <Page key={'root'}>

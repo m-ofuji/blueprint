@@ -1,6 +1,6 @@
 import { Text } from 'react-konva';
 import { forwardRef } from 'react';
-import { StampTextSize } from '../Constants';
+import { countStrLength } from '../../../Functions/CountStrLength';
 
 export type HoldTextProps = {
   key:number,
@@ -8,6 +8,7 @@ export type HoldTextProps = {
   x: number,
   y: number,
   character: string,
+  fontSize: number,
   color: string,
   scale: number | undefined,
   onDoubleTapped?: ((ev: string) => void)
@@ -19,7 +20,8 @@ export const isHoldTextProps = (arg: unknown): arg is HoldTextProps =>
     typeof (arg as HoldTextProps).x === 'number' &&
     typeof (arg as HoldTextProps).y === 'number' &&
     (typeof (arg as HoldTextProps).scale === 'number' || (arg as HoldTextProps).scale === undefined) &&
-    typeof (arg as HoldTextProps).character === 'string';
+    typeof (arg as HoldTextProps).character === 'string' &&
+    typeof (arg as HoldTextProps).fontSize === 'number';
 
 let HoldTextBase = (props: HoldTextProps, ref: any) => {
   const onDoubleTapped = () => {
@@ -31,13 +33,13 @@ let HoldTextBase = (props: HoldTextProps, ref: any) => {
     scaleX={props.scale}
     scaleY={props.scale}
     ref={ref}
-    fontSize={StampTextSize}
+    fontSize={props.fontSize}
     strokeWidth={1}
     stroke='white'
     fill={props.color}
     text={props.character}
-    x={props.x - ((StampTextSize * (props.scale ?? 1) * props.character.length) / 2)}
-    y={props.y - StampTextSize * (props.scale ?? 1) / 2}
+    x={props.x - ((props.fontSize * (props.scale ?? 1) * countStrLength(props.character) ) / 2)}
+    y={props.y - props.fontSize * (props.scale ?? 1) / 2}
     draggable={false}
     onDblTap={onDoubleTapped}
   />

@@ -42,7 +42,7 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
       }
       setHolds(holds.concat([normalHold]).filter(x => x));
     },
-    addText: (text: string, color: string) => {
+    addText: (text: string, fontSize: number, color: string) => {
 
       setStampKeys(stampKeys + 1);
 
@@ -53,6 +53,7 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
         y: (MarkerPositionY - (groupRef.current.y())) * (1 / scale),
         scale: 1 / scale,
         character:text,
+        fontSize: fontSize,
         color: color,
         onDoubleTapped: onTextDoubleTapped
       }

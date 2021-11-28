@@ -11,6 +11,7 @@ export interface IHoldStamp extends IStampButton {
 
 export interface ITextStamp extends IStampButton {
   contentText: string,
+  fontSize: number,
   textColor: string
 }
 
@@ -29,4 +30,5 @@ export const isITextStamp = (arg: unknown): arg is ITextStamp =>
     typeof (arg as ITextStamp).label === 'string' &&
     typeof (arg as ITextStamp).isSelected === 'boolean' &&
     typeof (arg as ITextStamp).contentText === 'string' &&
+    typeof (arg as ITextStamp).fontSize === 'number' &&
     typeof (arg as ITextStamp).textColor === 'string';
