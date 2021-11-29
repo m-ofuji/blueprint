@@ -70,7 +70,7 @@ const PaintPage = ({route, navigator, updateTopos}:
     { key:7,  label: 'カンテ',         isSelected: false, onTapped: () => activateTarget(6), contentText: 'カンテ',   fontSize: StampTextSize, textColor: SG_HOLD_COLOR },
     { key:8,  label: 'ハリボテ',       isSelected: false, onTapped: () => activateTarget(7), contentText: 'ボテあり', fontSize: StampTextSize, textColor: SG_HOLD_COLOR },
     { key:9,  label: '足自由',　       isSelected: false, onTapped: () => activateTarget(8), contentText: '足自由',   fontSize: StampTextSize, textColor: SG_HOLD_COLOR },
-    { key:10, label: 'フリーテキスト', isSelected: false, onTapped: () => activateFreeText(9), contentText: '',       fontSize: StampFreeTextSize, textColor: SG_HOLD_COLOR }
+    { key:10, label: 'フリーテキスト', isSelected: false, onTapped: () => activateFreeText(9), contentText: '',       fontSize: StampFreeTextSize, textColor: HOLD_COLOR }
   ];
 
   const [wallImage, setWallImage] = useState<CanvasImageSource | null>(null);
