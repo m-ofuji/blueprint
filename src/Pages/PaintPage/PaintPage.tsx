@@ -36,30 +36,6 @@ const PaintPage = ({route, navigator, updateTopos}:
     imageRotation: 0
   };
 
-  // history イベントの監視
-  window.addEventListener('popstate', function (e) {
-    // if (isHistoryPush) {
-      alert('navipage ブラウザでの戻るボタンは禁止されております。');
-      window.history.pushState(null, '');
-    // }
-  }, false);
-
-  // ons.ready(() => {
-  //   ons.disableDeviceBackButtonHandler();
-  //   document.addEventListener("backbutton", function(){
-  //     console.log('back button');
-  //   }, false);
-  // });
-
-  // ons.enableDeviceBackButtonHandler();
-  // console.log('set back button paintpage');
-  // ons.setDefaultDeviceBackButtonListener(() => {
-  //   console.log('back button pressed');
-  //   if (navigator.pages.length > 0) {
-  //     navigator.popPage();
-  //   }
-  // });
-
   const initialButton = [
     { key:1,  label: 'S・Gホールド',   isSelected: true,  onTapped: () => activateTarget(0), holdColor: SG_HOLD_COLOR },
     { key:2,  label: 'ホールド',       isSelected: false, onTapped: () => activateTarget(1), holdColor: HOLD_COLOR },
