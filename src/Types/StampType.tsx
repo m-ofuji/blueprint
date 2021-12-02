@@ -1,8 +1,10 @@
+import { MouseEvent } from "react";
+
 export interface IStampButton {
   key: number, 
   label: string,
   isSelected: boolean, 
-  onTapped: () => void
+  onTapped: (e: MouseEvent<HTMLDivElement>) => void
 }
 
 export interface IHoldStamp extends IStampButton {

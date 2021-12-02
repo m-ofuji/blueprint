@@ -1,9 +1,9 @@
-import { MouseEventHandler } from "react"
+import { MouseEvent } from "react"
 
 export type RoundButtonProps = {
   label: string,
   isSelected: boolean,
-  onTapped: MouseEventHandler<HTMLDivElement>
+  onTapped: (e: MouseEvent<HTMLDivElement>) => void
 }
 
 export const RoundButton = (props: RoundButtonProps) => {

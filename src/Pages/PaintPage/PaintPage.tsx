@@ -21,6 +21,7 @@ import { MAX_SIDE_LENGTH } from '../../Constants/MaxSideLength';
 import { BlobToArrayBuffer } from '../../Functions/BlobToArrayBuffer';
 import { HOLD_COLOR, SG_HOLD_COLOR } from '../../Constants/Colors';
 import { StampTextSize, StampFreeTextSize } from './Constants';
+import { MouseEvent } from 'react';
 
 const PaintPage = ({route, navigator, updateTopos}: 
   {route: any, navigator: Navigator, updateTopos: () => void}) => {
@@ -37,22 +38,25 @@ const PaintPage = ({route, navigator, updateTopos}:
   };
 
   const initialButton = [
-    { key:1,  label: 'S・Gホールド',   isSelected: true,  onTapped: () => activateTarget(0), holdColor: SG_HOLD_COLOR },
-    { key:2,  label: 'ホールド',       isSelected: false, onTapped: () => activateTarget(1), holdColor: HOLD_COLOR },
-    { key:3,  label: 'スタート',       isSelected: false, onTapped: () => activateTarget(2), contentText: 'S',        fontSize: StampTextSize, textColor: SG_HOLD_COLOR },
-    { key:4,  label: 'ゴール',         isSelected: false, onTapped: () => activateTarget(3), contentText: 'G',        fontSize: StampTextSize, textColor: SG_HOLD_COLOR },
-    { key:5,  label: 'スタート右',     isSelected: false, onTapped: () => activateTarget(4), contentText: 'S右',      fontSize: StampTextSize, textColor: SG_HOLD_COLOR },
-    { key:6,  label: 'スタート左',     isSelected: false, onTapped: () => activateTarget(5), contentText: 'S左',      fontSize: StampTextSize, textColor: SG_HOLD_COLOR },
-    { key:7,  label: 'カンテ',         isSelected: false, onTapped: () => activateTarget(6), contentText: 'カンテ',   fontSize: StampTextSize, textColor: SG_HOLD_COLOR },
-    { key:8,  label: 'ハリボテ',       isSelected: false, onTapped: () => activateTarget(7), contentText: 'ボテあり', fontSize: StampTextSize, textColor: SG_HOLD_COLOR },
-    { key:9,  label: '足自由',　       isSelected: false, onTapped: () => activateTarget(8), contentText: '足自由',   fontSize: StampTextSize, textColor: SG_HOLD_COLOR },
-    { key:10, label: 'フリーテキスト', isSelected: false, onTapped: () => activateFreeText(9), contentText: '',       fontSize: StampFreeTextSize, textColor: HOLD_COLOR }
+    { key:1,  label: 'S・Gホールド',   holdColor: SG_HOLD_COLOR },
+    { key:2,  label: 'ホールド',       holdColor: HOLD_COLOR },
+    { key:3,  label: 'スタート',       contentText: 'S',        fontSize: StampTextSize, textColor: SG_HOLD_COLOR },
+    { key:4,  label: 'ゴール',         contentText: 'G',        fontSize: StampTextSize, textColor: SG_HOLD_COLOR },
+    { key:5,  label: 'スタート右',     contentText: 'S右',      fontSize: StampTextSize, textColor: SG_HOLD_COLOR },
+    { key:6,  label: 'スタート左',     contentText: 'S左',      fontSize: StampTextSize, textColor: SG_HOLD_COLOR },
+    { key:7, label: 'フリーテキスト',  contentText: '',         fontSize: StampFreeTextSize, textColor: HOLD_COLOR }
   ];
 
   const [wallImage, setWallImage] = useState<CanvasImageSource | null>(null);
   const [stageSizeProps, setStageSizeProps] = useState<SizeProps>(sizeProps);
   const [imageSizeProps, setImageSizeProps] = useState<SizeProps>(sizeProps);
-  const [stamps, setStamps] = useState<IStampButton[]>(initialButton);
+  const [stamps, setStamps] = useState<IStampButton[]>(initialButton.map(x => {
+    return {
+      ...x, 
+      isSelected: x.key === 1,
+      onTapped: x.label === 'フリーテキスト' ? e => activateFreeText(e) : e => activateTarget(e) 
+    }
+  }));
   const [initial, setInitial] = useState<string>('msg');
 
   const stage = useRef<any>(null);
@@ -178,7 +182,7 @@ const PaintPage = ({route, navigator, updateTopos}:
     });
   }
 
-  const activateFreeText = (index: number) => {
+  const activateFreeText = (e: MouseEvent<HTMLDivElement>) => {
     ons.notification.prompt({
       title: 'フリーテキスト',
       message: '<p>画像に追加したい文言を入力してください。<br>※10文字まで入力できます。</p>',
@@ -191,7 +195,7 @@ const PaintPage = ({route, navigator, updateTopos}:
             message: '10文字以内で入力してください。',
             buttonLabels: ['OK'],
             callback: () => {
-              activateFreeText(index);
+              activateFreeText(e);
             }
           });
           return;
@@ -199,13 +203,13 @@ const PaintPage = ({route, navigator, updateTopos}:
         setStamps(old => old.map((x, i) => {
           return isITextStamp(x) ? { ...x, contentText: x.label === 'フリーテキスト' ? txt : x.contentText } : x;
         }));
-        activateTarget(index);
+        activateTarget(e);
       }
     });
   }
 
-  const activateTarget = (index: number) => {
-    setStamps(old => old.map((x,i) => {return { ...x, isSelected : i === index }}));
+  const activateTarget = (e: any) => {
+    setStamps(old => old.map((x,i) => {return { ...x, isSelected : x.label === e.target.innerText }}));
   }
 
   const holdTargetTapped = (evt: KonvaEventObject<Event>) => {
