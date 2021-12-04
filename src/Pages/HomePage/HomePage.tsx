@@ -7,6 +7,7 @@ import { TopoCard } from '../../Components/TopoCard';
 import { GRADES } from '../../Constants/Grades';
 import { RectangleButton, RectangleButtonProps } from '../../Components/RectangleButton';
 import EditPage from '../EditPage/EditPage';
+import { LoadingOverlay } from '../../Components/LoadingOverlay';
 
 const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigator, openMenu:() => void}) => {
   const onGradeClicked = (id: number) => (e: React.MouseEvent<HTMLElement>) => {
@@ -19,31 +20,6 @@ const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigato
     });
   }
 
-  // history イベントの監視
-  window.addEventListener('popstate', function (e) {
-    // if (isHistoryPush) {
-      alert('navipage ブラウザでの戻るボタンは禁止されております。');
-      window.history.pushState(null, '');
-    // }
-  }, false);
-
-  // ons.ready(() => {
-  //   ons.disableDeviceBackButtonHandler();
-  //   document.addEventListener("backbutton", function(){
-  //     console.log('back button');
-  //   }, false);
-  // });
-  // ons.ready(() => {
-  //   ons.enableDeviceBackButtonHandler();
-  //   console.log('set back button homepage');
-  //   ons.setDefaultDeviceBackButtonListener(() => {
-  //     console.log('back button pressed');
-  //     if (navigator?.pages.length > 0) {
-  //       navigator.popPage();
-  //     }
-  //   });
-  // });
-
   const [topos, setTopos] = useState<ITopo[]>([]);
   const [searchText, setSearchText] = useState<string>('');
   const [searchGrades, setSearchGrades] 
@@ -52,6 +28,7 @@ const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigato
         .filter(x => x.id <= 10)
         .map(x => {return { key: x.id, label: x.name, isSelected: false, onTapped: onGradeClicked(x.id) };})
     );
+  const [overlayVisibility, setOverlayVisibility] = useState<boolean>(true);
 
   const searchFunc = (x: ITopo) => 
     x.name.indexOf(searchText) > -1 
@@ -70,8 +47,12 @@ const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigato
   }
 
   const updateTopos = () => {
+    setOverlayVisibility(true);
     const db = new TopoDB();
-    db.Topos.toArray().then((topos) => { setTopos(topos); });
+    db.Topos.toArray().then((topos) => {
+      setTopos(topos);
+      setOverlayVisibility(false);
+    });
   }
 
   useLayoutEffect(updateTopos, []);
@@ -128,6 +109,7 @@ const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigato
             : <p> トポが見つかりませんでした </p>
           }
         </div>
+        <LoadingOverlay isVisible={overlayVisibility}/>
         <button className={'edit-button'} onClick={handlePaintPage}>
           <i className={'fas fa-pen'}/>
           トポ作成

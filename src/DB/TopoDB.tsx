@@ -1,5 +1,5 @@
 import Dexie from 'dexie';
-import {exportDB} from 'dexie-export-import';
+import { exportDB } from 'dexie-export-import';
 
 export class TopoDB extends Dexie {
   Topos: Dexie.Table<ITopo, number>;
@@ -19,11 +19,7 @@ export class TopoDB extends Dexie {
   }
 
   saveRows = (topos: ITopo[]) => {
-    // console.log(topos);
-    // this.Topos.bulkPut(topos);
-    // console.log('completed');
     for (const t of topos) {
-    console.log(t);
       this.save(t);
     }
   }
@@ -36,8 +32,6 @@ export class TopoDB extends Dexie {
     return await exportDB(this, {
       filter : (table, value) => { return table === 'Topos' },
       progressCallback: (progress) => {
-        console.log(progress.completedRows);
-        console.log(progress.totalRows);
         if (progress?.totalRows) {
           console.log((progress.completedRows / progress.totalRows) * 100);
         }
