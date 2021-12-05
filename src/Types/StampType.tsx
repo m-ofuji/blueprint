@@ -4,7 +4,7 @@ export interface IStampButton {
   key: number, 
   label: string,
   isSelected: boolean, 
-  onTapped: (e: MouseEvent<HTMLDivElement>) => void
+  onTapped?: (e: MouseEvent<HTMLDivElement>) => void
 }
 
 export interface IHoldStamp extends IStampButton {

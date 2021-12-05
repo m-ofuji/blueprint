@@ -51,13 +51,7 @@ const PaintPage = ({route, navigator, updateTopos}:
   const [wallImage, setWallImage] = useState<CanvasImageSource | null>(null);
   const [stageSizeProps, setStageSizeProps] = useState<SizeProps>(sizeProps);
   const [imageSizeProps, setImageSizeProps] = useState<SizeProps>(sizeProps);
-  const [stamps, setStamps] = useState<IStampButton[]>(initialButton.map(x => {
-    return {
-      ...x, 
-      isSelected: false,
-      onTapped: x.label === 'フリーテキスト' ? e => activateFreeText(e) : e => activateTarget(e) 
-    }
-  }));
+  const [stamps, setStamps] = useState<IStampButton[]>(initialButton.map(x => { return {...x, isSelected: false } }));
 
   const stage = useRef<any>(null);
   const resizableImage = useRef<any>(null);
@@ -78,6 +72,9 @@ const PaintPage = ({route, navigator, updateTopos}:
     const i = new window.Image();
     i.src = dataURL;
     setWallImage(i);
+    setStamps((oldStamp) => {
+      return oldStamp.map((x) => { return {...x, isSelected: x.key === 1 }});
+    });
 
     i.onload = (evt) => {
       setImageSizeProps((old) => {
@@ -88,9 +85,6 @@ const PaintPage = ({route, navigator, updateTopos}:
           width: i.width,
           height: i.height,
         } 
-      });
-      setStamps((old) => {
-        return old.map((x) => { return {...x, isSelected: x.key === 1} });
       });
     }
   }
@@ -210,7 +204,7 @@ const PaintPage = ({route, navigator, updateTopos}:
       onSelectImageTapped();
       return;
     }
-    setStamps(old => old.map((x,i) => {return { ...x, isSelected : x.label === e.target.innerText }}));
+    setStamps(old => old.map((x) => {return { ...x, isSelected : x.label === e.target.innerText }}));
   }
 
   const holdTargetTapped = (evt: KonvaEventObject<Event>) => {
@@ -286,7 +280,7 @@ const PaintPage = ({route, navigator, updateTopos}:
         </Layer>
       </Stage>
       <div className={'horizontal-container'}>
-        {stamps.map((props, i) => <RoundButton {...props}/>)}
+        {stamps.map(props => <RoundButton {...props} onTapped= {props.label === 'フリーテキスト' ? e => activateFreeText(e) : e => activateTarget(e)}/>)}
       </div>
       <SelectImageButton 
         isVisible={wallImage === null || wallImage === undefined} 
