@@ -1,7 +1,7 @@
 import ons from 'onsenui'
 import EditPage from '../EditPage/EditPage';
 import { Navigator } from 'react-onsenui';
-import { createRef, ChangeEvent, useState, useRef, useLayoutEffect} from 'react';
+import { createRef, ChangeEvent, useState, useRef } from 'react';
 import { Page } from 'react-onsenui';
 import { KonvaEventObject } from 'konva/lib/Node';
 import { Stage, Layer, Group } from 'react-konva';
@@ -22,6 +22,7 @@ import { BlobToArrayBuffer } from '../../Functions/BlobToArrayBuffer';
 import { HOLD_COLOR, SG_HOLD_COLOR } from '../../Constants/Colors';
 import { StampTextSize, StampFreeTextSize } from './Constants';
 import { MouseEvent } from 'react';
+import { SelectImageButton } from './Components/SelectImageButton';
 
 const PaintPage = ({route, navigator, updateTopos}: 
   {route: any, navigator: Navigator, updateTopos: () => void}) => {
@@ -53,37 +54,18 @@ const PaintPage = ({route, navigator, updateTopos}:
   const [stamps, setStamps] = useState<IStampButton[]>(initialButton.map(x => {
     return {
       ...x, 
-      isSelected: x.key === 1,
+      isSelected: false,
       onTapped: x.label === 'フリーテキスト' ? e => activateFreeText(e) : e => activateTarget(e) 
     }
   }));
-  const [initial, setInitial] = useState<string>('msg');
 
   const stage = useRef<any>(null);
   const resizableImage = useRef<any>(null);
   const fileInputRef = createRef<HTMLInputElement>();
 
-  useLayoutEffect(() => { 
-    if (wallImage) return;
-
-    if (ons.platform.isIOS() && fileInputRef.current) {
-      fileInputRef.current.click();
-      return;
-    }
-
-    if (initial === 'open' && fileInputRef.current) {
-      fileInputRef.current.click();
-    } else if (initial === 'msg') {
-      ons.notification.alert({
-        title: '壁画像選択',
-        message: '壁の画像を選択してください。',
-        buttonLabels: ['OK'],
-        callback: () => {
-          setInitial('open');
-        }
-      });
-    }
-   });
+  const onSelectImageTapped = () => {
+    fileInputRef.current?.click();
+  }
 
   const onChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.files === null) return;
@@ -107,11 +89,18 @@ const PaintPage = ({route, navigator, updateTopos}:
           height: i.height,
         } 
       });
+      setStamps((old) => {
+        return old.map((x) => { return {...x, isSelected: x.key === 1} });
+      });
     }
   }
 
   // 保存
   const onSaveTapped = async () => {
+    if (!wallImage) {
+      onSelectImageTapped();
+      return;
+    }
     // todo なぜawaitするとうまくリサイズされるのか
     await resizeStageToImageSize();
 
@@ -147,6 +136,10 @@ const PaintPage = ({route, navigator, updateTopos}:
 
   // ダウンロード
   const onDownloadTapped = () => {
+    if (!wallImage) {
+      onSelectImageTapped();
+      return;
+    }
     ons.openActionSheet({
       cancelable: true,
       title: 'トポ画像をダウンロードしますか？',
@@ -183,6 +176,10 @@ const PaintPage = ({route, navigator, updateTopos}:
   }
 
   const activateFreeText = (e: MouseEvent<HTMLDivElement>) => {
+    if (!wallImage) {
+      onSelectImageTapped();
+      return;
+    }
     ons.notification.prompt({
       title: 'フリーテキスト',
       message: '<p>画像に追加したい文言を入力してください。<br>※10文字まで入力できます。</p>',
@@ -209,6 +206,10 @@ const PaintPage = ({route, navigator, updateTopos}:
   }
 
   const activateTarget = (e: any) => {
+    if (!wallImage) {
+      onSelectImageTapped();
+      return;
+    }
     setStamps(old => old.map((x,i) => {return { ...x, isSelected : x.label === e.target.innerText }}));
   }
 
@@ -287,6 +288,10 @@ const PaintPage = ({route, navigator, updateTopos}:
       <div className={'horizontal-container'}>
         {stamps.map((props, i) => <RoundButton {...props}/>)}
       </div>
+      <SelectImageButton 
+        isVisible={wallImage === null || wallImage === undefined} 
+        onTapped={onSelectImageTapped}
+      />
       <CloseButton className={'close-button float-right-top'} onTapped={onCloseTapped}></CloseButton>
       <DownloadButton className={'download-button'} onTapped={onDownloadTapped}/>
       <SaveButton className={'save-button'} onTapped={onSaveTapped}/>
