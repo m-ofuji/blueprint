@@ -23,6 +23,7 @@ import { HOLD_COLOR, SG_HOLD_COLOR } from '../../Constants/Colors';
 import { StampTextSize, StampFreeTextSize } from './Constants';
 import { MouseEvent } from 'react';
 import { SelectImageButton } from './Components/SelectImageButton';
+import { FreeTextDialog } from './Components/FreeTextDialog';
 
 const PaintPage = ({route, navigator, updateTopos}: 
   {route: any, navigator: Navigator, updateTopos: () => void}) => {
@@ -52,6 +53,7 @@ const PaintPage = ({route, navigator, updateTopos}:
   const [stageSizeProps, setStageSizeProps] = useState<SizeProps>(sizeProps);
   const [imageSizeProps, setImageSizeProps] = useState<SizeProps>(sizeProps);
   const [stamps, setStamps] = useState<IStampButton[]>(initialButton.map(x => { return {...x, isSelected: false } }));
+  const [isFreeTextOpen, setIsFreeTextOpen] = useState<boolean>(false);
 
   const stage = useRef<any>(null);
   const resizableImage = useRef<any>(null);
@@ -169,34 +171,24 @@ const PaintPage = ({route, navigator, updateTopos}:
     });
   }
 
+  const onFreeTextOKTapped = (text: string) => {
+    if (!text || text.length <= 0) {
+      setIsFreeTextOpen(false);
+      return;
+    }
+    setStamps(old => old.map((x, i) => {
+      return isITextStamp(x) ? { ...x, contentText: x.label === 'フリーテキスト' ? text : x.contentText } : x;
+    }));
+    activateTarget({target: { innerText: 'フリーテキスト' }});
+    setIsFreeTextOpen(false);
+  }
+
   const activateFreeText = (e: MouseEvent<HTMLDivElement>) => {
     if (!wallImage) {
       onSelectImageTapped();
       return;
     }
-    ons.notification.prompt({
-      title: 'フリーテキスト',
-      message: '<p>画像に追加したい文言を入力してください。<br>※10文字まで入力できます。</p>',
-      buttonLabels: ['OK'],
-      callback: (txt: string) => {
-        if (!txt) return;
-        if (txt.length > 10) {
-          ons.notification.alert({
-            title: 'フリーテキスト',
-            message: '10文字以内で入力してください。',
-            buttonLabels: ['OK'],
-            callback: () => {
-              activateFreeText(e);
-            }
-          });
-          return;
-        }
-        setStamps(old => old.map((x, i) => {
-          return isITextStamp(x) ? { ...x, contentText: x.label === 'フリーテキスト' ? txt : x.contentText } : x;
-        }));
-        activateTarget(e);
-      }
-    });
+    setIsFreeTextOpen(true);
   }
 
   const activateTarget = (e: any) => {
@@ -298,6 +290,12 @@ const PaintPage = ({route, navigator, updateTopos}:
         accept='image/*'
       />
       </div>
+      <FreeTextDialog 
+        isOpen={isFreeTextOpen} 
+        title={'フリーテキスト'} 
+        msg={'画像に追加したい文言を入力してください。'} 
+        maxLength={10}
+        onOKTapped={onFreeTextOKTapped}/>
     </Page>
   )
 }
