@@ -34,9 +34,9 @@ export const FreeTextDialog = (props: FreeTextDialogProps) => {
       <div className='alert-dialog-title'>{props.title}</div>
       <div className='alert-dialog-content'>
         <p>{props.msg}<br/>{`※${props.maxLength}文字まで入力できます。`}</p>
-        <input className='text-input text-input--underbar' onChange={onChange} value={text} type='text' maxLength={props.maxLength * 1.5}/>
-        <div style={{textAlign: 'right', marginRight: '2rem', marginTop: '0.3rem'}}>
-          {text.length > props.maxLength ? '上限を超えています' : `${text.length}/${props.maxLength}`}
+        <input style={{width: '100%'}} className='text-input text-input--underbar' onChange={onChange} value={text} type='text' maxLength={props.maxLength * 1.5}/>
+        <div style={{textAlign: 'right', marginTop: '0.3rem'}}>
+          {text.length > props.maxLength ? '上限を超えています' : `${text.length}/${props.maxLength}文字`}
         </div>
       </div>
       <div className='alert-dialog-footer'>
