@@ -1,4 +1,4 @@
-import { MouseEventHandler, useState } from 'react'
+import { useState } from 'react'
 import { AlertDialog, Button } from 'react-onsenui'
 import ons from 'onsenui'
 
@@ -15,7 +15,7 @@ export const FreeTextDialog = (props: FreeTextDialogProps) => {
 
   const onOKTapped = () => {
     if (!props.onOKTapped) return;
-    if (text.length > 10) {
+    if (text.length > props.maxLength) {
       ons.notification.alert({
         title: props.title,
         message: `${props.maxLength}文字以内で入力してください。`,
