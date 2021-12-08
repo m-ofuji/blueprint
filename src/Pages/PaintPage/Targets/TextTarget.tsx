@@ -1,6 +1,6 @@
 import { Text } from 'react-konva';
 import { KonvaEventObject } from 'konva/lib/Node';
-import { MAIN_COLOR } from '../../../Constants/Colors';
+import { TARGET_COLOR } from '../../../Constants/Colors';
 import { countStrLength } from '../../../Functions/CountStrLength';
 
 export type TextTargetProps = {
@@ -18,7 +18,7 @@ export const TextTarget = (props: TextTargetProps) => {
       text={props.character}
       strokeWidth={1}
       stroke='white'
-      fill={MAIN_COLOR}
+      fill={TARGET_COLOR}
       fontSize={props.fontSize}
       visible={props.isVisible}
       x={props.x - (props.fontSize * (countStrLength(props.character) / 2))}
