@@ -90,9 +90,9 @@ const EditPage = (props: EditPageProps) => {
               })
             }
             <p className={'edit-title'}>課題名</p>
-            <Input className='edit-input' value={title} onChange={onTitleChanged}/>
+            <Input className='edit-input' modifier="underbar" value={title} onChange={onTitleChanged}/>
             <p className={'edit-title'}>設定者</p>
-            <Input className='edit-input' value={setter} onChange={onSetterChanged}/>
+            <Input className='edit-input' modifier="underbar" value={setter} onChange={onSetterChanged}/>
             <p className={'edit-title'}>グレード</p>
             <Select modifier={'material'} value={grade.toString()} onChange={onGradeChanged}>
               {GRADES.filter(x => x.id <= 10).map(x => <option key={x.id} value={x.id}>{x.name}</option>)}

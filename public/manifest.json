@@ -1,10 +1,10 @@
 {
-  "name": "BluePrint",
-  "short_name": "BluePrint",
+  "name": "Toporis",
+  "short_name": "Toporis",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#fff",
-  "description": "BluePrint",
+  "description": "Toporis",
   "icons": [{
     "src": "./icon_48.png",
     "sizes": "48x48",
