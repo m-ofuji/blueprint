@@ -52,7 +52,7 @@ const PaintPage = ({route, navigator, updateTopos}:
   const [wallImage, setWallImage] = useState<CanvasImageSource | null>(null);
   const [stageSizeProps, setStageSizeProps] = useState<SizeProps>(sizeProps);
   const [imageSizeProps, setImageSizeProps] = useState<SizeProps>(sizeProps);
-  const [stamps, setStamps] = useState<IStampButton[]>(initialButton.map(x => { return {...x, isSelected: false } }));
+  const [stamps, setStamps] = useState<IStampButton[]>(initialButton.map(x => { return { ...x, isSelected: false } }));
   const [isFreeTextOpen, setIsFreeTextOpen] = useState<boolean>(false);
 
   const stage = useRef<any>(null);
@@ -75,7 +75,7 @@ const PaintPage = ({route, navigator, updateTopos}:
     i.src = dataURL;
     setWallImage(i);
     setStamps((oldStamp) => {
-      return oldStamp.map((x) => { return {...x, isSelected: x.key === 1 }});
+      return oldStamp.map((x) => { return { ...x, isSelected: x.key === 1 }});
     });
 
     i.onload = (evt) => {
