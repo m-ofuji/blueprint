@@ -125,7 +125,7 @@ export const TopoCard = (props: TopoCardProps) => {
           <img ref={imageRef} src={arrayBufferToUrl(x)} alt={'画像の読み込みに失敗しました'} onClick={openImage}/>
         })
       } */}
-      <img ref={imageRef} src={arrayBufferToUrl(props.data[0])} alt={'画像の読み込みに失敗しました'} onClick={openImage}/>
+      <img ref={imageRef} src={arrayBufferToUrl(props.data[0])} alt={props.name} onClick={openImage}/>
       <div className={'topo-card-data'}>
         <div className={'topo-card-title-container'}>
           <div className={'topo-card-title'}>{props.name}</div>
