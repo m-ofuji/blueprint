@@ -1,11 +1,7 @@
-import ons from 'onsenui';
 import { Navigator } from 'react-onsenui';
-import { ChangeEvent, useState } from 'react';
-import { Page, Input, Select } from 'react-onsenui';
+import { Page, List, ListItem, Input, Select } from 'react-onsenui';
 import { CloseButton } from '../../Components/CloseButton';
-import { TopoDB } from '../../DB/TopoDB';
-import { GRADES } from '../../Constants/Grades';
-import { arrayBufferToUrl } from '../../Functions/ArraybufferToUrl';
+
 
 export interface HelpPageProps {
   route: any,
@@ -13,7 +9,7 @@ export interface HelpPageProps {
   id?: number;
 }
 
-const EditPage = (props: HelpPageProps) => {
+const HelpPage = (props: HelpPageProps) => {
 
   const onCloseTapped = () => props.navigator.popPage();
 
@@ -23,29 +19,29 @@ const EditPage = (props: HelpPageProps) => {
         <CloseButton className={'close-button float-right-top'} onTapped={onCloseTapped}></CloseButton>
         <div id={'edit-container'}>
           <h3 className={'page-title'}><i className={'fas fa-pen'}/>使い方</h3>
-          {/* <form id={'edit-form'}>
-            {
-              props.data?.map((x, idx) => {
-                const imgUrl = arrayBufferToUrl(x);
-                return <img key={idx} className={'edit-image'} src={imgUrl} alt={'画像の読み込みに失敗しました'} onClick={openImage(imgUrl)}/>;
-              })
-            }
-            <p className={'edit-title'}>課題名</p>
-            <Input className='edit-input' modifier="underbar" value={title} onChange={onTitleChanged}/>
-            <p className={'edit-title'}>設定者</p>
-            <Input className='edit-input' modifier="underbar" value={setter} onChange={onSetterChanged}/>
-            <p className={'edit-title'}>グレード</p>
-            <Select modifier={'material'} value={grade.toString()} onChange={onGradeChanged}>
-              {GRADES.filter(x => x.id <= 10).map(x => <option key={x.id} value={x.id}>{x.name}</option>)}
-            </Select>
-          </form> */}
+          <List>
+            <ListItem
+              key={1}
+              className={'menu-item'}
+              tappable
+              // onClick={exportTopo}
+              modifier='longdivider'>
+                <i className={'fas fa-database'}/> バックアップ保存
+            </ListItem>
+            <ListItem 
+              key={2}
+              className={'menu-item'}
+              tappable
+              expandable
+              modifier='longdivider'>
+                <i className={'fas fa-file-import'}/> インポート
+              <div className='expandable-content'>コンテント</div>
+            </ListItem>
+          </List>
         </div>
-        {/* <button className={'edit-button'} onClick={saveTopo}>
-          <i className={'fas fa-save'}/>保存
-        </button> */}
       </div>
     </Page>
   )
 }
 
-export default EditPage;
+export default HelpPage;

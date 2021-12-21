@@ -1,12 +1,13 @@
-import { Page, List, ListItem } from 'react-onsenui';
+import { Page, List, ListItem, Navigator } from 'react-onsenui';
 import { TopoDB } from '../../DB/TopoDB';
 import { downloadBlob } from '../../Functions/DownloadBlob';
 import { openFileSelecter } from '../../Functions/OpenFileSelecter';
 import { stringToJson } from '../../Functions/StringToJson';
 import { getCurrentTimestamp } from '../../Functions/CurrentTimestamp';
 import { uint8ArrayToBuffer } from '../../Functions/Uint8ArrayToBuffer';
+import HelpPage from '../HelpPage/HelpPage';
 
-const SideMenu = ({updateTopos}: {updateTopos?: (() => void)}) => {
+const SideMenu = ({route, navigator, updateTopos}: {route: any, navigator: Navigator, updateTopos?: (() => void)}) => {
   const exportTopo = async () => {
     const db = new TopoDB();
     const topos = await (await db.Topos.toArray()).map(x => { return {...x, data: x.data.map(y => new Uint8Array(y))} });
@@ -54,6 +55,17 @@ const SideMenu = ({updateTopos}: {updateTopos?: (() => void)}) => {
     });
   }
 
+  const helpClicked = () => {
+    navigator.pushPage({
+      comp: HelpPage,
+      props: {
+        key: 'HelpPage',
+        route: route,
+        navigator: navigator
+      }
+    });
+  }
+
   return (
     <Page>
       <List>
@@ -73,6 +85,14 @@ const SideMenu = ({updateTopos}: {updateTopos?: (() => void)}) => {
           modifier='longdivider'>
             <i className={'fas fa-file-import'}/> インポート
         </ListItem>
+        {/* <ListItem 
+          key={3}
+          className={'menu-item'}
+          tappable
+          onClick={helpClicked}
+          modifier='longdivider'>
+            <i className={'fas fa-file-import'}/> 使い方
+        </ListItem> */}
       </List>
     </Page>
   )

@@ -17,6 +17,16 @@ export const NaviPage = () => {
     );
   }
 
+  const renderMenu = (route:any, navigator: Navigator) => {
+    return (
+      <route.comp 
+        key={route.key} 
+        navigator={navigator}
+        {...route.props}
+      />
+    );
+  }
+
   const togggleMenuOpen = () => {
     setIsMenuOpen(!isMenuOpen);
   }
@@ -24,8 +34,6 @@ export const NaviPage = () => {
   const openMenu = () => {
     setIsMenuOpen(true);
   }
-
-  // const homePage = HomePage;
 
   return (
     <Splitter>
@@ -35,7 +43,11 @@ export const NaviPage = () => {
         onClose={togggleMenuOpen}
         width={250}
         collapse='portrait'>
-        <SideMenu/>
+        <Navigator
+          key='navi'
+          initialRoute={{comp: SideMenu, key: 'SideMenu'}}
+          renderPage={renderMenu}>
+        </Navigator>
       </SplitterSide>
       <SplitterContent>
       <Navigator
