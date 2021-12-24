@@ -18,24 +18,48 @@ const HelpPage = (props: HelpPageProps) => {
       <div className={'page-content edit-page-content'}>
         <CloseButton className={'close-button float-right-top'} onTapped={onCloseTapped}></CloseButton>
         <div id={'edit-container'}>
-          <h3 className={'page-title'}><i className={'fas fa-pen'}/>使い方</h3>
+          <h3 className={'page-title'}>使い方</h3>
           <List>
-            <ListItem
+            <ListItem 
               key={1}
               className={'menu-item'}
-              tappable
-              // onClick={exportTopo}
+              // tappable
+              expandable
               modifier='longdivider'>
-                <i className={'fas fa-database'}/> バックアップ保存
+              マークを追加したい
+              <div className='expandable-content'>
+                メニューから追加したいマークを選びます。<br/>画面上のアイコンをタップします。
+              </div>
             </ListItem>
             <ListItem 
               key={2}
               className={'menu-item'}
-              tappable
               expandable
               modifier='longdivider'>
-                <i className={'fas fa-file-import'}/> インポート
-              <div className='expandable-content'>コンテント</div>
+              マークを消したい
+              <div className='expandable-content'>
+                マークをダブルタップします。
+              </div>
+            </ListItem>
+            <ListItem 
+              key={3}
+              className={'menu-item'}
+              expandable
+              modifier='longdivider'>
+              アプリ内に画像を保存したい
+              <div className='expandable-content'>
+                {/* マークをダブルタップします。 */}
+              </div>
+            </ListItem>
+            <ListItem 
+              key={4}
+              className={'menu-item'}
+              expandable
+              modifier='longdivider'>
+              画像をダウンロードしたい
+              <div className='expandable-content'>
+                {/* マークをダブルタップします。 */}
+              </div>
             </ListItem>
           </List>
         </div>
