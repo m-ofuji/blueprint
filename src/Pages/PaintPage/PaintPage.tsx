@@ -12,6 +12,7 @@ import { RoundButton } from '../../Components/RoundButton';
 import { DownloadButton } from './Components/DownloadButton';
 import { SaveButton } from './Components/SaveButton';
 import { CloseButton } from '../../Components/CloseButton';
+import { RotateButton } from './Components/RotateButton';
 import { MarkerPositionX, MarkerPositionY } from './Constants';
 import { getCurrentTimestamp } from '../../Functions/CurrentTimestamp'; 
 import { downloadURI } from '../../Functions/DownloadUri';
@@ -54,6 +55,9 @@ const PaintPage = ({route, navigator, updateTopos}:
   const [imageSizeProps, setImageSizeProps] = useState<SizeProps>(sizeProps);
   const [stamps, setStamps] = useState<IStampButton[]>(initialButton.map(x => { return { ...x, isSelected: false } }));
   const [isFreeTextOpen, setIsFreeTextOpen] = useState<boolean>(false);
+  const [isRotated, setIsRotated] = useState<boolean>(false);
+  const [imageWidth, setIMageWidth] = useState<number>(0);
+  const [imageHeight, setIMageHeight] = useState<number>(0);
 
   const stage = useRef<any>(null);
   const resizableImage = useRef<any>(null);
@@ -80,6 +84,8 @@ const PaintPage = ({route, navigator, updateTopos}:
 
     i.onload = (evt) => {
       setImageSizeProps((old) => {
+        setIMageWidth(i.width);
+        setIMageHeight(i.height);
         return { 
           ...old,
           centerX: window.innerWidth,
@@ -149,6 +155,15 @@ const PaintPage = ({route, navigator, updateTopos}:
       const uri = stage.current.toDataURL({pixelRatio: pixelRatio});
       downloadURI(uri, getCurrentTimestamp() + '.png');
       resetStage();
+    });
+  }
+
+  const onRotateTapped = () => {
+    setIsRotated(old => {
+      const newRotation = !old;
+      setImageSizeProps(old => {return {...old, width: newRotation ? imageHeight : imageWidth, height: newRotation ? imageWidth : imageHeight}});
+      resizableImage.current.rotate(newRotation);
+      return newRotation;
     });
   }
 
@@ -281,6 +296,7 @@ const PaintPage = ({route, navigator, updateTopos}:
       <CloseButton className={'close-button float-right-top'} onTapped={onCloseTapped}></CloseButton>
       <DownloadButton className={'download-button'} onTapped={onDownloadTapped}/>
       <SaveButton className={'save-button'} onTapped={onSaveTapped}/>
+      <RotateButton className={'rotate-button'} onTapped={onRotateTapped}/>
       <input
         key={'file-uploader'}
         onChange={onChange}

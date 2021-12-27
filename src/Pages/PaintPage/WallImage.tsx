@@ -17,6 +17,8 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
   const [lastDist, setLastDist] = useState(0);
   const [lastCenter, setLastCenter] = useState<{x: number, y: number} | null>(null);
   const [stampKeys, setStampKeys] = useState<number>(0);
+  const [rotation, setRotation] = useState<number>(0);
+  const [x, setX] = useState<number>(0);
 
   const onCirleDoubleTapped = (keyStr: string) => {
     setHolds(old => old.filter(x => x.keyStr !== keyStr ));
@@ -58,6 +60,10 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
         onDoubleTapped: onTextDoubleTapped
       }
       setHoldText(texts.concat([t]).filter(x => x));
+    },
+    rotate: (isRotated: boolean) => {
+      setRotation(isRotated ? 90 : 0);
+      setX((isRotated ? Number(props.src?.height) : props.imageX) ?? 0);
     }
   }));
 
@@ -151,7 +157,8 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
       <Image
         offsetX={props.imageX}
         offsetY={props.imageY}
-        rotation={props.imageRotation}
+        x={x}
+        rotation={rotation}
         image={props.src}
       />
       {holds.map((props, i) => <HoldCircle {...props}/>)}
