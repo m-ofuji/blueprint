@@ -92,7 +92,7 @@ const PaintPage = ({route, navigator, updateTopos}:
           centerY: window.innerHeight,
           width: i.width,
           height: i.height,
-        } 
+        }
       });
     }
   }
@@ -159,6 +159,10 @@ const PaintPage = ({route, navigator, updateTopos}:
   }
 
   const onRotateTapped = () => {
+    if (!wallImage) {
+      onSelectImageTapped();
+      return;
+    }
     setIsRotated(old => {
       const newRotation = !old;
       setImageSizeProps(old => {return {...old, width: newRotation ? imageHeight : imageWidth, height: newRotation ? imageWidth : imageHeight}});
