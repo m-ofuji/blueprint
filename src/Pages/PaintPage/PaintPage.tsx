@@ -1,5 +1,6 @@
 import ons from 'onsenui'
 import EditPage from '../EditPage/EditPage';
+import HelpPage from '../HelpPage/HelpPage';
 import { Navigator } from 'react-onsenui';
 import { createRef, ChangeEvent, useState, useRef } from 'react';
 import { Page } from 'react-onsenui';
@@ -13,14 +14,15 @@ import { DownloadButton } from './Components/DownloadButton';
 import { SaveButton } from './Components/SaveButton';
 import { CloseButton } from '../../Components/CloseButton';
 import { RotateButton } from './Components/RotateButton';
+import { HelpButton } from './Components/HelpButton';
 import { MarkerPositionX, MarkerPositionY } from './Constants';
 import { getCurrentTimestamp } from '../../Functions/CurrentTimestamp'; 
 import { downloadURI } from '../../Functions/DownloadUri';
 import { IStampButton, IHoldStamp, ITextStamp, isIHoldStamp, isITextStamp } from '../../Types/StampType';
 import { SizeProps } from '../../Types/SizeProps';
 import { MAX_SIDE_LENGTH } from '../../Constants/MaxSideLength';
-import { BlobToArrayBuffer } from '../../Functions/BlobToArrayBuffer';
 import { HOLD_COLOR, SG_HOLD_COLOR } from '../../Constants/Colors';
+import { BlobToArrayBuffer } from '../../Functions/BlobToArrayBuffer';
 import { StampTextSize, StampFreeTextSize } from './Constants';
 import { MouseEvent } from 'react';
 import { SelectImageButton } from './Components/SelectImageButton';
@@ -171,6 +173,16 @@ const PaintPage = ({route, navigator, updateTopos}:
     });
   }
 
+  const onHelpTapped = () => {
+    navigator.pushPage({
+      comp: HelpPage,
+      props: {
+        key: 'HelpPage',
+        navigator: navigator
+      }
+    });
+  }
+
   const resizeStageToImageSize = () => {
     setStageSizeProps(old => {return {...old, ...imageSizeProps}});
     setStamps(old => old.map(x => {return { ...x, isSelected : false }}));
@@ -301,6 +313,7 @@ const PaintPage = ({route, navigator, updateTopos}:
       <DownloadButton className={'download-button'} onTapped={onDownloadTapped}/>
       <SaveButton className={'save-button'} onTapped={onSaveTapped}/>
       <RotateButton className={'rotate-button'} onTapped={onRotateTapped}/>
+      <HelpButton className={'help-button'} onTapped={onHelpTapped}/>
       <input
         key={'file-uploader'}
         onChange={onChange}

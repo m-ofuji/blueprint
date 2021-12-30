@@ -1,5 +1,5 @@
 import { Navigator } from 'react-onsenui';
-import { Page, List, ListItem, Input, Select } from 'react-onsenui';
+import { Page, List, ListItem } from 'react-onsenui';
 import { CloseButton } from '../../Components/CloseButton';
 
 
@@ -23,7 +23,6 @@ const HelpPage = (props: HelpPageProps) => {
             <ListItem 
               key={1}
               className={'menu-item'}
-              // tappable
               expandable
               modifier='longdivider'>
               マークを追加したい
@@ -46,9 +45,9 @@ const HelpPage = (props: HelpPageProps) => {
               className={'menu-item'}
               expandable
               modifier='longdivider'>
-              アプリ内に画像を保存したい
+              トポ画像を保存したい
               <div className='expandable-content'>
-                {/* マークをダブルタップします。 */}
+                画面左下のボタンをタップし、課題情報を入力して保存します。
               </div>
             </ListItem>
             <ListItem 
@@ -58,7 +57,7 @@ const HelpPage = (props: HelpPageProps) => {
               modifier='longdivider'>
               画像をダウンロードしたい
               <div className='expandable-content'>
-                {/* マークをダブルタップします。 */}
+                画面左下のボタンから、画像をダウンロードできます。
               </div>
             </ListItem>
           </List>
