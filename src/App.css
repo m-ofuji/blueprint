@@ -10,6 +10,11 @@ body {
   margin-right: 7px;
 }
 
+.page__content,
+.page__content.page--material__content {
+  background: #fafafa!important;
+}
+
 .page-content {
   position: absolute;
   width: 100%;
@@ -395,6 +400,38 @@ body {
 }
 
 /* ヘルプボタン　ここまで*/
+
+
+.help-page-title {
+  text-align: center;
+  font-weight: bold!important;
+  margin-top: 50px!important;
+}
+
+.help-container {
+  margin: 20px 20px;
+}
+
+.help-image {
+  margin-top: 20px;
+  text-align: center;
+}
+
+/* ヘルプメニューボタン　ここから*/
+
+.help-menu-button {
+  margin: 20px 20px;
+  border-radius: 1.3rem; 
+  padding: 2% 5%;
+  text-align: center;
+  width: 80%;
+  font-size: 1rem;
+  white-space: nowrap;
+  color: white;
+  background-color: #0058bf;
+}
+/* ヘルプメニューボタン　ここまで*/
+
 
 /* スタンプメニューここから */
 
