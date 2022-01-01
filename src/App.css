@@ -23,7 +23,7 @@ body {
 }
 
 .hidden {
-  display: none;
+  display: none!important;
 }
 
 .hand-segment{
@@ -409,7 +409,7 @@ body {
 }
 
 .help-container {
-  margin: 20px 20px 10px 20px;
+  margin: 15px 20px 10px 20px;
   border-radius: 20px;
   height: 75%;
   overflow-y: scroll;
@@ -430,6 +430,10 @@ body {
 .help-image {
   margin-top: 20px;
   text-align: center;
+}
+
+.help-selected-dot {
+  color: #0058bf;
 }
 
 /* ヘルプメニューボタン　ここから*/

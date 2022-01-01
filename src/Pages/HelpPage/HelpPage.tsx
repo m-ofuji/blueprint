@@ -1,7 +1,7 @@
 import { Navigator } from 'react-onsenui';
 import { Page, List, ListItem, Carousel, CarouselItem } from 'react-onsenui';
 import { CloseButton } from '../../Components/CloseButton';
-import HelpPage1 from './HelpPage1';
+import HelpDetailPage from './HelpDetailPage';
 
 export interface HelpPageProps {
   route: any,
@@ -13,14 +13,33 @@ const HelpPage = (props: HelpPageProps) => {
 
   const onCloseTapped = () => props.navigator.popPage();
 
+  const helpContents = {
+    title: 'マークを追加するには',
+    pages:[
+      {
+        text: 'メニューから追加したいマークを選びます。',
+        img: '/images/help/1/1_1.png'
+      },
+      {
+        text: '追加したい場所に画像を移動し、中央の画面中央のマークをタップします。',
+        img: '/images/help/1/1_2.png'
+      },
+      {
+        text: 'マークが追加されます。',
+        img: '/images/help/1/1_3.png'
+      }
+    ]
+  };
+
   const onHelpTapped = () => {
     props.navigator.pushPage({
-      comp: HelpPage1,
+      comp: HelpDetailPage,
       animation: 'none',
       props: {
-        key: 'HelpPage1',
+        key: 'HelpDetailPage',
         route:props.route,
-        navigator: props.navigator
+        navigator: props.navigator,
+        contents: helpContents
       }
     });
   }
