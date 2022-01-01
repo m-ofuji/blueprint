@@ -18,7 +18,7 @@ const HelpPage1 = (props: HelpPage1Props) => {
       <div className={'page-content'}>
         <CloseButton className={'close-button float-right-top'} onTapped={onCloseTapped}></CloseButton>
         <h3 className={'help-page-title'}>マークを追加するには</h3>
-        <div className={'help-container'}>
+        <div className='help-container'>
           <Carousel
             swipeable
             overscrollable
@@ -45,6 +45,17 @@ const HelpPage1 = (props: HelpPage1Props) => {
               </div>
             </CarouselItem>
           </Carousel>
+        </div>
+        <div className={'help-footer'}>
+          <div>
+            <i className='fas fa-chevron-left fa-lg'></i>
+          </div>
+          <div>
+            <i className='fas fa-circle fa-xs'></i>
+          </div>
+          <div>
+            <i className='fas fa-chevron-right fa-lg'></i>
+          </div>
         </div>
       </div>
     </Page>

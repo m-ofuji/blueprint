@@ -409,7 +409,22 @@ body {
 }
 
 .help-container {
-  margin: 20px 20px;
+  margin: 20px 20px 10px 20px;
+  border-radius: 20px;
+  height: 75%;
+  overflow-y: scroll;
+  background-color: white;
+  padding: 15px 15px 5px 15px;
+}
+
+.help-footer{
+  display: flex;
+  text-align: center;
+  justify-content: center;
+}
+
+.help-footer div {
+  margin: 10px 10px;
 }
 
 .help-image {
