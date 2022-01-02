@@ -29,9 +29,9 @@ const HelpDetailPage = (props: HelpDetailPageProps) => {
   const next = () => setSelectedIndex(old => old + 1);
 
   const onPostChange = () => {
-    if (selectedIndex != swipedIndex) {
-      setSelectedIndex(Math.floor(swipedIndex));
-    }
+    // if (selectedIndex != swipedIndex) {
+    //   setSelectedIndex(Math.floor(swipedIndex));
+    // }
   };
 
   const onSwipe = (idx:number) => {
@@ -54,7 +54,7 @@ const HelpDetailPage = (props: HelpDetailPageProps) => {
             autoScrollRatio={0.2}
             index={selectedIndex}
             onPostChange={onPostChange}
-            onSwipe={onSwipe}
+            // onSwipe={onSwipe}
           >
             {props.contents.pages.map((x, idx) => 
               <CarouselItem key={idx}>
