@@ -1,7 +1,8 @@
 import { Navigator } from 'react-onsenui';
 import { Page, Carousel, CarouselItem } from 'react-onsenui';
 import { CloseButton } from '../../Components/CloseButton';
-import { useState, createRef } from 'react';
+import { useState } from 'react';
+import { HelpContents } from './HelpContents';
 
 export interface HelpDetailPageProps {
   route: any,
@@ -10,16 +11,7 @@ export interface HelpDetailPageProps {
   contents: HelpContents
 }
 
-export interface HelpContents {
-  title: string,
-  pages: [{
-    text: string,
-    img: string
-  }]
-}
-
 const HelpDetailPage = (props: HelpDetailPageProps) => {
-  const carouselRef = createRef<any>();
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
   const [swipedIndex, setSwipedIndex] = useState<number>(0);
 
@@ -29,16 +21,19 @@ const HelpDetailPage = (props: HelpDetailPageProps) => {
   const next = () => setSelectedIndex(old => old + 1);
 
   const onPostChange = () => {
-    // if (selectedIndex != swipedIndex) {
-    //   setSelectedIndex(Math.floor(swipedIndex));
-    // }
+    if (selectedIndex != swipedIndex) {
+      setSelectedIndex(Math.floor(swipedIndex));
+    }
   };
 
-  const onSwipe = (idx:number) => {
+  const onSwipe = (idx:number, animationOptions: any) => {
+    console.log(animationOptions);
     if(idx % 1 === 0 && swipedIndex !== idx){
       setSwipedIndex(old => idx);
     }
   }
+
+  console.log(props.contents.pages);
 
   return (
     <Page className={'edit-page'}>
@@ -47,14 +42,13 @@ const HelpDetailPage = (props: HelpDetailPageProps) => {
         <h3 className={'help-page-title'}>{props.contents.title}</h3>
         <div className='help-container'>
           <Carousel
-            ref={carouselRef}
             swipeable
             overscrollable
             autoScroll
             autoScrollRatio={0.2}
             index={selectedIndex}
             onPostChange={onPostChange}
-            // onSwipe={onSwipe}
+            onSwipe={onSwipe}
           >
             {props.contents.pages.map((x, idx) => 
               <CarouselItem key={idx}>
