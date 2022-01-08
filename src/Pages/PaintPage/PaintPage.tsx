@@ -107,6 +107,7 @@ const PaintPage = ({route, navigator, updateTopos}:
     }
     // todo なぜawaitするとうまくリサイズされるのか
     await resizeStageToImageSize();
+    // resizeStageToImageSize();
 
     stage.current.toCanvas().toBlob((data: any) => {
       if (!data) {

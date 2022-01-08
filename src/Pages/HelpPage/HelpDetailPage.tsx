@@ -21,13 +21,12 @@ const HelpDetailPage = (props: HelpDetailPageProps) => {
   const next = () => setSelectedIndex(old => old + 1);
 
   const onPostChange = () => {
-    if (selectedIndex != swipedIndex) {
+    if (selectedIndex !== swipedIndex) {
       setSelectedIndex(Math.floor(swipedIndex));
     }
   };
 
   const onSwipe = (idx:number, animationOptions: any) => {
-    console.log(animationOptions);
     if(idx % 1 === 0 && swipedIndex !== idx){
       setSwipedIndex(old => idx);
     }
@@ -54,7 +53,7 @@ const HelpDetailPage = (props: HelpDetailPageProps) => {
               <CarouselItem key={idx}>
                 <div className='item-label'>{x.text}</div>
                 <div className='help-image'>
-                  <img src={x.img}/>
+                  <img src={x.img} alt={'画像が見つかりませんでした。'}/>
                 </div>
               </CarouselItem>
             )}
