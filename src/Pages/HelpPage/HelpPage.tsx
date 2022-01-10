@@ -35,8 +35,9 @@ const HelpPage = (props: HelpPageProps) => {
         <CloseButton className={'close-button float-right-top'} onTapped={onCloseTapped}></CloseButton>
         <div id={'edit-container'}>
           <h3 className={'page-title'}>使い方</h3>
-          {HELP_CONTENTS.map(x => 
+          {HELP_CONTENTS.map((x, i) => 
             <div
+              key={i}
               className={'help-menu-button'}
               onClick={onHelpTapped(x)}>
               {x.buttonTitle}
