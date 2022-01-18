@@ -2,6 +2,7 @@ import { Navigator } from 'react-onsenui';
 import { Page, Carousel, CarouselItem } from 'react-onsenui';
 import { CloseButton } from '../../Components/CloseButton';
 import { useState } from 'react';
+import { AnimationOptions } from 'react-onsenui';
 import { HelpContents } from './HelpContents';
 
 export interface HelpDetailPageProps {
@@ -26,13 +27,11 @@ const HelpDetailPage = (props: HelpDetailPageProps) => {
     }
   };
 
-  const onSwipe = (idx:number, animationOptions: any) => {
+  const onSwipe = (idx:number, animationOptions: AnimationOptions) => {
     if(idx % 1 === 0 && swipedIndex !== idx){
       setSwipedIndex(old => idx);
     }
   }
-
-  console.log(props.contents.pages);
 
   return (
     <Page className={'edit-page'}>
@@ -47,7 +46,7 @@ const HelpDetailPage = (props: HelpDetailPageProps) => {
             autoScrollRatio={0.2}
             index={selectedIndex}
             onPostChange={onPostChange}
-            onSwipe={onSwipe}
+            // onSwipe={onSwipe}
           >
             {props.contents.pages.map((x, idx) => 
               <CarouselItem key={idx}>

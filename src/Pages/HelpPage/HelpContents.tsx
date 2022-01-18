@@ -33,8 +33,12 @@ export const HELP_CONTENTS: HelpContents[] = [
     title: 'マークを削除するには',
     pages:[
       {
-        text: 'マークをダブルタップします。',
-        img: '/images/help/1/1_1.png'
+        text: 'マークをダブルタップすると…',
+        img: '/images/help/2/2_1.png'
+      },
+      {
+        text: 'マークを削除できます。',
+        img: '/images/help/2/2_2.png'
       }
     ]
   },
@@ -44,12 +48,16 @@ export const HELP_CONTENTS: HelpContents[] = [
     pages:[
       {
         text: '画面左下のボタンをタップします。',
-        img: '/images/help/1/1_1.png'
+        img: '/images/help/3/3_1.png'
       },
       {
         text: '必要事項を入力して保存します。',
-        img: '/images/help/1/1_1.png'
-      }
+        img: '/images/help/3/3_2.png'
+      },
+      {
+        text: '保存したトポは、ホーム画面から閲覧できます。トポをダウンロードし、クライミング仲間と共有しましょう。',
+        img: '/images/help/3/3_3.png'
+      },
     ]
   },
   {
@@ -58,11 +66,11 @@ export const HELP_CONTENTS: HelpContents[] = [
     pages:[
       {
         text: '画面左下のボタンをタップします。',
-        img: '/images/help/1/1_1.png'
+        img: '/images/help/4/4_1.png'
       },
       {
-        text: '必要事項を入力して保存します。',
-        img: '/images/help/1/1_1.png'
+        text: 'ダウンロードできます。',
+        img: '/images/help/4/4_2.png'
       }
     ]
   }
