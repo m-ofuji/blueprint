@@ -43,6 +43,16 @@ export const HELP_CONTENTS: HelpContents[] = [
     ]
   },
   {
+    buttonTitle: '画像を回転させたい',
+    title: '画像を回転させるには',
+    pages:[
+      {
+        text: '右上のボタンをタップすると、読み込んだ画像を回転できます。',
+        img: '/images/help/5/5_1.png'
+      }
+    ]
+  },
+  {
     buttonTitle: 'トポ画像を保存したい',
     title: 'トポ画像を保存するには',
     pages:[
