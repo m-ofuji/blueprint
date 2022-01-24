@@ -46,7 +46,7 @@ const HelpDetailPage = (props: HelpDetailPageProps) => {
             autoScrollRatio={0.2}
             index={selectedIndex}
             onPostChange={onPostChange}
-            // onSwipe={onSwipe}
+            onSwipe={onSwipe}
           >
             {props.contents.pages.map((x, idx) => 
               <CarouselItem key={idx}>

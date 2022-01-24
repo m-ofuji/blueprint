@@ -50,6 +50,7 @@ const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigato
 
   const updateTopos = () => {
     setOverlayVisibility(true);
+    // topoDb.Topos.orderBy('id').reverse().limit(topoLimit).toArray().then((topos) => {
     topoDb.Topos.limit(topoLimit).toArray().then((topos) => {
       setTopos(topos);
       setOverlayVisibility(false);
