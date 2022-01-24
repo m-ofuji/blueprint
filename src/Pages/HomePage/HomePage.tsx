@@ -21,7 +21,9 @@ const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigato
   }
 
   const [topos, setTopos] = useState<ITopo[]>([]);
+  const [topoLimit, setTopoLimit] = useState<number>(5);
   const [searchText, setSearchText] = useState<string>('');
+  const [topoDb, setTopoDb] = useState<TopoDB>(new TopoDB());
   const [searchGrades, setSearchGrades] 
     = useState<RectangleButtonProps[]>(
       GRADES
@@ -48,14 +50,13 @@ const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigato
 
   const updateTopos = () => {
     setOverlayVisibility(true);
-    const db = new TopoDB();
-    db.Topos.toArray().then((topos) => {
+    topoDb.Topos.limit(topoLimit).toArray().then((topos) => {
       setTopos(topos);
       setOverlayVisibility(false);
     });
   }
 
-  useLayoutEffect(updateTopos, []);
+  useLayoutEffect(updateTopos, [topoLimit]);
 
   const onSearchTextChange = (e: React.FormEvent<HTMLInputElement>) => {
     setSearchText(e.currentTarget.value);
@@ -80,8 +81,15 @@ const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigato
     });
   }
 
+  const onDone = () =>{
+    setTopoLimit(old => old + 5);
+    updateTopos();
+  }
+
   return (
-    <Page key={'root'}>
+    <Page
+      key={'root'}
+      onInfiniteScroll={onDone}>
       <div className={'page-content'}>
         <div className={'search-wrapper'}>
           <div className='search-container'>
