@@ -1,5 +1,5 @@
 import { Navigator } from 'react-onsenui';
-import { Page, Carousel, CarouselItem } from 'react-onsenui';
+import { Page, CarouselItem } from 'react-onsenui';
 import { CustomCarousel } from '../../Types/CustomCarousel';
 import { CloseButton } from '../../Components/CloseButton';
 import { useState } from 'react';
