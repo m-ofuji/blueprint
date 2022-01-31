@@ -46,14 +46,16 @@ export const NaviPage = () => {
         <Navigator
           key='navi'
           initialRoute={{comp: SideMenu, key: 'SideMenu'}}
-          renderPage={renderMenu}>
+          renderPage={renderMenu}
+          animation='lift'>
         </Navigator>
       </SplitterSide>
       <SplitterContent>
       <Navigator
         key='navi'
         initialRoute={{comp: HomePage, key: 'HomePage'}}
-        renderPage={renderPage}/>
+        renderPage={renderPage}
+        animation='lift'/>
       </SplitterContent>
     </Splitter>
   )
