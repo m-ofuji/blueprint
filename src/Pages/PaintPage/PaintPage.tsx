@@ -1,32 +1,22 @@
+import { createRef, ChangeEvent, useState, useRef, MouseEvent } from 'react';
 import ons from 'onsenui'
+import { Navigator, Page } from 'react-onsenui';
 import EditPage from '../EditPage/EditPage';
 import HelpPage from '../HelpPage/HelpPage';
-import { Navigator } from 'react-onsenui';
-import { createRef, ChangeEvent, useState, useRef } from 'react';
-import { Page } from 'react-onsenui';
+import { DownloadButton, SaveButton, RotateButton, HelpButton, SelectImageButton, FreeTextDialog } from './Components'
+import { MarkerPositionX, MarkerPositionY, StampTextSize, StampFreeTextSize } from './Constants';
 import { KonvaEventObject } from 'konva/lib/Node';
 import { Stage, Layer, Group } from 'react-konva';
 import { WallImage } from './WallImage';
 import { NormalTarget } from './Targets/NormalTarget';
 import { TextTarget } from './Targets/TextTarget';
-import { RoundButton } from '../../Components/RoundButton';
-import { DownloadButton } from './Components/DownloadButton';
-import { SaveButton } from './Components/SaveButton';
-import { CloseButton } from '../../Components/CloseButton';
-import { RotateButton } from './Components/RotateButton';
-import { HelpButton } from './Components/HelpButton';
-import { MarkerPositionX, MarkerPositionY } from './Constants';
+import { RoundButton, CloseButton } from '../../Components';
 import { getCurrentTimestamp } from '../../Functions/CurrentTimestamp'; 
 import { downloadURI } from '../../Functions/DownloadUri';
 import { IStampButton, IHoldStamp, ITextStamp, isIHoldStamp, isITextStamp } from '../../Types/StampType';
 import { SizeProps } from '../../Types/SizeProps';
-import { MAX_SIDE_LENGTH } from '../../Constants/MaxSideLength';
-import { HOLD_COLOR, SG_HOLD_COLOR } from '../../Constants/Colors';
+import { MAX_SIDE_LENGTH, HOLD_COLOR, SG_HOLD_COLOR } from '../../Constants';
 import { BlobToArrayBuffer } from '../../Functions/BlobToArrayBuffer';
-import { StampTextSize, StampFreeTextSize } from './Constants';
-import { MouseEvent } from 'react';
-import { SelectImageButton } from './Components/SelectImageButton';
-import { FreeTextDialog } from './Components/FreeTextDialog';
 
 const PaintPage = ({route, navigator, updateTopos}: 
   {route: any, navigator: Navigator, updateTopos: () => void}) => {
