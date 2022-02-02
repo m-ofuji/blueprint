@@ -5,18 +5,16 @@ import EditPage from '../EditPage/EditPage';
 import HelpPage from '../HelpPage/HelpPage';
 import { DownloadButton, SaveButton, RotateButton, HelpButton, SelectImageButton, FreeTextDialog } from './Components'
 import { MarkerPositionX, MarkerPositionY, StampTextSize, StampFreeTextSize } from './Constants';
+import { getCurrentTimestamp, downloadURI, BlobToArrayBuffer } from '../../Functions'; 
 import { KonvaEventObject } from 'konva/lib/Node';
 import { Stage, Layer, Group } from 'react-konva';
 import { WallImage } from './WallImage';
 import { NormalTarget } from './Targets/NormalTarget';
 import { TextTarget } from './Targets/TextTarget';
 import { RoundButton, CloseButton } from '../../Components';
-import { getCurrentTimestamp } from '../../Functions/CurrentTimestamp'; 
-import { downloadURI } from '../../Functions/DownloadUri';
 import { IStampButton, IHoldStamp, ITextStamp, isIHoldStamp, isITextStamp } from '../../Types/StampType';
 import { SizeProps } from '../../Types/SizeProps';
 import { MAX_SIDE_LENGTH, HOLD_COLOR, SG_HOLD_COLOR } from '../../Constants';
-import { BlobToArrayBuffer } from '../../Functions/BlobToArrayBuffer';
 
 const PaintPage = ({route, navigator, updateTopos}: 
   {route: any, navigator: Navigator, updateTopos: () => void}) => {

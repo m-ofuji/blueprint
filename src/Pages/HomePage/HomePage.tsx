@@ -3,11 +3,10 @@ import PaintPage from '../PaintPage/PaintPage';
 import { Navigator, Page } from 'react-onsenui';
 import { ITopo, TopoDB } from '../../DB/TopoDB';
 import { useLayoutEffect, useState } from 'react';
-import { TopoCard } from '../../Components/TopoCard';
 import { GRADES } from '../../Constants/Grades';
-import { RectangleButton, RectangleButtonProps } from '../../Components/RectangleButton';
+import { RectangleButtonProps } from '../../Components/RectangleButton';
 import EditPage from '../EditPage/EditPage';
-import { LoadingOverlay } from '../../Components/LoadingOverlay';
+import { LoadingOverlay, RectangleButton, TopoCard } from '../../Components';
 
 const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigator, openMenu:() => void}) => {
   const onGradeClicked = (id: number) => (e: React.MouseEvent<HTMLElement>) => {
