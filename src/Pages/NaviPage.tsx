@@ -17,15 +17,15 @@ export const NaviPage = () => {
     );
   }
 
-  const renderMenu = (route:any, navigator: Navigator) => {
-    return (
-      <route.comp 
-        key={route.key} 
-        navigator={navigator}
-        {...route.props}
-      />
-    );
-  }
+  // const renderMenu = (route:any, navigator: Navigator) => {
+  //   return (
+  //     <route.comp 
+  //       key={route.key} 
+  //       navigator={navigator}
+  //       {...route.props}
+  //     />
+  //   );
+  // }
 
   const togggleMenuOpen = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -35,8 +35,30 @@ export const NaviPage = () => {
     setIsMenuOpen(true);
   }
 
-  return (
-    <Splitter>
+  const renderP = ({mainRoute, mainNavigator}: {mainRoute: any, mainNavigator: Navigator}) => {
+    const renderMenu = (route:any, navigator: Navigator) => {
+      return (
+        <route.comp 
+          key={route.key} 
+          navigator={navigator}
+          {...route.props}
+          // {...route.props, mainRoute, mainNavigator}
+        />
+      );
+    }
+
+    // const renderPage = (route:any, navigator: Navigator) => {
+    //   return (
+    //     <route.comp 
+    //       key={route.key} 
+    //       navigator={navigator}
+    //       openMenu={openMenu}
+    //       {...route.props}
+    //     />
+    //   );
+    // }
+
+    return <Splitter>
       <SplitterSide
         side="left"
         isOpen={isMenuOpen}
@@ -58,5 +80,16 @@ export const NaviPage = () => {
         animation='lift'/>
       </SplitterContent>
     </Splitter>
+  }
+
+  return (
+    <Navigator
+      key='navi2'
+      initialRoute={{comp: SideMenu, key: 'SideMenu'}}
+      renderPage={renderP}
+      animation='lift'>
+      
+    </Navigator>
+    
   )
 }

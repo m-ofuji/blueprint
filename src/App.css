@@ -550,7 +550,7 @@ body {
   border: none;
   background: none;
   position: absolute;
-  margin-top: 0.6rem;
+  margin-top: calc(10px + 0.1rem);
   margin-left: 5px;
 }
 
