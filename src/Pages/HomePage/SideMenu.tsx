@@ -7,7 +7,8 @@ import { getCurrentTimestamp } from '../../Functions/CurrentTimestamp';
 import { uint8ArrayToBuffer } from '../../Functions/Uint8ArrayToBuffer';
 import HelpPage from '../HelpPage/HelpPage';
 
-const SideMenu = ({route, navigator, updateTopos}: {route: any, navigator: Navigator, updateTopos?: (() => void)}) => {
+const SideMenu = ({route, navigator, mainNavigator, updateTopos}:
+   {route: any, navigator: Navigator, mainNavigator: Navigator, updateTopos?: (() => void)}) => {
   const exportTopo = async () => {
     const db = new TopoDB();
     const topos = await (await db.Topos.toArray()).map(x => { return {...x, data: x.data.map(y => new Uint8Array(y))} });
@@ -56,7 +57,7 @@ const SideMenu = ({route, navigator, updateTopos}: {route: any, navigator: Navig
   }
 
   const helpClicked = () => {
-    navigator.pushPage({
+    mainNavigator.pushPage({
       comp: HelpPage,
       props: {
         key: 'HelpPage',

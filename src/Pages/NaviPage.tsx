@@ -40,7 +40,9 @@ export const NaviPage = () => {
       return (
         <route.comp 
           key={route.key} 
-          navigator={navigator}
+          // navigator={navigator}
+          navigator={mainNavigator}
+          mainNavigator={mainNavigator}
           {...route.props}
           // {...route.props, mainRoute, mainNavigator}
         />
