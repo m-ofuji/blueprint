@@ -11,7 +11,7 @@ const SideMenu = ({route, navigator, mainNavigator, updateTopos}:
    {route: any, navigator: Navigator, mainNavigator: Navigator, updateTopos?: (() => void)}) => {
   const exportTopo = async () => {
     const db = new TopoDB();
-    const topos = await (await db.Topos.toArray()).map(x => { return {...x, data: x.data.map(y => new Uint8Array(y))} });
+    const topos = await (await db.Topos?.toArray())?.map(x => { return {...x, data: x.data.map(y => new Uint8Array(y))} });
     const blob = new Blob([JSON.stringify(topos)], {type: 'application/json'});
     downloadBlob(blob, `topos_${getCurrentTimestamp()}.json`);
   }

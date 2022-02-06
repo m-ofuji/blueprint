@@ -2,7 +2,7 @@ import Dexie from 'dexie';
 import { exportDB } from 'dexie-export-import';
 
 export class TopoDB extends Dexie {
-  Topos: Dexie.Table<ITopo, number>;
+  Topos: Dexie.Table<ITopo, number> | undefined;
   
   constructor() {  
     super('TopoDB');
@@ -11,11 +11,11 @@ export class TopoDB extends Dexie {
       Topos: '++id, data',
     });
 
-    this.Topos = this.table('Topos');
+    // this.Topos = this.table('Topos');
   }
 
   save = (topo: ITopo) => {
-    this.Topos.put(topo);
+    this.Topos?.put(topo);
   }
 
   saveRows = (topos: ITopo[]) => {
@@ -25,7 +25,7 @@ export class TopoDB extends Dexie {
   }
 
   deleteTopo = (id: number) => {
-    this.Topos.delete(id);
+    this.Topos?.delete(id);
   }
 
   exportTopos = async () => {
