@@ -11,7 +11,9 @@ export class TopoDB extends Dexie {
       Topos: '++id, data',
     });
 
-    // this.Topos = this.table('Topos');
+    // alert('constructor before');
+    this.Topos = this.table('Topos');
+    // alert('constructor after');
   }
 
   save = (topo: ITopo) => {

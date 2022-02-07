@@ -1,4 +1,4 @@
-
+import ons from 'onsenui';
 import PaintPage from '../PaintPage/PaintPage';
 import { Navigator, Page } from 'react-onsenui';
 import { ITopo, TopoDB } from '../../DB/TopoDB';
@@ -49,7 +49,21 @@ const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigato
 
   const updateTopos = () => {
     setOverlayVisibility(true);
+    // alert('Topos');
+    // alert(topoDb.Topos);
+    // // alert(topoDb.Topos?.orderBy('id').reverse().limit(topoLimit).count());
+    // // alert(topoDb.Topos?.orderBy('id').reverse().limit(topoLimit));
+    // topoDb.Topos?.orderBy('id').reverse().limit(topoLimit).each(topos => {
+    //   alert('updateTopos');
+    //   alert(topos);
+    //   setTopos(old => [...old, topos]);
+    //   // setOverlayVisibility(false);
+    // });
+    // setOverlayVisibility(false);
+    // alert('after ToposArray');
     topoDb.Topos?.orderBy('id').reverse().limit(topoLimit).toArray().then((topos) => {
+      alert('updateTopos');
+      alert(topos);
       setTopos(topos);
       setOverlayVisibility(false);
     });
@@ -84,6 +98,10 @@ const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigato
     setTopoLimit(old => old + 5);
     updateTopos();
   }
+
+  ons.ready(function() {
+    ons.disableDeviceBackButtonHandler();
+  });
 
   return (
     <Page
