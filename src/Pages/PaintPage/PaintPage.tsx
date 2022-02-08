@@ -157,7 +157,7 @@ const PaintPage = ({route, navigator, updateTopos}:
     setIsRotated(old => {
       const newRotation = !old;
       setImageSizeProps(old => {return {...old, width: newRotation ? imageHeight : imageWidth, height: newRotation ? imageWidth : imageHeight}});
-      resizableImage.current.rotate(newRotation);
+      resizableImage.current.rotate();
       return newRotation;
     });
   }

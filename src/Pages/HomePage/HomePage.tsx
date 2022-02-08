@@ -59,14 +59,29 @@ const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigato
     //   setTopos(old => [...old, topos]);
     //   // setOverlayVisibility(false);
     // });
-    // setOverlayVisibility(false);
-    // alert('after ToposArray');
-    topoDb.Topos?.orderBy('id').reverse().limit(topoLimit).toArray().then((topos) => {
-      alert('updateTopos');
-      alert(topos);
-      setTopos(topos);
-      setOverlayVisibility(false);
-    });
+    // // setOverlayVisibility(false);
+    // // alert('after ToposArray');
+
+    // try {
+    //   // alert('toporis');
+      // topoDb.Topos?.orderBy('id').reverse().limit(topoLimit).toArray().then((topos) => {
+      //   setTopos(topos);
+      //   setOverlayVisibility(false);
+      // });
+
+      topoDb.Topos?.orderBy('id').toArray().then((topos) => {
+        setTopos(topos);
+        setOverlayVisibility(false);
+      });
+    // } catch(ex) {
+    //   alert(ex);
+    // }
+
+    // (async () => {
+    //   const topos = await topoDb.Topos?.orderBy('id').reverse().limit(topoLimit).toArray();
+    //   setTopos(topos ?? []);
+    //   setOverlayVisibility(false);
+    // })();
   }
 
   useLayoutEffect(updateTopos, [topoLimit]);
