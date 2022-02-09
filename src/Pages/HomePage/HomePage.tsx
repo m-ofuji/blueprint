@@ -7,6 +7,7 @@ import { GRADES } from '../../Constants/Grades';
 import { RectangleButtonProps } from '../../Components/RectangleButton';
 import EditPage from '../EditPage/EditPage';
 import { LoadingOverlay, RectangleButton, TopoCard } from '../../Components';
+import { sleep } from '../../Functions';
 
 const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigator, openMenu:() => void}) => {
   const onGradeClicked = (id: number) => (e: React.MouseEvent<HTMLElement>) => {
@@ -53,9 +54,41 @@ const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigato
     // alert(topoDb.Topos);
     // // alert(topoDb.Topos?.orderBy('id').reverse().limit(topoLimit).count());
     // // alert(topoDb.Topos?.orderBy('id').reverse().limit(topoLimit));
-    // topoDb.Topos?.orderBy('id').reverse().limit(topoLimit).each(topos => {
+    // topoDb.Topos?.orderBy('id').reverse().limit(topoLimit).each(async topos => {
     //   alert('updateTopos');
     //   alert(topos);
+
+    //   await sleep(100);
+
+    //   setTopos(old => [...old, topos]);
+    //   // setOverlayVisibility(false);
+    // });
+
+    // (async () => {
+    //   alert('toCollection pk');
+    //   // const keys = topoDb.Topos?.orderBy('id').reverse().limit(topoLimit).keys();
+
+    //   // const topos = topoDb.Topos?.toCollection().;
+
+    //   const keys = await topoDb.Topos?.toCollection().primaryKeys();
+    //   alert(keys);
+    //   console.log(keys);
+    //   keys?.forEach(async key => {
+    //     const t = await topoDb.Topos?.where({id: key}).first();
+    //     if (t) {
+    //       setTopos(old => [...old, t]);
+    //     }
+    //   });
+    //   setOverlayVisibility(false);
+    //   // const keys = topoDb.Topos?.orderBy('id').reverse().limit(topoLimit).keys();  
+    // })();
+    
+    // topoDb.Topos?.orderBy('id').reverse().limit(topoLimit).toArray(async topos => {
+    //   alert('updateTopos');
+    //   alert(topos);
+
+    //   await sleep(100);
+
     //   setTopos(old => [...old, topos]);
     //   // setOverlayVisibility(false);
     // });
@@ -69,10 +102,19 @@ const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigato
       //   setOverlayVisibility(false);
       // });
 
-      topoDb.Topos?.orderBy('id').toArray().then((topos) => {
+      topoDb.Topos?.orderBy('id').reverse().toArray().then((topos) => {
         setTopos(topos);
         setOverlayVisibility(false);
       });
+
+      // alert('collection');
+      // topoDb.Topos?.toCollection().primaryKeys();
+      // alert('limit end');
+
+      // topoDb.Topos?.orderBy('id').toArray().then((topos) => {
+      //   setTopos(topos);
+      //   setOverlayVisibility(false);
+      // });
     // } catch(ex) {
     //   alert(ex);
     // }
