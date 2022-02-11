@@ -12,7 +12,11 @@ export class TopoDB extends Dexie {
       Topos: '++id, data',
     });
 
-    this.version(2).stores({
+    // this.version(2).stores({
+    //   Topos: '++id, data',
+    // });
+
+    this.version(1).stores({
       Topos: '++id, data',
     });
 

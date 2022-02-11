@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import HomePage from './HomePage/HomePage';
-import { Navigator, SplitterContent, SplitterSide, Splitter } from 'react-onsenui';
+import { Navigator, SplitterContent, SplitterSide, Splitter, Page } from 'react-onsenui';
 import SideMenu from './HomePage/SideMenu';
 
 export const NaviPage = () => {
@@ -27,7 +27,7 @@ export const NaviPage = () => {
   //   );
   // }
 
-  const togggleMenuOpen = () => {
+  const toggleMenuOpen = () => {
     setIsMenuOpen(!isMenuOpen);
   }
 
@@ -35,15 +35,15 @@ export const NaviPage = () => {
     setIsMenuOpen(true);
   }
 
-  const renderP = ({mainRoute, mainNavigator}: {mainRoute: any, mainNavigator: Navigator}) => {
+  const renderP = (mainRoute:any, mainNavigator: Navigator) => {
+  // const renderP = ({mainRoute, mainNavigator}: {mainRoute: any, mainNavigator: Navigator}) => {
     const renderMenu = (route:any, navigator: Navigator) => {
       return (
-        <route.comp 
-          key={route.key} 
+        <mainRoute.comp 
+          key={mainRoute.key} 
           // navigator={navigator}
           navigator={mainNavigator}
-          mainNavigator={mainNavigator}
-          {...route.props}
+          {...mainRoute.props}
           // {...route.props, mainRoute, mainNavigator}
         />
       );
@@ -64,9 +64,13 @@ export const NaviPage = () => {
       <SplitterSide
         side="left"
         isOpen={isMenuOpen}
-        onClose={togggleMenuOpen}
+        onClose={toggleMenuOpen}
         width={250}
         collapse='portrait'>
+        {/* <SideMenu
+          route={mainRoute}
+          navigator={mainNavigator}>
+        </SideMenu> */}
         <Navigator
           key='navi'
           initialRoute={{comp: SideMenu, key: 'SideMenu'}}
@@ -90,7 +94,6 @@ export const NaviPage = () => {
       initialRoute={{comp: SideMenu, key: 'SideMenu'}}
       renderPage={renderP}
       animation='lift'>
-      
     </Navigator>
     
   )
