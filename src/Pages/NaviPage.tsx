@@ -1,13 +1,29 @@
 import { useState } from 'react';
 import HomePage from './HomePage/HomePage';
-import { Navigator, SplitterContent, SplitterSide, Splitter, Page } from 'react-onsenui';
-import SideMenu from './HomePage/SideMenu';
-import HelpPage from './HelpPage/HelpPage';
+import { Navigator, SplitterContent, SplitterSide, Splitter, Page, List, ListItem } from 'react-onsenui';
+import LicensePage from './LicensePage/EditPage';
 
 export const NaviPage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const [openLicensePage, setOpenLicensePage] = useState<(() => void) | undefined>(undefined);
 
   const renderPage = (route: any, navigator: Navigator) => {
+    // setOpenLicensePage(
+    //   () => {
+    //     // console.log(navigator.pages.length);
+    //     // if (navigator.pages.length > 0) return;
+    //     // console.log('openLicensePage');
+    //     // navigator.pushPage({
+    //     //   comp: LicensePage,
+    //     //   props: {
+    //     //     key: 'LicensePage',
+    //     //     route: route,
+    //     //     navigator: navigator,
+    //     //   }
+    //     // });
+    //   }
+    // );
+
     return (
       <route.comp 
         key={route.key} 
@@ -26,65 +42,40 @@ export const NaviPage = () => {
     setIsMenuOpen(true);
   }
 
-  const renderP = (mainRoute:any, mainNavigator: Navigator) => {
-    const openHelpPage = () => {
-      // console.log('help open');
-      // setIsMenuOpen(false);
-      mainNavigator.pushPage({
-        comp: HelpPage,
-        props: {
-          key: 'HelpPage',
-          navigator: navigator
-        }
-      });
+  const onLicenseClicked = () => {
+    console.log('clicked');
+    if (isMenuOpen && openLicensePage) {
+      console.log('clicked');
+      openLicensePage();
     }
-
-    const renderMenu = (route:any, navigator: Navigator) => {
-      return (
-        <route.comp 
-          key={route.key} 
-          navigator={navigator}
-          {...route.props}
-          // {...route.props, mainRoute, mainNavigator}
-        />
-      );
-    }
-
-    return <Splitter>
-      <SplitterSide
-        side="left"
-        isOpen={isMenuOpen}
-        onClose={toggleMenuOpen}
-        width={250}
-        collapse='portrait'>
-        <SideMenu
-          route={mainRoute}
-          navigator={mainNavigator}
-          openHelpPage={openHelpPage}>
-        </SideMenu>
-        {/* <Navigator
-          key='navi'
-          initialRoute={{comp: SideMenu, key: 'SideMenu'}}
-          renderPage={renderMenu}
-          animation='lift'>
-        </Navigator> */}
-      </SplitterSide>
-      <SplitterContent>
-      <Navigator
-        key='navi'
-        initialRoute={{comp: HomePage, key: 'HomePage'}}
-        renderPage={renderPage}
-        animation='lift'/>
-      </SplitterContent>
-    </Splitter>
   }
 
-  return (
+  return <Splitter>
+    <SplitterSide
+      side="left"
+      isOpen={isMenuOpen}
+      onClose={toggleMenuOpen}
+      width={250}
+      collapse='portrait'>
+      <Page>
+        <List>
+          <ListItem 
+            key={1}
+            className={'menu-item'}
+            tappable
+            onClick={onLicenseClicked}
+            modifier='longdivider'>
+              <i className={'fas fa-award'}/> ライセンス情報
+          </ListItem>
+        </List>
+      </Page>
+    </SplitterSide>
+    <SplitterContent>
     <Navigator
-      key='navi2'
-      initialRoute={{comp: SideMenu, key: 'SideMenu'}}
-      renderPage={renderP}
-      animation='lift'>
-    </Navigator>
-  )
+      key='navi'
+      initialRoute={{comp: HomePage, key: 'HomePage'}}
+      renderPage={renderPage}
+      animation='lift'/>
+    </SplitterContent>
+  </Splitter>
 }
