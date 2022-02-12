@@ -2,11 +2,12 @@ import { useState } from 'react';
 import HomePage from './HomePage/HomePage';
 import { Navigator, SplitterContent, SplitterSide, Splitter, Page } from 'react-onsenui';
 import SideMenu from './HomePage/SideMenu';
+import HelpPage from './HelpPage/HelpPage';
 
 export const NaviPage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
-  const renderPage = (route:any, navigator: Navigator) => {
+  const renderPage = (route: any, navigator: Navigator) => {
     return (
       <route.comp 
         key={route.key} 
@@ -17,16 +18,6 @@ export const NaviPage = () => {
     );
   }
 
-  // const renderMenu = (route:any, navigator: Navigator) => {
-  //   return (
-  //     <route.comp 
-  //       key={route.key} 
-  //       navigator={navigator}
-  //       {...route.props}
-  //     />
-  //   );
-  // }
-
   const toggleMenuOpen = () => {
     setIsMenuOpen(!isMenuOpen);
   }
@@ -36,29 +27,28 @@ export const NaviPage = () => {
   }
 
   const renderP = (mainRoute:any, mainNavigator: Navigator) => {
-  // const renderP = ({mainRoute, mainNavigator}: {mainRoute: any, mainNavigator: Navigator}) => {
+    const openHelpPage = () => {
+      // console.log('help open');
+      // setIsMenuOpen(false);
+      mainNavigator.pushPage({
+        comp: HelpPage,
+        props: {
+          key: 'HelpPage',
+          navigator: navigator
+        }
+      });
+    }
+
     const renderMenu = (route:any, navigator: Navigator) => {
       return (
-        <mainRoute.comp 
-          key={mainRoute.key} 
-          // navigator={navigator}
-          navigator={mainNavigator}
-          {...mainRoute.props}
+        <route.comp 
+          key={route.key} 
+          navigator={navigator}
+          {...route.props}
           // {...route.props, mainRoute, mainNavigator}
         />
       );
     }
-
-    // const renderPage = (route:any, navigator: Navigator) => {
-    //   return (
-    //     <route.comp 
-    //       key={route.key} 
-    //       navigator={navigator}
-    //       openMenu={openMenu}
-    //       {...route.props}
-    //     />
-    //   );
-    // }
 
     return <Splitter>
       <SplitterSide
@@ -67,16 +57,17 @@ export const NaviPage = () => {
         onClose={toggleMenuOpen}
         width={250}
         collapse='portrait'>
-        {/* <SideMenu
+        <SideMenu
           route={mainRoute}
-          navigator={mainNavigator}>
-        </SideMenu> */}
-        <Navigator
+          navigator={mainNavigator}
+          openHelpPage={openHelpPage}>
+        </SideMenu>
+        {/* <Navigator
           key='navi'
           initialRoute={{comp: SideMenu, key: 'SideMenu'}}
           renderPage={renderMenu}
           animation='lift'>
-        </Navigator>
+        </Navigator> */}
       </SplitterSide>
       <SplitterContent>
       <Navigator
@@ -95,6 +86,5 @@ export const NaviPage = () => {
       renderPage={renderP}
       animation='lift'>
     </Navigator>
-    
   )
 }
