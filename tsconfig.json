@@ -19,10 +19,11 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "typeRoots": ["src/@types"]
+    "baseUrl": "./src"
   },
   "include": [
     "src",
     "src/**/*.tsx"
-  ]
+  ],
+  "extends": "./tsconfig-react-onsenui.json"
 }

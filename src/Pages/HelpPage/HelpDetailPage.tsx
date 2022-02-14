@@ -1,8 +1,8 @@
 import { Navigator } from 'react-onsenui';
-import { Page, Carousel, CarouselItem } from 'react-onsenui';
+import { Page, CarouselItem } from 'react-onsenui';
 // import { CustomCarousel } from '../../Types/CustomCarousel';
 // import { Carousel } from '../../Types/CustomCarousel';
-// import { Carousel } from '../../@types/CustomCarousel';
+import { Carousel } from '../../@types/react-onsenui';
 import { CloseButton } from '../../Components/CloseButton';
 import { useState } from 'react';
 import { AnimationOptions } from 'react-onsenui';
@@ -49,7 +49,7 @@ const HelpDetailPage = (props: HelpDetailPageProps) => {
             autoScrollRatio={0.2}
             index={selectedIndex}
             onPostChange={onPostChange}
-            // onSwipe={onSwipe}
+            onSwipe={onSwipe}
           >
             {props.contents.pages.map((x, idx) => 
               <CarouselItem key={idx}>
