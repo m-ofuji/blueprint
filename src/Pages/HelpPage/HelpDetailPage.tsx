@@ -1,8 +1,8 @@
-import { Navigator } from 'react-onsenui';
-import { Page, CarouselItem } from 'react-onsenui';
+// import {  } from 'react-onsenui';
+import { Navigator, Page, CarouselItem, CustomCarousel } from 'react-onsenui';
 // import { CustomCarousel } from '../../Types/CustomCarousel';
-// import { Carousel } from '../../Types/CustomCarousel';
-import { Carousel } from '../../@types/react-onsenui';
+// import { Carousel } from '../../@types/CustomCarousel';
+// import { Carousel } from '../../@types/react-onsenui';
 import { CloseButton } from '../../Components/CloseButton';
 import { useState } from 'react';
 import { AnimationOptions } from 'react-onsenui';
@@ -42,7 +42,7 @@ const HelpDetailPage = (props: HelpDetailPageProps) => {
         <CloseButton className={'close-button float-right-top'} onTapped={onCloseTapped}></CloseButton>
         <h3 className={'help-page-title'}>{props.contents.title}</h3>
         <div className='help-container'>
-          <Carousel
+          <CustomCarousel
             swipeable
             overscrollable
             autoScroll
@@ -59,7 +59,7 @@ const HelpDetailPage = (props: HelpDetailPageProps) => {
                 </div>
               </CarouselItem>
             )}
-          </Carousel>
+          </CustomCarousel>
         </div>
         <div className={'help-footer'}>
           <div onClick={prev}>

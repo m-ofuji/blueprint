@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import HomePage from './HomePage/HomePage';
 import { Navigator, SplitterContent, SplitterSide, Splitter, Page, List, ListItem } from 'react-onsenui';
-import LicensePage from './LicensePage/EditPage';
+// import LicensePage from './LicensePage/EditPage';
 
 export const NaviPage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-  const [openLicensePage, setOpenLicensePage] = useState<(() => void) | undefined>(undefined);
+  // const [openLicensePage, setOpenLicensePage] = useState<(() => void) | undefined>(undefined);
 
   const renderPage = (route: any, navigator: Navigator) => {
     // setOpenLicensePage(
@@ -43,11 +43,9 @@ export const NaviPage = () => {
   }
 
   const onLicenseClicked = () => {
-    console.log('clicked');
-    if (isMenuOpen && openLicensePage) {
-      console.log('clicked');
-      openLicensePage();
-    }
+    // if (isMenuOpen && openLicensePage) {
+    //   openLicensePage();
+    // }
   }
 
   return <Splitter>

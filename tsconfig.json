@@ -18,12 +18,10 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx",
-    "baseUrl": "./src"
+    "jsx": "react-jsx"
   },
   "include": [
     "src",
     "src/**/*.tsx"
   ],
-  "extends": "./tsconfig-react-onsenui.json"
 }

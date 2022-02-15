@@ -7,7 +7,6 @@ import { GRADES } from '../../Constants/Grades';
 import { RectangleButtonProps } from '../../Components/RectangleButton';
 import EditPage from '../EditPage/EditPage';
 import { LoadingOverlay, RectangleButton, TopoCard } from '../../Components';
-import { sleep } from '../../Functions';
 
 const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigator, openMenu:() => void}) => {
   const onGradeClicked = (id: number) => (e: React.MouseEvent<HTMLElement>) => {
@@ -31,6 +30,8 @@ const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigato
         .map(x => {return { key: x.id, label: x.name, isSelected: false, onTapped: onGradeClicked(x.id) };})
     );
   const [overlayVisibility, setOverlayVisibility] = useState<boolean>(true);
+
+  // const topoDb = new TopoDB();
 
   const searchFunc = (x: ITopo) => 
     x.name.indexOf(searchText) > -1 

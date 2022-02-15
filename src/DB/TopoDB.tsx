@@ -8,6 +8,8 @@ export class TopoDB extends Dexie {
   constructor() {  
     super('TopoDB');
 
+    console.log('topo');
+
     this.version(1).stores({
       Topos: '++id, data',
     });
