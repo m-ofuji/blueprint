@@ -22,7 +22,7 @@ const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigato
   const [topos, setTopos] = useState<ITopo[]>([]);
   const [topoLimit, setTopoLimit] = useState<number>(5);
   const [searchText, setSearchText] = useState<string>('');
-  const [topoDb, setTopoDb] = useState<TopoDB>(new TopoDB());
+  const [topoDb, setTopoDb] = useState<TopoDB | undefined>();
   const [searchGrades, setSearchGrades] 
     = useState<RectangleButtonProps[]>(
       GRADES
@@ -30,8 +30,6 @@ const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigato
         .map(x => {return { key: x.id, label: x.name, isSelected: false, onTapped: onGradeClicked(x.id) };})
     );
   const [overlayVisibility, setOverlayVisibility] = useState<boolean>(true);
-
-  // const topoDb = new TopoDB();
 
   const searchFunc = (x: ITopo) => 
     x.name.indexOf(searchText) > -1 
@@ -51,83 +49,26 @@ const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigato
 
   const updateTopos = () => {
     setOverlayVisibility(true);
-    // alert('Topos');
-    // alert(topoDb.Topos);
-    // // alert(topoDb.Topos?.orderBy('id').reverse().limit(topoLimit).count());
-    // // alert(topoDb.Topos?.orderBy('id').reverse().limit(topoLimit));
-    // topoDb.Topos?.orderBy('id').reverse().limit(topoLimit).each(async topos => {
-    //   alert('updateTopos');
-    //   alert(topos);
+    console.log('updates');
 
-    //   await sleep(100);
-
-    //   setTopos(old => [...old, topos]);
-    //   // setOverlayVisibility(false);
-    // });
-
-    // (async () => {
-    //   alert('toCollection pk');
-    //   // const keys = topoDb.Topos?.orderBy('id').reverse().limit(topoLimit).keys();
-
-    //   // const topos = topoDb.Topos?.toCollection().;
-
-    //   const keys = await topoDb.Topos?.toCollection().primaryKeys();
-    //   alert(keys);
-    //   console.log(keys);
-    //   keys?.forEach(async key => {
-    //     const t = await topoDb.Topos?.where({id: key}).first();
-    //     if (t) {
-    //       setTopos(old => [...old, t]);
-    //     }
-    //   });
-    //   setOverlayVisibility(false);
-    //   // const keys = topoDb.Topos?.orderBy('id').reverse().limit(topoLimit).keys();  
-    // })();
-    
-    // topoDb.Topos?.orderBy('id').reverse().limit(topoLimit).toArray(async topos => {
-    //   alert('updateTopos');
-    //   alert(topos);
-
-    //   await sleep(100);
-
-    //   setTopos(old => [...old, topos]);
-    //   // setOverlayVisibility(false);
-    // });
-    // // setOverlayVisibility(false);
-    // // alert('after ToposArray');
-
-    // try {
-    //   // alert('toporis');
-      // topoDb.Topos?.orderBy('id').reverse().limit(topoLimit).toArray().then((topos) => {
-      //   setTopos(topos);
-      //   setOverlayVisibility(false);
-      // });
-
-      topoDb.Topos?.orderBy('id').reverse().toArray().then((topos) => {
-        setTopos(topos);
-        setOverlayVisibility(false);
+    if (!topoDb) {
+      setTopoDb(old => {
+        const db = new TopoDB();
+        db?.Topos?.orderBy('id').reverse().limit(topoLimit).toArray().then((topos) => {
+          setTopos(topos);
+          setOverlayVisibility(false);
+        });
+        return db;
       });
+    }
 
-      // alert('collection');
-      // topoDb.Topos?.toCollection().primaryKeys();
-      // alert('limit end');
-
-      // topoDb.Topos?.orderBy('id').toArray().then((topos) => {
-      //   setTopos(topos);
-      //   setOverlayVisibility(false);
-      // });
-    // } catch(ex) {
-    //   alert(ex);
-    // }
-
-    // (async () => {
-    //   const topos = await topoDb.Topos?.orderBy('id').reverse().limit(topoLimit).toArray();
-    //   setTopos(topos ?? []);
-    //   setOverlayVisibility(false);
-    // })();
+    topoDb?.Topos?.orderBy('id').reverse().limit(topoLimit).toArray().then((topos) => {
+      setTopos(topos);
+      setOverlayVisibility(false);
+    });
   }
 
-  useLayoutEffect(updateTopos, [topoLimit]);
+  useLayoutEffect(updateTopos, [topoLimit, topoDb]);
 
   const onSearchTextChange = (e: React.FormEvent<HTMLInputElement>) => {
     setSearchText(e.currentTarget.value);

@@ -3,28 +3,16 @@ import { exportDB } from 'dexie-export-import';
 
 export class TopoDB extends Dexie {
   Topos: Dexie.Table<ITopo, number> | undefined;
-  // TopoPictures: Dexie.Table<ITopoPicture, number> | undefined;
   
   constructor() {  
     super('TopoDB');
 
-    console.log('topo');
-
     this.version(1).stores({
       Topos: '++id, data',
     });
 
-    // this.version(2).stores({
-    //   Topos: '++id, data',
-    // });
-
-    this.version(1).stores({
-      Topos: '++id, data',
-    });
-
-    // alert('constructor before');
+    console.log('topo constructor');
     this.Topos = this.table('Topos');
-    // alert('constructor after');
   }
 
   save = (topo: ITopo) => {
@@ -62,16 +50,3 @@ export interface ITopo {
   data: ArrayBuffer[];
   createdAt: number;
 }
-
-// export interface ITopo {
-//   id?: number;
-//   name: string;
-//   setter: string | undefined;
-//   grade: number;
-//   createdAt: number;
-// }
-
-// export interface ITopoPicture {
-//   id?: number;
-//   data: ArrayBuffer;
-// }
