@@ -2,12 +2,11 @@ import Dexie from 'dexie';
 import { exportDB } from 'dexie-export-import';
 
 export class TopoDB extends Dexie {
-  Topos: Dexie.Table<ITopo, number> | undefined;
-  
+  Topos: Dexie.Table<ITopo, number>;
   constructor() {  
     super('TopoDB');
 
-    this.version(1).stores({
+    this.version(2).stores({
       Topos: '++id, data',
     });
 
