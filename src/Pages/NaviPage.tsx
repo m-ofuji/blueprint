@@ -1,19 +1,14 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import HomePage from './HomePage/HomePage';
 import { Navigator, SplitterContent, SplitterSide, Splitter, Page, List, ListItem } from 'react-onsenui';
 import LicensePage from './LicensePage/LicensePage';
 
 export const NaviPage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-  const [route, setRoute] = useState<any | undefined>();
-  const [navigator, setNavigator] = useState<Navigator | undefined>();
-  // const [openLicensePage, setOpenLicensePage] = useState<(() => void) | undefined>(undefined);
+  const navigator = useRef<Navigator>(null);
+  const initialRoute = {comp: HomePage, key: 'HomePage'};
 
   const renderPage = (route: any, navigator: Navigator) => {
-    console.log(route);
-    setRoute(route);
-    setNavigator(navigator);
-
     return (
       <route.comp 
         key={route.key} 
@@ -25,7 +20,7 @@ export const NaviPage = () => {
   }
 
   const toggleMenuOpen = () => {
-    setIsMenuOpen(!isMenuOpen);
+    setIsMenuOpen(false);
   }
 
   const openMenu = () => {
@@ -33,20 +28,17 @@ export const NaviPage = () => {
   }
 
   const onLicenseClicked = () => {
-    if (isMenuOpen) {
-      console.log('aaa');
-      // openLicensePage();
-      if (navigator != undefined && navigator.pages.length > 0) return;
-      console.log('openLicensePage');
-      navigator?.pushPage({
+    if (!isMenuOpen) return;
+    setIsMenuOpen(false);
+    navigator?.current?.pushPage({
         comp: LicensePage,
         props: {
           key: 'LicensePage',
-          route: route,
-          navigator: navigator,
+          route: initialRoute,
+          navigator: navigator.current,
         }
-      });
-    }
+      }
+    );
   }
 
   return <Splitter>
@@ -72,7 +64,8 @@ export const NaviPage = () => {
     <SplitterContent>
     <Navigator
       key='navi'
-      initialRoute={{comp: HomePage, key: 'HomePage'}}
+      ref={navigator}
+      initialRoute={initialRoute}
       renderPage={renderPage}
       animation='lift'
     />

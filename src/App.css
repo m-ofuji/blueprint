@@ -13,6 +13,7 @@ body {
 .page__content,
 .page__content.page--material__content {
   background: #fafafa!important;
+  background-color: #fafafa!important;
 }
 
 .page-content {

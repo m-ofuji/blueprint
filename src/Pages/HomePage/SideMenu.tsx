@@ -5,16 +5,9 @@ import { openFileSelecter } from '../../Functions/OpenFileSelecter';
 import { stringToJson } from '../../Functions/StringToJson';
 import { getCurrentTimestamp } from '../../Functions/CurrentTimestamp';
 import { uint8ArrayToBuffer } from '../../Functions/Uint8ArrayToBuffer';
-import HelpPage from '../HelpPage/HelpPage';
 
 const SideMenu = ({openHelpPage, updateTopos}: 
-  {
-    openHelpPage?: () => void,
-    updateTopos?: () => void
-  }
-) => {
-// const SideMenu = () => {
-// const SideMenu = (openHelpPage?: () => void, updateTopos?: () => void) => {
+  { openHelpPage?: () => void, updateTopos?: () => void }) => {
   const exportTopo = async () => {
     const db = new TopoDB();
     const topos = await (await db.Topos?.toArray())?.map(x => { return {...x, data: x.data.map(y => new Uint8Array(y))} });
