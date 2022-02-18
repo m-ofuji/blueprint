@@ -53,14 +53,14 @@ const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigato
     if (!topoDb) {
       setTopoDb(old => {
         const db = new TopoDB();
-        db.Topos.orderBy('id').reverse().limit(topoLimit).toArray().then((topos) => {
+        db.Topos.orderBy('id').reverse().toArray().then((topos) => {
           setTopos(topos);
           setOverlayVisibility(false);
         });
         return db;
       });
     } else {
-      topoDb?.Topos.orderBy('id').reverse().limit(topoLimit).toArray().then((topos) => {
+      topoDb?.Topos.orderBy('id').reverse().toArray().then((topos) => {
         setTopos(topos);
         setOverlayVisibility(false);
       });

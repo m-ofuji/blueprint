@@ -1,28 +1,18 @@
 import { useState } from 'react';
 import HomePage from './HomePage/HomePage';
 import { Navigator, SplitterContent, SplitterSide, Splitter, Page, List, ListItem } from 'react-onsenui';
-// import LicensePage from './LicensePage/EditPage';
+import LicensePage from './LicensePage/LicensePage';
 
 export const NaviPage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const [route, setRoute] = useState<any | undefined>();
+  const [navigator, setNavigator] = useState<Navigator | undefined>();
   // const [openLicensePage, setOpenLicensePage] = useState<(() => void) | undefined>(undefined);
 
   const renderPage = (route: any, navigator: Navigator) => {
-    // setOpenLicensePage(
-    //   () => {
-    //     // console.log(navigator.pages.length);
-    //     // if (navigator.pages.length > 0) return;
-    //     // console.log('openLicensePage');
-    //     // navigator.pushPage({
-    //     //   comp: LicensePage,
-    //     //   props: {
-    //     //     key: 'LicensePage',
-    //     //     route: route,
-    //     //     navigator: navigator,
-    //     //   }
-    //     // });
-    //   }
-    // );
+    console.log(route);
+    setRoute(route);
+    setNavigator(navigator);
 
     return (
       <route.comp 
@@ -43,9 +33,20 @@ export const NaviPage = () => {
   }
 
   const onLicenseClicked = () => {
-    // if (isMenuOpen && openLicensePage) {
-    //   openLicensePage();
-    // }
+    if (isMenuOpen) {
+      console.log('aaa');
+      // openLicensePage();
+      if (navigator != undefined && navigator.pages.length > 0) return;
+      console.log('openLicensePage');
+      navigator?.pushPage({
+        comp: LicensePage,
+        props: {
+          key: 'LicensePage',
+          route: route,
+          navigator: navigator,
+        }
+      });
+    }
   }
 
   return <Splitter>
@@ -73,7 +74,8 @@ export const NaviPage = () => {
       key='navi'
       initialRoute={{comp: HomePage, key: 'HomePage'}}
       renderPage={renderPage}
-      animation='lift'/>
+      animation='lift'
+    />
     </SplitterContent>
   </Splitter>
 }
