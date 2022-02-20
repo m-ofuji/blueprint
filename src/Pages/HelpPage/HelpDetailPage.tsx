@@ -1,4 +1,4 @@
-// import {  } from 'react-onsenui';
+// import { Carousel } from 'react-onsenui';
 import { Navigator, Page, CarouselItem, CustomCarousel } from 'react-onsenui';
 // import { CustomCarousel } from '../../Types/CustomCarousel';
 // import { Carousel } from '../../@types/CustomCarousel';
