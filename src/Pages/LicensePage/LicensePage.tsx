@@ -15,6 +15,7 @@ const LicensePage = ({route, navigator}: {route: any, navigator: Navigator}) => 
           <ul>
             <li>OnsenUi</li>
             <li>konvajs</li>
+            <li>Dexie.js</li>
           </ul>
           <p>
           MIT License<br/>

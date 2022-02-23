@@ -2,6 +2,9 @@ import { useRef, useState } from 'react';
 import HomePage from './HomePage/HomePage';
 import { Navigator, SplitterContent, SplitterSide, Splitter, Page, List, ListItem } from 'react-onsenui';
 import LicensePage from './LicensePage/LicensePage';
+import { TopoDB } from '../DB/TopoDB';
+import { downloadBlob, getCurrentTimestamp, arrayBufferToUrl, downloadURI } from '../Functions';
+import JSZip from 'jszip'
 
 export const NaviPage = () => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
@@ -41,6 +44,28 @@ export const NaviPage = () => {
     );
   }
 
+  const exportTopo = async () => {
+    const db = new TopoDB();
+    const topos = (await db.Topos.toArray());
+    const jsonTopos = topos.map(x => { 
+      return {
+        id: x.id,
+        name: x.name,
+        setter: x.setter,
+        grade: x.grade,
+        createdAt: x.createdAt,
+        dataName: `topo_${x.id}.png`
+      }
+    });
+    const blob = new Blob([JSON.stringify(jsonTopos)], {type: 'application/json'});
+
+    const zip = new JSZip();
+    zip.file('topos.json', blob);
+
+    const zipBlob = await zip.generateAsync({type:'blob'});
+    downloadBlob(zipBlob, 'topos.zip');
+  }
+
   return <Splitter>
     <SplitterSide
       side="left"
@@ -57,6 +82,14 @@ export const NaviPage = () => {
             onClick={onLicenseClicked}
             modifier='longdivider'>
               <i className={'fas fa-award'}/> ライセンス情報
+          </ListItem>
+          <ListItem 
+            key={2}
+            className={'menu-item'}
+            tappable
+            onClick={exportTopo}
+            modifier='longdivider'>
+              <i className={'fas fa-database'}/> 一括ダウンロード
           </ListItem>
         </List>
       </Page>
