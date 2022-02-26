@@ -3,7 +3,7 @@ import HomePage from './HomePage/HomePage';
 import { Navigator, SplitterContent, SplitterSide, Splitter, Page, List, ListItem } from 'react-onsenui';
 import LicensePage from './LicensePage/LicensePage';
 import { TopoDB } from '../DB/TopoDB';
-import { downloadBlob, getCurrentTimestamp, arrayBufferToUrl, downloadURI } from '../Functions';
+import { downloadBlob, loadLoalFile } from '../Functions';
 import JSZip from 'jszip'
 
 export const NaviPage = () => {
@@ -47,23 +47,39 @@ export const NaviPage = () => {
   const exportTopo = async () => {
     const db = new TopoDB();
     const topos = (await db.Topos.toArray());
+    
+    const zip = new JSZip();
+
     const jsonTopos = topos.map(x => { 
+      const fileName = `topo_${x.id}.png`;
+      zip.file(fileName, x.data[0]);
       return {
         id: x.id,
         name: x.name,
         setter: x.setter,
         grade: x.grade,
         createdAt: x.createdAt,
-        dataName: `topo_${x.id}.png`
+        file_name: `topo_${x.id}.png`
       }
     });
     const blob = new Blob([JSON.stringify(jsonTopos)], {type: 'application/json'});
 
-    const zip = new JSZip();
     zip.file('topos.json', blob);
+
+    topos.forEach(x => {
+      zip.file(`topo_${x.id}.png`, )
+    });
 
     const zipBlob = await zip.generateAsync({type:'blob'});
     downloadBlob(zipBlob, 'topos.zip');
+  }
+
+  const importTopo = async () => {
+    loadLoalFile(files => {
+      JSZip.loadAsync(files[0]).then(x => {
+        x.forEach((path, zip) => console.log(path, zip));
+      });
+    });
   }
 
   return <Splitter>
@@ -90,6 +106,14 @@ export const NaviPage = () => {
             onClick={exportTopo}
             modifier='longdivider'>
               <i className={'fas fa-database'}/> 一括ダウンロード
+          </ListItem>
+          <ListItem 
+            key={3}
+            className={'menu-item'}
+            tappable
+            onClick={importTopo}
+            modifier='longdivider'>
+              <i className={'fas fa-file-import'}/> インポート
           </ListItem>
         </List>
       </Page>

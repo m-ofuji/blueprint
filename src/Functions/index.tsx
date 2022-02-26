@@ -12,6 +12,7 @@ import { resizeCanvas } from "./ResizeCanvas";
 import { sleep } from "./Sleep";
 import { stringToJson } from "./StringToJson";
 import { uint8ArrayToBuffer } from "./Uint8ArrayToBuffer";
+import { loadLoalFile } from "./LoadLocalFile";
 
 export {
   addNewLine,
@@ -27,5 +28,6 @@ export {
   resizeCanvas,
   sleep,
   stringToJson,
-  uint8ArrayToBuffer
+  uint8ArrayToBuffer,
+  loadLoalFile
 }
