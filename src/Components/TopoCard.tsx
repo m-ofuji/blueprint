@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import ons from "onsenui"
 import { Button } from "react-onsenui";
 import { downloadCanvas } from "../Functions/DownloadCanvas";
@@ -16,6 +16,8 @@ export interface TopoCardProps extends ITopo {
 
 export const TopoCard = (props: TopoCardProps) => {
   const imageRef = useRef<HTMLImageElement>(null);
+  const [isTouchEnd, setIsTouchEnd] = useState<boolean>(true);
+  const [isSelected, setIsSelected] = useState<boolean>(false);
 
   const downLoad = () => {
     if (!imageRef) return;
@@ -116,16 +118,45 @@ export const TopoCard = (props: TopoCardProps) => {
     window.open(imageRef.current?.src);
   }
 
-  // console.log(new Blob([props.data[0]], {type: 'image/png'}));
+  const onTouchStart = async () => {
+    if (isSelected) {
+      setIsTouchEnd(false);
+      setTimeout(() => {
+        if (isTouchEnd) {
+          setIsSelected(false);
+        }
+      }, 1);
+    } else {
+      setIsTouchEnd(false);
+      setTimeout(() => {
+        setIsSelected(true);
+      }, 500);
+    }
+  }
+
+  const onTouchEnd = async () => {
+    console.log('end');
+    console.log(isSelected);
+    setIsTouchEnd(true);
+    // if (!isSelected) {
+    //   setIsSelected(false);
+    // }
+  }
 
   return (
-    <div className={'topo-card'}>
+    <div className={'topo-card'}
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+    >
       {/* {
         props.data.map(x => {
           <img ref={imageRef} src={arrayBufferToUrl(x)} alt={'画像の読み込みに失敗しました'} onClick={openImage}/>
         })
       } */}
-      <img ref={imageRef} src={arrayBufferToUrl(props.data[0])} alt={props.name} onClick={openImage}/>
+      <div className={'topo-card-image-box'}>
+        <img ref={imageRef} src={arrayBufferToUrl(props.data[0])} alt={props.name} onClick={openImage}/>
+        { isSelected ? <i className={'fas fa-check-circle fa-2x'}/> : '' }
+      </div>
       <div className={'topo-card-data'}>
         <div className={'topo-card-title-container'}>
           <div className={'topo-card-title'}>{props.name}</div>

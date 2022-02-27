@@ -212,6 +212,17 @@ body {
   padding: 3px 10px;
 }
 
+.topo-card-image-box {
+  position: relative;
+}
+
+.topo-card-image-box i {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  color: #167ff6;
+}
+
 .grade1 {
   background-color: #FF3399;
   color: #ffffff;
