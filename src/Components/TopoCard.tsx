@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ons from "onsenui"
 import { Button } from "react-onsenui";
 import { downloadCanvas } from "../Functions/DownloadCanvas";
@@ -118,35 +118,36 @@ export const TopoCard = (props: TopoCardProps) => {
     window.open(imageRef.current?.src);
   }
 
-  const onTouchStart = async () => {
-    if (isSelected) {
-      setIsTouchEnd(false);
+  useEffect(() => {
+    console.log('effect');
+    if (!isSelected) {
+      // console.log('effect: not selected');
       setTimeout(() => {
-        if (isTouchEnd) {
-          setIsSelected(false);
-        }
-      }, 1);
-    } else {
-      setIsTouchEnd(false);
-      setTimeout(() => {
-        setIsSelected(true);
+        // console.log('effect: 500ms');
+        console.log('effect: 500ms', isTouchEnd);
+        setIsSelected(!isTouchEnd);
       }, 500);
+    } 
+  }, [isSelected, isTouchEnd]);
+
+  const onTouchStart = async () => {
+    console.log('start');
+    setIsTouchEnd(false);
+    if (isSelected) {
+      setIsSelected(false);
     }
   }
 
   const onTouchEnd = async () => {
     console.log('end');
-    console.log(isSelected);
     setIsTouchEnd(true);
-    // if (!isSelected) {
-    //   setIsSelected(false);
-    // }
   }
 
   return (
     <div className={'topo-card'}
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
+
     >
       {/* {
         props.data.map(x => {
