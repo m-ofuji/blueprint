@@ -120,15 +120,16 @@ export const TopoCard = (props: TopoCardProps) => {
 
   useEffect(() => {
     console.log('effect');
-    if (!isSelected) {
-      // console.log('effect: not selected');
-      setTimeout(() => {
-        // console.log('effect: 500ms');
-        console.log('effect: 500ms', isTouchEnd);
-        setIsSelected(!isTouchEnd);
-      }, 500);
-    } 
-  }, [isSelected, isTouchEnd]);
+    let update = true;
+    setTimeout(() => {
+      console.log('effect: 500ms', isTouchEnd);
+      console.log(update);
+      if (!isTouchEnd && update) {
+        setIsSelected(true);
+      }
+    }, 500);
+    return () => { update = false; };
+  }, [isTouchEnd]);
 
   const onTouchStart = async () => {
     console.log('start');
