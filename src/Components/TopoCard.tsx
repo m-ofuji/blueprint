@@ -119,28 +119,50 @@ export const TopoCard = (props: TopoCardProps) => {
   }
 
   useEffect(() => {
-    console.log('effect');
+    // console.log('effect');
     let update = true;
+
+    if (isSelected && !isTouchEnd) return;
+
+    if (!update && isSelected && isTouchEnd) {
+      setIsSelected(false);
+      // return () => {update = false};
+      // setTimeout(() => {
+      //   // if (update) {
+      //     console.log('aaa');
+      //     setIsSelected(false);
+      //   // }
+      // }, 1);
+    } else {
+      return () => {update = false};
+    }
+
     setTimeout(() => {
-      console.log('effect: 500ms', isTouchEnd);
-      console.log(update);
+      // console.log('effect: 500ms', isTouchEnd);
+      // console.log(update);
       if (!isTouchEnd && update) {
         setIsSelected(true);
       }
     }, 500);
+
     return () => { update = false; };
   }, [isTouchEnd]);
 
   const onTouchStart = async () => {
-    console.log('start');
+    // console.log('start');
+
+    // if (isSelected) {
+    //   setIsSelected(false);
+    // }
+
     setIsTouchEnd(false);
-    if (isSelected) {
-      setIsSelected(false);
-    }
+    // if (isSelected) {
+    //   setIsSelected(false);
+    // }
   }
 
   const onTouchEnd = async () => {
-    console.log('end');
+    // console.log('end');
     setIsTouchEnd(true);
   }
 

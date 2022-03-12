@@ -92,9 +92,15 @@ const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigato
     });
   }
 
-  const onDone = () =>{
-    setTopoLimit(old => old + 5);
-    updateTopos();
+  const onDone = async (done: () => void) =>{
+    if(!overlayVisibility ) {
+      const topoCount = (await topoDb?.Topos.count()) ?? 0;
+      if (topoCount > topoLimit) {
+        setTopoLimit(old => topoCount > (old + 5) ? (old + 5) : topoCount);
+        updateTopos();
+      }
+    }
+    done();
   }
 
   ons.ready(function() {

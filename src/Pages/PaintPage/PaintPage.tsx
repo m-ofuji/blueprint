@@ -5,7 +5,7 @@ import EditPage from '../EditPage/EditPage';
 import HelpPage from '../HelpPage/HelpPage';
 import { DownloadButton, SaveButton, RotateButton, HelpButton, SelectImageButton, FreeTextDialog } from './Components'
 import { MarkerPositionX, MarkerPositionY, StampTextSize, StampFreeTextSize } from './Constants';
-import { getCurrentTimestamp, downloadURI, BlobToArrayBuffer } from '../../Functions'; 
+import { getCurrentTimestamp, downloadURI, BlobToArrayBuffer, sleep } from '../../Functions'; 
 import { KonvaEventObject } from 'konva/lib/Node';
 import { Stage, Layer, Group } from 'react-konva';
 import { WallImage } from './WallImage';
@@ -192,6 +192,7 @@ const PaintPage = ({route, navigator, updateTopos}:
   }
 
   const onFreeTextOKTapped = (text: string) => {
+    alert('tapped');
     if (!text || text.length <= 0) {
       setIsFreeTextOpen(false);
       return;
@@ -203,7 +204,8 @@ const PaintPage = ({route, navigator, updateTopos}:
     setIsFreeTextOpen(false);
   }
 
-  const activateFreeText = (e: MouseEvent<HTMLDivElement>) => {
+  const activateFreeText = async (e: MouseEvent<HTMLDivElement>) => {
+    await sleep(0);
     if (!wallImage) {
       onSelectImageTapped();
       return;
