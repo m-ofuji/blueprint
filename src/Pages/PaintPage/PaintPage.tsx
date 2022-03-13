@@ -192,7 +192,6 @@ const PaintPage = ({route, navigator, updateTopos}:
   }
 
   const onFreeTextOKTapped = (text: string) => {
-    alert('tapped');
     if (!text || text.length <= 0) {
       setIsFreeTextOpen(false);
       return;
