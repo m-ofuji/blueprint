@@ -53,13 +53,16 @@ const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigato
     if (!topoDb) {
       setTopoDb(old => {
         const db = new TopoDB();
-        db.Topos.orderBy('id').limit(topoLimit).reverse().toArray().then((topos) => {
-          setTopos(topos);
-          setOverlayVisibility(false);
-        });
+        console.log('init db');
+        setOverlayVisibility(false);
+        // db.Topos.orderBy('id').limit(topoLimit).reverse().toArray().then((topos) => {
+        //   setTopos(topos);
+        //   setOverlayVisibility(false);
+        // });
         return db;
       });
     } else {
+      console.log('update topo');
       topoDb?.Topos.orderBy('id').limit(topoLimit).reverse().toArray().then((topos) => {
         setTopos(topos);
         setOverlayVisibility(false);
