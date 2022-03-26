@@ -10,6 +10,7 @@ import { arrayBufferToUrl } from "../Functions/ArraybufferToUrl";
 import { MAIN_COLOR } from "../Constants/Colors";
 
 export interface TopoCardProps extends ITopo {
+  db: TopoDB | undefined
   updateTopos: () => void,
   onEditTapped?: () => void;
 }
@@ -102,11 +103,12 @@ export const TopoCard = (props: TopoCardProps) => {
       title: 'トポ削除',
       message: '削除したトポは復元できません。\nトポを削除してよろしいですか。',
       buttonLabels: ons.platform.isIOS() ? ['いいえ', 'はい'] : ['はい', 'いいえ'],
-      callback: (idx: any) => {
+      callback: async (idx: any) => {
         const isYes = ons.platform.isIOS() ? idx === 1 : idx === 0;
         if (isYes && props.id !== undefined) {
-          const db = new TopoDB();
-          db.deleteTopo(props.id);
+          // const db = new TopoDB();
+          console.log(props.db);
+          await props.db?.deleteTopo(props.id);
           props.updateTopos();
           ons.notification.toast('トポを削除しました。', {timeout: 2000});
         }

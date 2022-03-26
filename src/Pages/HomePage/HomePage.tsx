@@ -7,6 +7,7 @@ import { GRADES } from '../../Constants/Grades';
 import { RectangleButtonProps } from '../../Components/RectangleButton';
 import EditPage from '../EditPage/EditPage';
 import { LoadingOverlay, RectangleButton, TopoCard } from '../../Components';
+import { sleep } from '../../Functions';
 
 const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigator, openMenu:() => void}) => {
   const onGradeClicked = (id: number) => (e: React.MouseEvent<HTMLElement>) => {
@@ -47,22 +48,89 @@ const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigato
     });
   }
 
+  const refleshTopoCards = () => {
+    setTopoDb(undefined);
+  };
+
   const updateTopos = () => {
+    console.log('update');
     setOverlayVisibility(true);
+    // setOverlayVisibility(false);
 
     if (!topoDb) {
       setTopoDb(old => {
         const db = new TopoDB();
         console.log('init db');
         setOverlayVisibility(false);
-        // db.Topos.orderBy('id').limit(topoLimit).reverse().toArray().then((topos) => {
-        //   setTopos(topos);
-        //   setOverlayVisibility(false);
-        // });
         return db;
       });
     } else {
-      console.log('update topo');
+      console.log('update topo 1');
+      // alert('each'):
+      // console.log(topoDb?.Topos.orderBy('id'));
+
+      // setOverlayVisibility(false);
+
+      // (async() => {
+      //   const topo = topoDb?.Topos.limit(topoLimit);
+      //   console.log(topo);
+      //   let ts: ITopo[] = [];
+      //   topo.each(x => ts.push(x));
+      //   // topo.each(x => setTopos(old => [x, ...old]));
+      //   console.log(ts);
+      //   // setTopos(old => [...ts, ...old]);
+      //   console.log('update topo 2');
+      //   // setTopos(ts);
+      //   console.log('update topo 3');
+      //   // await sleep(1);
+      //   setTimeout(() => {
+      //     setTopos(ts);
+      //     setOverlayVisibility(false);
+      //   }, 1);
+      //   // console.log(topos);
+      //   // setOverlayVisibility(false);
+      //   console.log('update topo 4');
+      //   console.log(topos);
+      // })();
+
+      // const topo = topoDb?.Topos.limit(topoLimit);
+      // console.log(topo);
+      // let ts: ITopo[] = [];
+      // topo.each(x => ts.push(x));
+      // // topo.each(x => setTopos(old => [x, ...old]));
+      // console.log(ts);
+      // // setTopos(old => [...ts, ...old]);
+      // console.log('update topo 2');
+      // setTopos(ts);
+      // console.log('update topo 3');
+      // console.log(topos);
+      // setOverlayVisibility(false);
+      // console.log('update topo 4');
+      // console.log(topos);
+
+      // (async () => {
+      //   // await sleep(1000);
+      //   topoDb?.Topos.limit(topoLimit).reverse().toArray().then((topos) => {
+      //     setTopos(topos);
+      //     setOverlayVisibility(false);
+      //   });
+
+      //   // topoDb?.Topos.limit(topoLimit).toArray().then((topos) => {
+      //   //   setTopos(topos);
+      //   //   setOverlayVisibility(false);
+      //   // });
+      //   // const topo = topoDb?.Topos.limit(topoLimit);
+      //   // console.log(topo);
+      //   // // let ts: ITopo[] = [];
+      //   // topo.each(x => topos.push(x));
+      //   // console.log(topos);
+      //   // setTopos(topos);
+      //   // setOverlayVisibility(false);
+      //   // topoDb?.Topos.limit(topoLimit)((topos) => {
+      //   //   setTopos(topos);
+      //   //   setOverlayVisibility(false);
+      //   // });
+      // })();
       topoDb?.Topos.orderBy('id').limit(topoLimit).reverse().toArray().then((topos) => {
         setTopos(topos);
         setOverlayVisibility(false);
@@ -70,6 +138,10 @@ const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigato
     }
   }
 
+  console.log('domain');
+  console.log(topos);
+
+  // useLayoutEffect(updateTopos, [topoLimit, topoDb]);
   useLayoutEffect(updateTopos, [topoLimit, topoDb]);
 
   const onSearchTextChange = (e: React.FormEvent<HTMLInputElement>) => {
@@ -137,7 +209,7 @@ const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigato
             topos
               .filter(x => searchFunc(x))
               .sort((a, b) => a.createdAt > b.createdAt ? -1 : 1)
-              .map((x, i) => <TopoCard key={i} {...x} updateTopos={updateTopos} onEditTapped={openEditPage(x)}/>)
+              .map((x, i) => <TopoCard key={i} {...x} db={topoDb} updateTopos={updateTopos} onEditTapped={openEditPage(x)}/>)
             : <p> トポが見つかりませんでした </p>
           }
         </div>

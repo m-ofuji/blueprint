@@ -24,8 +24,8 @@ export class TopoDB extends Dexie {
     }
   }
 
-  deleteTopo = (id: number) => {
-    this.Topos?.delete(id);
+  deleteTopo = async (id: number) => {
+    await this.Topos?.delete(id);
   }
 
   exportTopos = async () => {
