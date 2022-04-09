@@ -1,22 +1,17 @@
 import { Text } from 'react-konva';
 import { forwardRef } from 'react';
 import { countStrLength } from '../../../Functions/CountStrLength';
+import { HoldProps } from './HoldProps';
 
-export type HoldTextProps = {
-  key:number,
-  keyStr: string,
-  x: number,
-  y: number,
+export interface HoldTextProps extends HoldProps{
   character: string,
-  fontSize: number,
-  color: string,
-  scale: number | undefined,
-  onDoubleTapped?: ((ev: string) => void)
+  fontSize: number;
 }
 
 export const isHoldTextProps = (arg: unknown): arg is HoldTextProps =>
     typeof arg === "object" &&
     arg !== null &&
+    typeof (arg as HoldTextProps).id === 'number' &&
     typeof (arg as HoldTextProps).x === 'number' &&
     typeof (arg as HoldTextProps).y === 'number' &&
     (typeof (arg as HoldTextProps).scale === 'number' || (arg as HoldTextProps).scale === undefined) &&
@@ -26,7 +21,7 @@ export const isHoldTextProps = (arg: unknown): arg is HoldTextProps =>
 let HoldTextBase = (props: HoldTextProps, ref: any) => {
   const onDoubleTapped = () => {
     if (!props.onDoubleTapped) return;
-    props.onDoubleTapped(props.keyStr);
+    props.onDoubleTapped(props.id);
   }
 
   return <Text

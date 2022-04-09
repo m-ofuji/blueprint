@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Image, Group } from 'react-konva';
 import { HoldCircleProps, HoldCircle } from './Holds/HoldCircle';
 import { HoldTextProps, HoldText } from './Holds/HoldText';
@@ -21,21 +21,19 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
   const [x, setX] = useState<number>(0);
   const [y, setY] = useState<number>(0);
 
-  const onCirleDoubleTapped = (keyStr: string) => {
-    setHolds(old => old.filter(x => x.keyStr !== keyStr ));
+  const onCirleDoubleTapped = (id: number) => {
+    setHolds(old => old.filter(x => x.id !== id ));
   }
 
-  const onTextDoubleTapped = (keyStr: string) => {
-    setHoldText(old => old.filter(x => x.keyStr !== keyStr ));
+  const onTextDoubleTapped = (id: number) => {
+    setHoldText(old => old.filter(x => x.id !== id ));
   }
 
   useImperativeHandle(ref, () => ({
     addCircle: (color: string) => {
-
       setStampKeys(stampKeys + 1);
-
       const normalHold = {
-        key: stampKeys,
+        id: stampKeys,
         keyStr: stampKeys.toString(),
         x: (MarkerPositionX - (groupRef.current.x())) * (1 / scale),
         y: (MarkerPositionY - (groupRef.current.y())) * (1 / scale),
@@ -43,14 +41,12 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
         color: color,
         onDoubleTapped: onCirleDoubleTapped
       }
-      setHolds(holds.concat([normalHold]).filter(x => x));
+      setHolds(holds.concat(normalHold));
     },
     addText: (text: string, fontSize: number, color: string) => {
-
       setStampKeys(stampKeys + 1);
-
       const t = {
-        key: stampKeys,
+        id: stampKeys,
         keyStr: stampKeys.toString(),
         x: (MarkerPositionX - (groupRef.current.x())) * (1 / scale),
         y: (MarkerPositionY - (groupRef.current.y())) * (1 / scale),
@@ -60,7 +56,7 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
         color: color,
         onDoubleTapped: onTextDoubleTapped
       }
-      setHoldText(texts.concat([t]).filter(x => x));
+      setHoldText(texts.concat(t).filter(x => x));
     },
     rotate: () => {
       setRotation(old => old + 90);
@@ -177,8 +173,8 @@ let WallImageBase = (props : WallImageProps, ref : any) => {
         rotation={rotation}
         image={props.src}
       />
-      {holds.map((props, i) => <HoldCircle {...props}/>)}
-      {texts.map((props, i) => <HoldText {...props}/>)}
+      {holds.map((props, i) => <HoldCircle key={i} {...props}/>)}
+      {texts.map((props, i) => <HoldText key={i} {...props}/>)}
     </Group>
   );
 };

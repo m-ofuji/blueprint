@@ -2,20 +2,14 @@ import { Circle } from 'react-konva';
 import { forwardRef } from 'react';
 import { HoldCircleRadius, HoldCircleStrokeWidth } from '../Constants';
 import { KonvaEventObject } from 'konva/lib/Node';
+import { HoldProps } from './HoldProps';
 
-export type HoldCircleProps = {
-  key: number,
-  keyStr: string,
-  x: number,
-  y: number,
-  scale: number | undefined,
-  color: string,
-  onDoubleTapped?: ((ev: string) => void)
-}
+export interface HoldCircleProps extends HoldProps { }
 
 export const isHoldCircleProps = (arg: unknown): arg is HoldCircleProps =>
     typeof arg === "object" &&
     arg !== null &&
+    typeof (arg as HoldCircleProps).id === 'number' &&
     typeof (arg as HoldCircleProps).x === 'number' &&
     typeof (arg as HoldCircleProps).y === 'number' &&
     (typeof (arg as HoldCircleProps).scale === 'number' || (arg as HoldCircleProps).scale === undefined) &&
@@ -24,7 +18,7 @@ export const isHoldCircleProps = (arg: unknown): arg is HoldCircleProps =>
 let HoldCircleBase = (props: HoldCircleProps, ref: any) => {
   const doubleTapped = (ev: KonvaEventObject<Event>) => {
     if (!props.onDoubleTapped) return;
-    props.onDoubleTapped(props.keyStr);
+    props.onDoubleTapped(props.id);
   }
 
   return (

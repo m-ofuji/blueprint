@@ -1,4 +1,6 @@
 import { SizeProps } from "./SizeProps"
+import { HoldCircleProps } from "../Pages/PaintPage/Holds/HoldCircle";
+import { HoldTextProps } from "../Pages/PaintPage/Holds/HoldText";
 
 export type WallImageProps = {
   ref?: React.ForwardedRef<HTMLInputElement>;
