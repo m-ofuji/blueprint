@@ -30,7 +30,7 @@ export const FreeTextDialog = (props: FreeTextDialogProps) => {
   const onChange= (e: React.ChangeEvent<HTMLInputElement>) => setText(e.target.value);
 
   return (
-    <AlertDialog isOpen={props.isOpen} modifier='rowfooter' isCancelable={false}>
+    <AlertDialog isOpen={props.isOpen} modifier='rowfooter' isCancelable={false} animation={'none'}>
       <div className='alert-dialog-title'>{props.title}</div>
       <div className='alert-dialog-content'>
         <p>{props.msg}<br/>{`※${props.maxLength}文字まで入力できます。`}</p>

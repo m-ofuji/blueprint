@@ -203,8 +203,7 @@ const PaintPage = ({route, navigator, updateTopos}:
     setIsFreeTextOpen(false);
   }
 
-  const activateFreeText = async (e: MouseEvent<HTMLDivElement>) => {
-    await sleep(0);
+  const activateFreeText = (e: MouseEvent<HTMLDivElement>) => {
     if (!wallImage) {
       onSelectImageTapped();
       return;
@@ -217,7 +216,7 @@ const PaintPage = ({route, navigator, updateTopos}:
       onSelectImageTapped();
       return;
     }
-    setStamps(old => old.map((x) => {return { ...x, isSelected : x.label === e.target.innerText }}));
+    setStamps(old => old.map((x) => ({ ...x, isSelected : x.label === e.target.innerText })));
   }
 
   const holdTargetTapped = (evt: KonvaEventObject<Event>) => {
