@@ -2,6 +2,7 @@ import { createRef, ChangeEvent, useState, useRef, MouseEvent } from 'react';
 import ons from 'onsenui'
 import { Navigator, Page } from 'react-onsenui';
 import EditPage from '../EditPage/EditPage';
+import HowToPage from '../HowToPage/HowToPage';
 import HelpPage from '../HelpPage/HelpPage';
 import { DownloadButton, SaveButton, RotateButton, HelpButton, SelectImageButton, FreeTextDialog } from './Components'
 import { MarkerPositionX, MarkerPositionY, StampTextSize, StampFreeTextSize } from './Constants';
@@ -318,6 +319,7 @@ const PaintPage = ({route, navigator, updateTopos}:
         msg={'画像に追加したい文言を入力してください。'} 
         maxLength={10}
         onOKTapped={onFreeTextOKTapped}/>
+      {/* <HowToPage isShown={true} hide={() => {}}/> */}
     </Page>
   )
 }
