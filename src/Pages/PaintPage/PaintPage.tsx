@@ -319,7 +319,7 @@ const PaintPage = ({route, navigator, updateTopos}:
         msg={'画像に追加したい文言を入力してください。'} 
         maxLength={10}
         onOKTapped={onFreeTextOKTapped}/>
-      {/* <HowToPage isShown={true} hide={() => {}}/> */}
+      <HowToPage isShown={true} hide={() => {}}/>
     </Page>
   )
 }
