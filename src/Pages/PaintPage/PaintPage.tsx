@@ -49,6 +49,7 @@ const PaintPage = ({route, navigator, updateTopos}:
   const [isRotated, setIsRotated] = useState<boolean>(false);
   const [imageWidth, setIMageWidth] = useState<number>(0);
   const [imageHeight, setIMageHeight] = useState<number>(0);
+  const [howToVisibility, setHowToVisibility] = useState<boolean>(false);
 
   const stage = useRef<any>(null);
   const resizableImage = useRef<any>(null);
@@ -85,6 +86,9 @@ const PaintPage = ({route, navigator, updateTopos}:
           height: i.height,
         }
       });
+      if (localStorage.getItem('how_to_shown') !== 'true') {
+        setHowToVisibility(true);
+      }
     }
   }
 
@@ -319,7 +323,9 @@ const PaintPage = ({route, navigator, updateTopos}:
         msg={'画像に追加したい文言を入力してください。'} 
         maxLength={10}
         onOKTapped={onFreeTextOKTapped}/>
-      <HowToPage isShown={true} hide={() => {}}/>
+      {
+        howToVisibility && <HowToPage/>
+      }
     </Page>
   )
 }

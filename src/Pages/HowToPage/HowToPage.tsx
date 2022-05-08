@@ -1,40 +1,15 @@
-import { Carousel } from 'react-onsenui';
-import { Navigator, Page, CarouselItem, CustomCarousel } from 'react-onsenui';
-// import { CustomCarousel } from '../../Types/CustomCarousel';
-// import { Carousel } from '../../@types/CustomCarousel';
-// import { Carousel } from '../../@types/react-onsenui';
-import { CloseButton } from '../../Components/CloseButton';
-import { useState } from 'react';
-import { AnimationOptions } from 'react-onsenui';
-// import { HelpContents } from './HelpContents';
+import { HtmlHTMLAttributes, useState } from 'react';
 
-export interface HowToOverlayProps {
-  // route: any,
-  // navigator: Navigator,
-  // id?: number,
-  // contents: HelpContents
-  isShown: boolean,
-  hide:() => void
-}
+const HowToOverlay = () => {
+  const [shownContent, setShownContent] = useState<string>('zoom');
 
-const HowToOverlay = (props: HowToOverlayProps) => {
-  const [selectedIndex, setSelectedIndex] = useState<number>(0);
-  const [swipedIndex, setSwipedIndex] = useState<number>(0);
-  const [shownContent, setShownContent] = useState<string>('add-mark');
+  const toNext = (contentType: string) => (e: React.MouseEvent<HTMLElement>) => {
+    setShownContent(contentType);
+  }
 
-  const prev = () => setSelectedIndex(old => old - 1);
-  const next = () => setSelectedIndex(old => old + 1);
-
-  const onPostChange = () => {
-    if (selectedIndex !== swipedIndex) {
-      setSelectedIndex(Math.floor(swipedIndex));
-    }
-  };
-
-  const onSwipe = (idx:number, animationOptions: AnimationOptions) => {
-    if(idx % 1 === 0 && swipedIndex !== idx){
-      setSwipedIndex(old => idx);
-    }
+  const finish = () => {
+    setShownContent('');
+    localStorage.setItem('how_to_shown', 'true');
   }
 
   return (
@@ -48,26 +23,107 @@ const HowToOverlay = (props: HowToOverlayProps) => {
           <p>
             ピンチイン・ピンチアウトで画像の縮小・拡大ができます。
           </p>
-          <div className="how-to-ok-button">OK</div>
+          <div className="how-to-ok-button" onClick={toNext('rotate')}>OK</div>
         </div>
+      }
+      {shownContent === 'rotate' && 
+        <>
+          <div className='how-to-rotate-topo-wrapper-top'/>
+          <div className='how-to-rotate-topo-wrapper-right'/>
+          <div className='how-to-rotate-topo-wrapper-bottom'/>
+          <div className="how-to how-to-rotate-topo">
+            <h5 className="how-to-title"><span/>画像を回転する</h5>
+            <p>
+              このボタンをタップすると、読み込んだ画像を回転できます。
+            </p>
+            <div className="how-to-ok-button" onClick={toNext('add-mark')}>OK</div>
+          </div>
+        </>
       }
       {shownContent === 'add-mark' && 
         <div className="how-to how-to-add-mark">
           <h5 className="how-to-title"><span/>マークを付ける</h5>
-          <p>
-            使用するホールドが画面中央の〇マークに収まるように画像を移動します。<br/>位置が決まったら、マークをタップします。
-          </p>
-          <div className="how-to-ok-button">OK</div>
+          <div>
+            使用するホールドが画面中央の〇マークに収まるように画像を移動します。
+          </div>
+          <div>
+            位置が決まったら、マークをタップします。
+          </div>
+          <div className="how-to-ok-button" onClick={toNext('remove-mark')}>OK</div>
         </div>
       }
       {shownContent === 'remove-mark' && 
         <div className="how-to how-to-remove-mark">
           <h5 className="how-to-title"><span/>マークを消す</h5>
           <p>
-            間違えたときは、マークをダブルタップすることで、マークを消します。
+            間違えたときは、マークをダブルタップすると、マークが消えます。
           </p>
-          <div className="how-to-ok-button">OK</div>
+          <div className="how-to-ok-button" onClick={toNext('mark-buttons')}>OK</div>
         </div>
+      }
+      {shownContent === 'mark-buttons' && 
+        <div className="how-to how-to-mark-buttons">
+          <h5 className="how-to-title"><span/>マークを変更する。</h5>
+          <div className="how-to-mark-buttons-detail">
+            <p>
+              画面下部のメニューから追加したいマークを変更できます。
+            </p>
+            <p>
+              <div>〇S・Gホールド：</div>
+              <div>スタート、ゴールホールド用の赤丸マークです。</div>
+            </p>
+            <p>
+              <div>〇ホールド：</div>
+              <div>通常ホールド用の青丸マークです。</div>
+            </p>
+            <p>
+              <div>〇スタート：</div>
+              <div>スタートホールド用のSマークです。</div>
+            </p>
+            <p>
+              <div>〇ゴール：</div>
+              <div>ゴールホールド用のGマークです。</div>
+            </p>
+            <p>
+              <div>〇スタート右・左：</div>
+              <div>セパレートスタートの時に使用します。</div>
+            </p>
+            <p>
+              <div>〇フリーテキスト：</div>
+              <div>「ハリボテあり」「足自由」など自由に追加できます。</div>
+            </p>
+          </div>
+          <div className="how-to-ok-button" onClick={toNext('save-topo')}>OK</div>
+        </div>
+      }
+      {shownContent === 'save-topo' && 
+        <>
+          <div className='how-to-save-topo-wrapper-top'/>
+          <div className='how-to-save-topo-wrapper-right'/>
+          <div className='how-to-save-topo-wrapper-bottom'/>
+          <div className="how-to how-to-save-topo">
+            <h5 className="how-to-title"><span/>トポを保存する</h5>
+            <p>
+              このボタンを押すとトポ保存画面が開きます。保存したトポはトップ画面に表示されます。
+            </p>
+            <div className="how-to-ok-button" onClick={toNext('download-topo')}>OK</div>
+          </div>
+          <div className='save-button-hole'></div>
+        </>
+      }
+      {shownContent === 'download-topo' && 
+        <>
+          <div className='how-to-download-topo-wrapper-top'/>
+          <div className='how-to-download-topo-wrapper-right'/>
+          <div className='how-to-download-topo-wrapper-bottom'/>
+          <div className="how-to how-to-download-topo">
+            <h5 className="how-to-title"><span/>画像をダウンロードする</h5>
+            <p>
+              このボタンを押すと画像を端末にダウンロードできます。
+            </p>
+            <div className="how-to-ok-button" onClick={finish}>OK</div>
+          </div>
+        </>
       }
     </>
   )
