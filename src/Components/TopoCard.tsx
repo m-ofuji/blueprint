@@ -8,6 +8,8 @@ import { MAX_SIDE_LENGTH } from "../Constants/MaxSideLength";
 import { resizeCanvas } from "../Functions/ResizeCanvas";
 import { arrayBufferToUrl } from "../Functions/ArraybufferToUrl";
 import { MAIN_COLOR } from "../Constants/Colors";
+import { faL, faShareNodes } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export interface TopoCardProps extends ITopo {
   db: TopoDB | undefined
@@ -168,6 +170,15 @@ export const TopoCard = (props: TopoCardProps) => {
     setIsTouchEnd(true);
   }
 
+  const share = () => {
+    if (window.navigator.share) {
+      window.navigator.share({
+        title: 'test',
+        text: 'test2',
+      });
+    }
+  }
+
   return (
     <div className={'topo-card'}
       onTouchStart={onTouchStart}
@@ -194,6 +205,9 @@ export const TopoCard = (props: TopoCardProps) => {
       <div className={'topo-card-action'}>
         <Button modifier={'quiet'} className={'topo-card-action-button'} onClick={deleteTopo} >
           <i className={'fas fa-trash-alt fa-lg'}/>
+        </Button>
+        <Button modifier={'quiet'} className={'topo-card-action-button'} onClick={share} >
+          <FontAwesomeIcon className={'fa-lg'} icon={faShareNodes}/>
         </Button>
         <Button modifier={'quiet'} className={'topo-card-action-button'} onClick={downLoad} >
           <i className={'fas fa-download fa-lg'}/>

@@ -223,6 +223,10 @@ body {
   color: #167ff6;
 }
 
+.topo-card-action .fa-lg {
+  color: black;
+}
+
 .grade1 {
   background-color: #FF3399;
   color: #ffffff;
