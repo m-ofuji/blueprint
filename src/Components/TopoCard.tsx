@@ -17,6 +17,13 @@ export interface TopoCardProps extends ITopo {
   onEditTapped?: () => void;
 }
 
+interface ShareData {
+  files?: File[];
+  text?: string;
+  title?: string;
+  url?: string;
+}
+
 export const TopoCard = (props: TopoCardProps) => {
   const imageRef = useRef<HTMLImageElement>(null);
   const [isTouchEnd, setIsTouchEnd] = useState<boolean>(true);
@@ -171,21 +178,24 @@ export const TopoCard = (props: TopoCardProps) => {
   }
 
   const share = () => {
-    if (window.navigator.share) {
-      const picture = new Blob(props.data) as File;
-      
-      window.navigator.share({
-        title: props.name,
-        files: [picture]
-      });
-    }
+    const blob = new Blob([props.data[0]], {type: 'image/png'});
+    console.log(blob);
+    const picture = new File([blob], props.name) ;
+    
+    const data: ShareData = {
+      title: props.name,
+      files: [picture]
+    };
+
+    console.log(data);
+
+    window.navigator.share(data);
   }
 
   return (
     <div className={'topo-card'}
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
-
     >
       {/* {
         props.data.map(x => {
