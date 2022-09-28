@@ -8,7 +8,7 @@ import { MAX_SIDE_LENGTH } from "../Constants/MaxSideLength";
 import { resizeCanvas } from "../Functions/ResizeCanvas";
 import { arrayBufferToUrl } from "../Functions/ArraybufferToUrl";
 import { MAIN_COLOR } from "../Constants/Colors";
-import { faL, faShareNodes } from '@fortawesome/free-solid-svg-icons';
+import { faShareNodes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export interface TopoCardProps extends ITopo {
@@ -172,9 +172,11 @@ export const TopoCard = (props: TopoCardProps) => {
 
   const share = () => {
     if (window.navigator.share) {
+      const picture = new Blob(props.data) as File;
+      
       window.navigator.share({
-        title: 'test',
-        text: 'test2',
+        title: props.name,
+        files: [picture]
       });
     }
   }
