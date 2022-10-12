@@ -1,12 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import ons from "onsenui"
 import { Button } from "react-onsenui";
-import { downloadCanvas } from "../Functions/DownloadCanvas";
+import { downloadCanvas, resizeCanvas, urlToFile, arrayBufferToUrl } from "../Functions";
 import { ITopo, TopoDB } from "../DB/TopoDB";
 import { GRADES } from "../Constants/Grades";
 import { MAX_SIDE_LENGTH } from "../Constants/MaxSideLength";
-import { resizeCanvas } from "../Functions/ResizeCanvas";
-import { arrayBufferToUrl } from "../Functions/ArraybufferToUrl";
 import { MAIN_COLOR } from "../Constants/Colors";
 import { faShareNodes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -177,19 +175,15 @@ export const TopoCard = (props: TopoCardProps) => {
     setIsTouchEnd(true);
   }
 
-  const share = () => {
-    const blob = new Blob([props.data[0]], {type: 'image/png'});
-    console.log(blob);
-    const picture = new File([blob], props.name) ;
-    
+  const share = async () => {
+    const picture = await urlToFile(arrayBufferToUrl(props.data[0]), props.name);
+
     const data: ShareData = {
       title: props.name,
       files: [picture]
     };
 
-    console.log(data);
-
-    window.navigator.share(data);
+    await window.navigator.share(data).catch(error => console.log(error));
   }
 
   return (

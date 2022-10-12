@@ -13,6 +13,7 @@ import { sleep } from "./Sleep";
 import { stringToJson } from "./StringToJson";
 import { uint8ArrayToBuffer } from "./Uint8ArrayToBuffer";
 import { loadLoalFile } from "./LoadLocalFile";
+import { urlToFile } from "./UrlToFile";
 
 export {
   addNewLine,
@@ -29,5 +30,6 @@ export {
   sleep,
   stringToJson,
   uint8ArrayToBuffer,
-  loadLoalFile
+  loadLoalFile,
+  urlToFile
 }
