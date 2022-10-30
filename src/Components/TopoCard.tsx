@@ -1,11 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import ons from "onsenui"
 import { Button } from "react-onsenui";
-import { downloadCanvas, resizeCanvas, urlToFile, arrayBufferToUrl } from "../Functions";
+import { downloadCanvas, resizeCanvas, urlToFile, arrayBufferToUrl, drawTopoImageOnCanvas, blobToUrl, urlToBlobImg } from "../Functions";
 import { ITopo, TopoDB } from "../DB/TopoDB";
 import { GRADES } from "../Constants/Grades";
-import { MAX_SIDE_LENGTH } from "../Constants/MaxSideLength";
-import { MAIN_COLOR } from "../Constants/Colors";
 import { faShareNodes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -28,80 +26,18 @@ export const TopoCard = (props: TopoCardProps) => {
   const [isSelected, setIsSelected] = useState<boolean>(false);
 
   const downLoad = () => {
-    if (!imageRef) return;
     ons.openActionSheet({
       cancelable: true,
       title: 'どの画像をダウンロードしますか？',
       buttons: ['元のサイズ', '元のサイズ（課題情報つき）', '縮小版',　'縮小版（課題情報つき）', 'キャンセル'],
-    }).then((idx: any) => {
+    }).then(async(idx: any) => {
       if (idx < 0) return;
-      if (!imageRef.current?.src) return;
-      const canvas = document.createElement('canvas');
+      const resize = idx === 2 || idx === 3;
+      const printInfo = idx === 1 || idx === 3;
 
-      const img = new Image();
-      img.src = imageRef.current?.src;  // 画像のURLを指定
-      img.onload = () => {
+      const drawnCanvas = await drawTopoImageOnCanvas(props, resize, printInfo);
 
-        const resize = idx === 2 || idx === 3;
-        const printInfo = idx === 1 || idx === 3;  
-
-        const imgWidth = img.naturalWidth;
-        const imgHeight = img.naturalHeight;
-        const fixPixelRatio = imgWidth > MAX_SIDE_LENGTH || imgHeight > MAX_SIDE_LENGTH;
-        const pixelRatio = resize && fixPixelRatio ? MAX_SIDE_LENGTH / Math.max(imgWidth, imgHeight) : 1;
-
-        canvas.width = imgWidth;
-        canvas.height = imgHeight;
-
-        const ctx = canvas.getContext('2d');
-        if (!ctx) return;
-        // トポ画像描画
-        ctx.drawImage(img, 0, 0);
-
-        const resizedCanvas = resizeCanvas(canvas, pixelRatio);
-
-        const minSuf = resize ? '_min' : '';
-        const infoSuf = printInfo ? '_info' : '';
-
-        if (!printInfo) {
-          downloadCanvas(resizedCanvas, props.name + minSuf + infoSuf, 1);
-        } else {
-          const infoCanvas = document.createElement('canvas');
-
-          const fontSize = resizedCanvas.height * 0.05;
-          const padding = fontSize / 4;
-
-          const infoWidth = resizedCanvas.width;
-          const infoHeight = resizedCanvas.height + (fontSize * 2) + (padding * 3);
-
-          infoCanvas.width = infoWidth;
-          infoCanvas.height = infoHeight;
-
-          const infoCtx = infoCanvas.getContext('2d');
-          if (!infoCtx) return;
-
-          // 背景色設定
-          infoCtx.fillStyle = MAIN_COLOR;
-          infoCtx.fillRect(0, 0, infoCanvas.width, infoCanvas.height);
-
-          // トポ情報描画
-          infoCtx.font = fontSize.toString() + 'px sans-serif';
-          infoCtx.fillStyle = '#fafafa';
-          infoCtx.textBaseline = 'top';
-          infoCtx.textAlign = 'left';
-          const resizedHeigt = resizedCanvas.height;
-          infoCtx.fillText(props.name, padding, resizedHeigt + padding);
-          infoCtx.fillText(new Date(props.createdAt * 1000).toLocaleDateString(), padding, resizedHeigt + fontSize + (padding * 2));
-          infoCtx.fillText(GRADES.find(x => x.id === props.grade)?.name ?? '', infoWidth - fontSize * 2 - padding, resizedHeigt + (fontSize / 2) + (padding * 2));
-
-          // トポ画像コピー
-          const copied = resizedCanvas.getContext('2d')?.getImageData(0, 0, resizedCanvas.width, resizedCanvas.height);
-          if (!copied) return;
-          infoCtx.putImageData(copied, 0, 0);
-
-          downloadCanvas(infoCanvas, props.name + minSuf + infoSuf, 1);
-        }
-      };
+      downloadCanvas(drawnCanvas, `${props.name}${resize ? '_min' : ''}${printInfo ? '_info' : ''}`);
     });
   }
 
@@ -176,14 +112,35 @@ export const TopoCard = (props: TopoCardProps) => {
   }
 
   const share = async () => {
-    const picture = await urlToFile(arrayBufferToUrl(props.data[0]), props.name);
+    ons.openActionSheet({
+      cancelable: true,
+      title: 'どの画像をダウンロードしますか？',
+      buttons: ['元のサイズ', '元のサイズ（課題情報つき）', '縮小版',　'縮小版（課題情報つき）', 'キャンセル'],
+    }).then(async(idx: any) => {
+      if (idx < 0) return;
+      const resize = idx === 2 || idx === 3;
+      const printInfo = idx === 1 || idx === 3;
 
-    const data: ShareData = {
-      title: props.name,
-      files: [picture]
-    };
+      const drawnCanvas = await drawTopoImageOnCanvas(props, resize, printInfo);
 
-    await window.navigator.share(data).catch(error => console.log(error));
+      const dataURL = drawnCanvas.toDataURL('image/png');
+      const blob = urlToBlobImg(dataURL);
+
+      if (blob === null) {
+        alert('画像の共有に失敗しました');
+        return;
+      }
+    
+      const imageFile = new File([blob], 'image.png', { type: 'image/png' });
+
+      const data: ShareData = {
+        title: props.name,
+        files: [imageFile]
+      };
+
+      navigator.share(data);
+
+    });
   }
 
   return (
