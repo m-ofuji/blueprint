@@ -29,7 +29,7 @@ export const TopoCard = (props: TopoCardProps) => {
     ons.openActionSheet({
       cancelable: true,
       title: 'どの画像をダウンロードしますか？',
-      buttons: ['元のサイズ', '元のサイズ（課題情報つき）', '縮小版',　'縮小版（課題情報つき）', 'キャンセル'],
+      buttons: ['元のサイズ', '元のサイズ（課題情報つき）', '縮小版', '縮小版（課題情報つき）', 'キャンセル'],
     }).then(async(idx: any) => {
       if (idx < 0) return;
       const resize = idx === 2 || idx === 3;
@@ -114,7 +114,7 @@ export const TopoCard = (props: TopoCardProps) => {
   const share = async () => {
     ons.openActionSheet({
       cancelable: true,
-      title: 'どの画像をダウンロードしますか？',
+      title: 'どの画像を共有しますか？',
       buttons: ['元のサイズ', '元のサイズ（課題情報つき）', '縮小版',　'縮小版（課題情報つき）', 'キャンセル'],
     }).then(async(idx: any) => {
       if (idx < 0) return;
