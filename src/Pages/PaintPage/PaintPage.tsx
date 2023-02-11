@@ -296,7 +296,7 @@ const PaintPage = ({route, navigator, updateTopos}:
           />
         </Layer>
       </Stage>
-      <div className={'horizontal-container'}>
+      <div className='horizontal-container'>
         {stamps.map(props => <RoundButton {...props} onTapped= {props.label === 'フリーテキスト' ? e => activateFreeText(e) : e => activateTarget(e)}/>)}
       </div>
       <SelectImageButton 
