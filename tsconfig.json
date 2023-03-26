@@ -18,10 +18,16 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "rootDir": ".",
+    "typeRoots": [
+      "./node_modules/@types",
+      "src/@types"
+    ],
+    "paths": {"react-onsenui": ["./src/@types/react-onsenui"]}
   },
   "include": [
     "src",
     "src/**/*.tsx"
-  ],
+  ]
 }

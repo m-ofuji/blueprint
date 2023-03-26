@@ -13,7 +13,7 @@
     "@types/node": "^12.20.18",
     "@types/react": "^17.0.15",
     "@types/react-dom": "^17.0.9",
-    "@types/react-onsenui": "^2.9.14",
+    "@vitejs/plugin-react": "^3.1.0",
     "axios": "^0.26.1",
     "dexie": "^3.0.3",
     "dexie-export-import": "^1.0.3",
@@ -27,6 +27,7 @@
     "react-scripts": "^4.0.3",
     "typescript": "^4.3.5",
     "use-image": "^1.0.8",
+    "vite": "^4.2.1",
     "web-vitals": "^1.1.2",
     "workbox-background-sync": "^5.1.4",
     "workbox-broadcast-update": "^5.1.4",
@@ -42,10 +43,9 @@
     "workbox-streams": "^5.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "vite",
+    "build": "tsc --noEmit && vite build",
+    "serve": "vite preview"
   },
   "eslintConfig": {
     "extends": [
@@ -67,6 +67,7 @@
   },
   "devDependencies": {
     "onsenui": "^2.11.2",
-    "react-onsenui": "^1.11.4"
+    "react-onsenui": "^1.11.4",
+    "vite-tsconfig-paths": "^4.0.7"
   }
 }

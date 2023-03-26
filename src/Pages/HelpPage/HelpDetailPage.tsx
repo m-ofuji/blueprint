@@ -1,8 +1,4 @@
-import { Carousel } from 'react-onsenui';
-import { Navigator, Page, CarouselItem, CustomCarousel } from 'react-onsenui';
-// import { CustomCarousel } from '../../Types/CustomCarousel';
-// import { Carousel } from '../../@types/CustomCarousel';
-// import { Carousel } from '../../@types/react-onsenui';
+import { Navigator, Page, CarouselItem, Carousel } from 'react-onsenui';
 import { CloseButton } from '../../Components/CloseButton';
 import { useState } from 'react';
 import { AnimationOptions } from 'react-onsenui';
