@@ -67,6 +67,7 @@
   "devDependencies": {
     "onsenui": "^2.11.2",
     "react-onsenui": "^1.11.4",
+    "vite-plugin-pwa": "^0.14.6",
     "vite-tsconfig-paths": "^4.0.7"
   }
 }
