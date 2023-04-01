@@ -3,12 +3,11 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" href="/favicon.io" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#fafafa" />
-    <link rel="apple-touch-icon" href="/logo192.png" />
-    <!-- <script type="module" src="/service-worker.js"></script> -->
     <link rel="manifest" href="/manifest.json" />
+    <link rel="apple-touch-icon" href="/logo192.png" />
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Toporis">
@@ -20,20 +19,12 @@
     <link rel="apple-touch-icon" href="/icon_192.png" sizes="192x192">
     <link rel="icon" type="image/png" href="/icon_192.png" sizes="192x192">
     <link rel="mask-icon" href="/icon_192.png" color="#FFFFFF">
+    <!-- <link rel="manifest" href="manifest.webmanifest"> -->
+    <!-- <script id="vite-plugin-pwa:register-sw" href="/registerSW.js"></script> -->
     <title>Toporis</title>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/index.tsx"></script>
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker
-            .register('./service-worker.js')
-            .then((reg) => console.log('サービスワーカーの登録成功', reg.scope))
-            .catch((err) => console.log('サービスワーカーの登録失敗', err));
-        });
-      }
-    </script>
   </body>
 </html>
