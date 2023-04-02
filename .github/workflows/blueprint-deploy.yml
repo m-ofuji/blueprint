@@ -30,11 +30,15 @@ jobs:
         run: npm run build
 
       - name: Generate ssh key
+        environment: 
+          name: blueprint-deploy
         run: echo "$SSH_PRIVATE_KEY" > ${{ runner.temp }}/key && chmod 600 ${{ runner.temp }}/key
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Deploy with rsync
+        environment: 
+          name: blueprint-deploy
         run: >
           rsync -e 'ssh -i ${{ runner.temp }}/key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
           -av dist/ ${SSH_USER}@${SSH_HOST}:${DST_PATH}          
