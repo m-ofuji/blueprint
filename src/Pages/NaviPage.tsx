@@ -115,6 +115,13 @@ export const NaviPage = () => {
             modifier='longdivider'>
               <i className={'fas fa-file-import'}/> インポート
           </ListItem>
+          <ListItem 
+            key={4}
+            className={'menu-item'}
+            tappable
+            modifier='longdivider'>
+              バージョン:1.0.0
+          </ListItem>
         </List>
       </Page>
     </SplitterSide>

@@ -53,19 +53,16 @@ const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigato
   };
 
   const updateTopos = () => {
-    console.log('update');
     setOverlayVisibility(true);
     // setOverlayVisibility(false);
 
     if (!topoDb) {
       setTopoDb(old => {
         const db = new TopoDB();
-        console.log('init db');
         setOverlayVisibility(false);
         return db;
       });
     } else {
-      console.log('update topo 1');
       // alert('each'):
       // console.log(topoDb?.Topos.orderBy('id'));
 
@@ -137,9 +134,6 @@ const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigato
       });
     }
   }
-
-  console.log('domain');
-  console.log(topos);
 
   // useLayoutEffect(updateTopos, [topoLimit, topoDb]);
   useLayoutEffect(updateTopos, [topoLimit, topoDb]);
