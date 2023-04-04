@@ -38,7 +38,7 @@ jobs:
       - name: Deploy with rsync
         run: >
           rsync -e 'ssh -i ${{ runner.temp }}/key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
-          -av ${{ runner.temp }}/dist/ ${SSH_USER}@${SSH_HOST}:${DST_PATH}g
+          -av dist/ ${SSH_USER}@${SSH_HOST}:${DST_PATH}g
         env:
           SSH_USER: ${{ secrets.SSH_USER }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
