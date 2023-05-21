@@ -10,7 +10,6 @@ export class TopoDB extends Dexie {
       Topos: '++id, data',
     });
 
-    console.log('topo constructor');
     this.Topos = this.table('Topos');
   }
 

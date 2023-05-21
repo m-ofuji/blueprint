@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import ons from "onsenui"
 import { Button } from "react-onsenui";
-import { downloadCanvas, resizeCanvas, urlToFile, arrayBufferToUrl, drawTopoImageOnCanvas, blobToUrl, urlToBlobImg } from "../Functions";
+import { downloadCanvas, arrayBufferToUrl, drawTopoImageOnCanvas, urlToBlobImg } from "../Functions";
 import { ITopo, TopoDB } from "../DB/TopoDB";
 import { GRADES } from "../Constants/Grades";
 import { faShareNodes } from '@fortawesome/free-solid-svg-icons';
@@ -22,7 +22,6 @@ interface ShareData {
 
 export const TopoCard = (props: TopoCardProps) => {
   const imageRef = useRef<HTMLImageElement>(null);
-  const [isTouchEnd, setIsTouchEnd] = useState<boolean>(true);
   const [isSelected, setIsSelected] = useState<boolean>(false);
 
   const downLoad = () => {
@@ -64,52 +63,24 @@ export const TopoCard = (props: TopoCardProps) => {
   }
 
   useEffect(() => {
-    // console.log('effect');
     let update = true;
 
-    if (isSelected && !isTouchEnd) return;
+    if (isSelected) return;
 
-    if (!update && isSelected && isTouchEnd) {
+    if (!update && isSelected) {
       setIsSelected(false);
-      // return () => {update = false};
-      // setTimeout(() => {
-      //   // if (update) {
-      //     console.log('aaa');
-      //     setIsSelected(false);
-      //   // }
-      // }, 1);
     } else {
       return () => {update = false};
     }
 
     setTimeout(() => {
-      // console.log('effect: 500ms', isTouchEnd);
-      // console.log(update);
-      if (!isTouchEnd && update) {
+      if (update) {
         setIsSelected(true);
       }
     }, 500);
 
     return () => { update = false; };
-  }, [isTouchEnd]);
-
-  const onTouchStart = async () => {
-    // console.log('start');
-
-    // if (isSelected) {
-    //   setIsSelected(false);
-    // }
-
-    setIsTouchEnd(false);
-    // if (isSelected) {
-    //   setIsSelected(false);
-    // }
-  }
-
-  const onTouchEnd = async () => {
-    // console.log('end');
-    setIsTouchEnd(true);
-  }
+  });
 
   const share = async () => {
     ons.openActionSheet({
@@ -144,10 +115,7 @@ export const TopoCard = (props: TopoCardProps) => {
   }
 
   return (
-    <div className={'topo-card'}
-      onTouchStart={onTouchStart}
-      onTouchEnd={onTouchEnd}
-    >
+    <div className={'topo-card'}>
       {/* {
         props.data.map(x => {
           <img ref={imageRef} src={arrayBufferToUrl(x)} alt={'画像の読み込みに失敗しました'} onClick={openImage}/>
