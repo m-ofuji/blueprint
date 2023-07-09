@@ -221,7 +221,8 @@ const PaintPage = ({route, navigator, updateTopos}:
       onSelectImageTapped();
       return;
     }
-    setStamps(old => old.map((x) => ({ ...x, isSelected : x.label === e.target.innerText })));
+    const text = e.target.innerText;
+    setStamps(old => old.map((x) => ({ ...x, isSelected : x.label === text })));
   }
 
   const holdTargetTapped = (evt: KonvaEventObject<Event>) => {
