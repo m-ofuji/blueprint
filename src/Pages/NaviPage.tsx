@@ -120,7 +120,7 @@ export const NaviPage = () => {
             className={'menu-item'}
             tappable
             modifier='longdivider'>
-              バージョン:1.0.2
+              バージョン:1.0.3
           </ListItem>
         </List>
       </Page>
