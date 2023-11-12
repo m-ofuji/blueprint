@@ -2,7 +2,7 @@ import ons from 'onsenui';
 import PaintPage from '../PaintPage/PaintPage';
 import { Navigator, Page } from 'react-onsenui';
 import { ITopo, TopoDB } from '../../DB/TopoDB';
-import { useLayoutEffect, useState } from 'react';
+import { useLayoutEffect, useState, useRef, useCallback } from 'react';
 import { GRADES } from '../../Constants/Grades';
 import { RectangleButtonProps } from '../../Components/RectangleButton';
 import EditPage from '../EditPage/EditPage';
@@ -20,9 +20,7 @@ const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigato
   }
 
   const [topos, setTopos] = useState<ITopo[]>([]);
-  const [topoLimit, setTopoLimit] = useState<number>(5);
   const [searchText, setSearchText] = useState<string>('');
-  const [topoDb, setTopoDb] = useState<TopoDB | undefined>();
   const [searchGrades, setSearchGrades] 
     = useState<RectangleButtonProps[]>(
       GRADES
@@ -30,6 +28,9 @@ const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigato
         .map(x => {return { key: x.id, label: x.name, isSelected: false, onTapped: onGradeClicked(x.id) };})
     );
   const [overlayVisibility, setOverlayVisibility] = useState<boolean>(true);
+
+  const topoDb = useRef<TopoDB>(new TopoDB);
+  const topoLimit = useRef<number>(5);
 
   const searchFunc = (x: ITopo) => 
     x.name.indexOf(searchText) > -1 
@@ -47,24 +48,14 @@ const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigato
     });
   }
 
-  const updateTopos = () => {
-    setOverlayVisibility(true);
+  const updateTopos = useCallback(() => {
+    topoDb.current?.Topos.orderBy('id').limit(topoLimit.current).reverse().toArray().then((topos) => {
+      setTopos(topos);
+      setOverlayVisibility(false);
+    });
+  }, [topoDb.current, topoLimit.current])
 
-    if (!topoDb) {
-      setTopoDb(old => {
-        const db = new TopoDB();
-        setOverlayVisibility(false);
-        return db;
-      });
-    } else {
-      topoDb?.Topos.orderBy('id').limit(topoLimit).reverse().toArray().then((topos) => {
-        setTopos(topos);
-        setOverlayVisibility(false);
-      });
-    }
-  }
-
-  useLayoutEffect(updateTopos, [topoLimit, topoDb]);
+  useLayoutEffect(updateTopos, [topoLimit, topoDb.current]);
 
   const onSearchTextChange = (e: React.FormEvent<HTMLInputElement>) => {
     setSearchText(e.currentTarget.value);
@@ -89,11 +80,11 @@ const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigato
     });
   }
 
-  const onDone = async (done: () => void) =>{
+  const onScrollDone = async (done: () => void) =>{
     if(!overlayVisibility ) {
-      const topoCount = (await topoDb?.Topos.count()) ?? 0;
-      if (topoCount > topoLimit) {
-        setTopoLimit(old => topoCount > (old + 5) ? (old + 5) : topoCount);
+      const topoCount = (await topoDb.current?.Topos.count()) ?? 0;
+      if (topoCount > topoLimit.current) {
+        topoLimit.current = Math.min(topoLimit.current + 5, topoCount);
         updateTopos();
       }
     }
@@ -107,7 +98,7 @@ const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigato
   return (
     <Page
       key={'root'}
-      onInfiniteScroll={onDone}>
+      onInfiniteScroll={onScrollDone}>
       <div className={'page-content'}>
         <div className={'search-wrapper'}>
           <div className='search-container'>
@@ -131,7 +122,7 @@ const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigato
             topos
               .filter(x => searchFunc(x))
               .sort((a, b) => a.createdAt > b.createdAt ? -1 : 1)
-              .map((x, i) => <TopoCard key={i} {...x} db={topoDb} updateTopos={updateTopos} onEditTapped={openEditPage(x)}/>)
+              .map((x, i) => <TopoCard key={i} {...x} db={topoDb.current} updateTopos={updateTopos} onEditTapped={openEditPage(x)}/>)
             : <p> トポが見つかりませんでした </p>
           }
         </div>
