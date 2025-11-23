@@ -54,6 +54,7 @@
   },
   "devDependencies": {
     "onsenui": "^2.11.2",
-    "react-onsenui": "^1.11.4"
+    "react-onsenui": "^1.11.4",
+    "vite-plugin-compression2": "^2.3.1"
   }
 }
