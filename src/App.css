@@ -325,6 +325,35 @@ body {
 
 /* トポカード　ここまで */
 
+/* Webトポ連携ボタン　ここから */
+
+.webtopo-button {
+position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  left: 1em;
+  bottom: 44%;
+  height: 50px;
+  width: 50px;
+  border-radius: 35px;
+  /* padding: 15px; */
+  vertical-align: bottom;
+  color: whitesmoke;
+  background-color: #0058bf;
+  box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.webtopo-button img {
+  height: 35px;
+}
+
+.webtopo-button.is-lefty {
+  left: auto;
+  right: 1em;
+}
+
+/* Webトポ連携ボタン　ここまで*/
 
 /* ダウンロードボタン　ここから*/
 

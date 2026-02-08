@@ -7,8 +7,13 @@ import { GRADES } from '../../Constants/Grades';
 import { RectangleButtonProps } from '../../Components/RectangleButton';
 import EditPage from '../EditPage/EditPage';
 import { LoadingOverlay, RectangleButton, TopoCard } from '../../Components';
+import { useLocation } from "react-router-dom";
 
 const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigator, openMenu:() => void}) => {
+  const search = useLocation().search;
+  const query = new URLSearchParams(search);
+  const mode = query.get('mode');
+
   const onGradeClicked = (id: number) => (e: React.MouseEvent<HTMLElement>) => {
     setSearchGrades(old => {
       const tapped = old.find(x => x.key === id);
@@ -122,7 +127,12 @@ const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigato
             topos
               .filter(x => searchFunc(x))
               .sort((a, b) => a.createdAt > b.createdAt ? -1 : 1)
-              .map((x, i) => <TopoCard key={i} {...x} db={topoDb.current} updateTopos={updateTopos} onEditTapped={openEditPage(x)}/>)
+              .map((x, i) => <TopoCard 
+                key={i} {...x} 
+                db={topoDb.current} 
+                mode={mode}
+                updateTopos={updateTopos} 
+                onEditTapped={openEditPage(x)}/>)
             : <p> トポが見つかりませんでした </p>
           }
         </div>

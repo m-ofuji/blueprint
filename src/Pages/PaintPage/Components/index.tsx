@@ -8,6 +8,7 @@ import { RotateButton } from "./RotateButton"
 import { SaveButton } from "./SaveButton"
 import { SelectImageButton } from "./SelectImageButton"
 import { UndoButton } from "./UndoButton"
+import { WebtopoButton } from "./WebtopoButton"
 
 export { 
   DownloadButton,
@@ -19,5 +20,6 @@ export {
   RotateButton,
   SaveButton,
   SelectImageButton,
-  UndoButton
+  UndoButton,
+  WebtopoButton
 }

@@ -4,7 +4,7 @@ import { Navigator, Page } from 'react-onsenui';
 import EditPage from '../EditPage/EditPage';
 import HowToPage from '../HowToPage/HowToPage';
 import HelpPage from '../HelpPage/HelpPage';
-import { DownloadButton, SaveButton, RotateButton, HelpButton, SelectImageButton, FreeTextDialog } from './Components'
+import { WebtopoButton, DownloadButton, SaveButton, RotateButton, HelpButton, SelectImageButton, FreeTextDialog } from './Components'
 import { MarkerPositionX, MarkerPositionY, StampTextSize, StampFreeTextSize } from './Constants';
 import { getCurrentTimestamp, downloadURI, BlobToArrayBuffer, sleep } from '../../Functions'; 
 import { KonvaEventObject } from 'konva/lib/Node';
@@ -16,6 +16,7 @@ import { RoundButton, CloseButton } from '../../Components';
 import { IStampButton, IHoldStamp, ITextStamp, isIHoldStamp, isITextStamp } from '../../Types/StampType';
 import { SizeProps } from '../../Types/SizeProps';
 import { MAX_SIDE_LENGTH, HOLD_COLOR, SG_HOLD_COLOR } from '../../Constants';
+import { postToWebtopo } from '../../Functions/postToWebtopo';
 
 const PaintPage = ({route, navigator, updateTopos}: 
   {route: any, navigator: Navigator, updateTopos: () => void}) => {
@@ -130,6 +131,33 @@ const PaintPage = ({route, navigator, updateTopos}:
     });
 
     resetStage();
+  }
+
+  // Webトポ連携
+  const onWebtopoTapped = () => {
+    if (!wallImage) {
+      onSelectImageTapped();
+      return;
+    }
+    ons.openActionSheet({
+      cancelable: true,
+      title: 'トポ画像をWebトポに連携しますか？',
+      buttons: ['連携する', '縮小版を連携する', 'キャンセル'],
+    }).then((idx: any) => {
+      if (!stage || (idx !== 1 && idx !== 0)) return;
+      const resize = idx === 1;
+      resizeStageToImageSize();
+      const fixPixelRatio = imageSizeProps.width > MAX_SIDE_LENGTH || imageSizeProps.height > MAX_SIDE_LENGTH;
+      const pixelRatio = resize && fixPixelRatio ? MAX_SIDE_LENGTH / Math.max(imageSizeProps.width, imageSizeProps.height) : 1;
+      const uri = stage.current.toDataURL({pixelRatio: pixelRatio});
+      postToWebtopo(uri, false);
+
+      ons.notification.confirm({
+        title: 'Webトポ連携',
+        message: 'Webトポに画像を連携しました。\nWebトポで編集を続けてください。',
+        buttonLabels: ['OK'],
+      });
+    });
   }
 
   // ダウンロード
@@ -305,6 +333,7 @@ const PaintPage = ({route, navigator, updateTopos}:
         onTapped={onSelectImageTapped}
       />
       <CloseButton className={'close-button float-right-top'} onTapped={onCloseTapped}></CloseButton>
+      <WebtopoButton className={'webtopo-button'} onTapped={onWebtopoTapped}/>
       <DownloadButton className={'download-button'} onTapped={onDownloadTapped}/>
       <SaveButton className={'save-button'} onTapped={onSaveTapped}/>
       <RotateButton className={'rotate-button'} onTapped={onRotateTapped}/>

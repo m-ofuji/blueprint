@@ -6,9 +6,11 @@ import { ITopo, TopoDB } from "../DB/TopoDB";
 import { GRADES } from "../Constants/Grades";
 import { faShareNodes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { postToWebtopo } from '../Functions/postToWebtopo'
 
 export interface TopoCardProps extends ITopo {
   db: TopoDB | undefined
+  mode: string | null,
   updateTopos: () => void,
   onEditTapped?: () => void;
 }
@@ -23,7 +25,7 @@ interface ShareData {
 export const TopoCard = (props: TopoCardProps) => {
   const imageRef = useRef<HTMLImageElement>(null);
   const [isSelected, setIsSelected] = useState<boolean>(false);
-
+  
   const downLoad = () => {
     ons.openActionSheet({
       cancelable: true,
@@ -55,6 +57,21 @@ export const TopoCard = (props: TopoCardProps) => {
           ons.notification.toast('トポを削除しました。', {timeout: 2000});
         }
       }
+    });
+  }
+
+  const moveToWebtopo = () => {
+    ons.openActionSheet({
+      cancelable: true,
+      title: 'Webトポに連携する画像を選択してください。',
+      buttons: ['元のサイズ', '元のサイズ（課題情報つき）', '縮小版', '縮小版（課題情報つき）', 'キャンセル'],
+    }).then(async(idx: any) => {
+      if (idx < 0) return;
+      const resize = idx === 2 || idx === 3;
+      const printInfo = idx === 1 || idx === 3;
+
+      const drawnCanvas = await drawTopoImageOnCanvas(props, resize, printInfo);
+      postToWebtopo(drawnCanvas.toDataURL(), true);
     });
   }
 
@@ -137,6 +154,12 @@ export const TopoCard = (props: TopoCardProps) => {
         <Button modifier={'quiet'} className={'topo-card-action-button'} onClick={deleteTopo} >
           <i className={'fas fa-trash-alt fa-lg'}/>
         </Button>
+        {
+          props.mode == 'webtopo' ? 
+          <Button modifier={'quiet'} className={'topo-card-action-button'} onClick={moveToWebtopo} >
+            <img height={30} src="/images/goma.png"/>
+          </Button> : <></>
+        }
         <Button modifier={'quiet'} className={'topo-card-action-button'} onClick={share} >
           <FontAwesomeIcon className={'fa-lg'} icon={faShareNodes}/>
         </Button>

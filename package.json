@@ -24,14 +24,15 @@
     "react-dom": "^16.3",
     "react-konva": "^17.0.2-5",
     "react-onsenui": "^1.11.4",
+    "react-router-dom": "^5.3.4",
     "typescript": "^4.3.5",
     "use-image": "^1.0.8",
     "vite": "^4.2.1",
     "web-vitals": "^1.1.2"
   },
   "scripts": {
-    "start": "vite",
-    "build": "tsc --noEmit && vite build",
+    "start": "vite --host --mode development",
+    "build": "tsc --noEmit && vite build --mode production",
     "serve": "vite preview"
   },
   "eslintConfig": {
@@ -53,6 +54,8 @@
     ]
   },
   "devDependencies": {
+    "@types/react-router-dom": "^5.3.3",
+    "baseline-browser-mapping": "^2.9.19",
     "onsenui": "^2.11.2",
     "react-onsenui": "^1.11.4",
     "vite-plugin-compression2": "^2.3.1"
