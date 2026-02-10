@@ -1,6 +1,5 @@
 const toDomain = import.meta.env.VITE_WEBTOPO_URL;
 export const postToWebtopo = (imageDataUrl: string, closeWindow: boolean) => {
-  console.log(toDomain);
   try {
     window.opener.postMessage({image: imageDataUrl, closeWindow}, toDomain);
   } catch(e) {

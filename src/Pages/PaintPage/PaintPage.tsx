@@ -18,8 +18,8 @@ import { SizeProps } from '../../Types/SizeProps';
 import { MAX_SIDE_LENGTH, HOLD_COLOR, SG_HOLD_COLOR } from '../../Constants';
 import { postToWebtopo } from '../../Functions/postToWebtopo';
 
-const PaintPage = ({route, navigator, updateTopos}: 
-  {route: any, navigator: Navigator, updateTopos: () => void}) => {
+const PaintPage = ({route, navigator, mode, updateTopos}: 
+  {route: any, navigator: Navigator, mode: string, updateTopos: () => void}) => {
     const sizeProps = {
     offsetX: 0,
     offsetY: 0,
@@ -39,7 +39,7 @@ const PaintPage = ({route, navigator, updateTopos}:
     { key:4,  label: 'ゴール',         contentText: 'G',        fontSize: StampTextSize, textColor: SG_HOLD_COLOR },
     { key:5,  label: 'スタート右',     contentText: 'S右',      fontSize: StampTextSize, textColor: SG_HOLD_COLOR },
     { key:6,  label: 'スタート左',     contentText: 'S左',      fontSize: StampTextSize, textColor: SG_HOLD_COLOR },
-    { key:7, label: 'フリーテキスト',  contentText: '',         fontSize: StampFreeTextSize, textColor: HOLD_COLOR }
+    { key:7,  label: 'フリーテキスト',  contentText: '',         fontSize: StampFreeTextSize, textColor: HOLD_COLOR }
   ];
 
   const [wallImage, setWallImage] = useState<CanvasImageSource | null>(null);
@@ -333,7 +333,7 @@ const PaintPage = ({route, navigator, updateTopos}:
         onTapped={onSelectImageTapped}
       />
       <CloseButton className={'close-button float-right-top'} onTapped={onCloseTapped}></CloseButton>
-      <WebtopoButton className={'webtopo-button'} onTapped={onWebtopoTapped}/>
+      { mode === 'webtopo' ? <WebtopoButton className={'webtopo-button'} onTapped={onWebtopoTapped}/> : <></> }   
       <DownloadButton className={'download-button'} onTapped={onDownloadTapped}/>
       <SaveButton className={'save-button'} onTapped={onSaveTapped}/>
       <RotateButton className={'rotate-button'} onTapped={onRotateTapped}/>

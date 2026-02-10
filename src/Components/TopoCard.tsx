@@ -157,7 +157,7 @@ export const TopoCard = (props: TopoCardProps) => {
         {
           props.mode == 'webtopo' ? 
           <Button modifier={'quiet'} className={'topo-card-action-button'} onClick={moveToWebtopo} >
-            <img height={30} src="/images/goma.png"/>
+            <img height={30} width={30} src="/images/goma.png"/>
           </Button> : <></>
         }
         <Button modifier={'quiet'} className={'topo-card-action-button'} onClick={share} >

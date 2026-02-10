@@ -48,6 +48,7 @@ const HomePage = ({route, navigator, openMenu}: {route: any, navigator: Navigato
         key: 'PaintPage',
         isLefty: false,
         navigator: navigator,
+        mode: mode,
         updateTopos: updateTopos,
       }
     });
