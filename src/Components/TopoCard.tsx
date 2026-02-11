@@ -6,7 +6,7 @@ import { ITopo, TopoDB } from "../DB/TopoDB";
 import { GRADES } from "../Constants/Grades";
 import { faShareNodes } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { postToWebtopo } from '../Functions/postToWebtopo'
+import { postToWebtopo } from '../Functions/PostImageToWebtopo'
 
 export interface TopoCardProps extends ITopo {
   db: TopoDB | undefined

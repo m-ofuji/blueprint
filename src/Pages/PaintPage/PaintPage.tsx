@@ -16,7 +16,7 @@ import { RoundButton, CloseButton } from '../../Components';
 import { IStampButton, IHoldStamp, ITextStamp, isIHoldStamp, isITextStamp } from '../../Types/StampType';
 import { SizeProps } from '../../Types/SizeProps';
 import { MAX_SIDE_LENGTH, HOLD_COLOR, SG_HOLD_COLOR } from '../../Constants';
-import { postToWebtopo } from '../../Functions/postToWebtopo';
+import { postToWebtopo as postImageToWebtopo } from '../../Functions/PostImageToWebtopo';
 
 const PaintPage = ({route, navigator, mode, updateTopos}: 
   {route: any, navigator: Navigator, mode: string, updateTopos: () => void}) => {
@@ -150,13 +150,8 @@ const PaintPage = ({route, navigator, mode, updateTopos}:
       const fixPixelRatio = imageSizeProps.width > MAX_SIDE_LENGTH || imageSizeProps.height > MAX_SIDE_LENGTH;
       const pixelRatio = resize && fixPixelRatio ? MAX_SIDE_LENGTH / Math.max(imageSizeProps.width, imageSizeProps.height) : 1;
       const uri = stage.current.toDataURL({pixelRatio: pixelRatio});
-      postToWebtopo(uri, false);
-
-      ons.notification.confirm({
-        title: 'Webトポ連携',
-        message: 'Webトポに画像を連携しました。\nWebトポで編集を続けてください。',
-        buttonLabels: ['OK'],
-      });
+      postImageToWebtopo(uri, false);
+      resetStage();
     });
   }
 

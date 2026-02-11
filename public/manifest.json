@@ -1,7 +1,8 @@
 {
   "name": "Toporis",
   "short_name": "Toporis",
-  "start_url": "/",
+  "start_url": "/app/index.html",
+  "scope": "/app/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#ffffff",
