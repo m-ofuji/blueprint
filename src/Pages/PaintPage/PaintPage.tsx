@@ -151,7 +151,6 @@ const PaintPage = ({route, navigator, mode, updateTopos}:
       const pixelRatio = resize && fixPixelRatio ? MAX_SIDE_LENGTH / Math.max(imageSizeProps.width, imageSizeProps.height) : 1;
       const uri = stage.current.toDataURL({pixelRatio: pixelRatio});
       postImageToWebtopo(uri, false);
-      resetStage();
     });
   }
 
